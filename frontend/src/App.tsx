@@ -1,6 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 import Navbar from './components/Navbar/Navbar';
 import PagesRoutes from './components/PagesRoutes/PagesRoutes';
 import axios from 'axios'
