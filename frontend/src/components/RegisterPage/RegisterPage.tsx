@@ -13,9 +13,8 @@ export default function RegisterPage() {
 
         <label><p>Confirm password:</p></label>
         <input type = 'password' placeholder = 'Confirm Password...'/>
-
       </form>
-      <button>Submit</button>
+      <button type = 'submit'>Submit</button>
 
     </div>
   )
