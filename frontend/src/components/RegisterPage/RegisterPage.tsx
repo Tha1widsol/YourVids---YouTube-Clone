@@ -7,13 +7,6 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
 
   function handleSubmit(){
-    const requestOptions = { 
-      headers:{
-        'Content-Type':'application/json',
-        'Accept':'application/json'
-      }
-  }
-
     fetch('api/register', {
       method: 'POST',
       body: JSON.stringify({username, password}),
