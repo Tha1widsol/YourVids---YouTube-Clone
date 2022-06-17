@@ -22,4 +22,4 @@ Route::get('/hello', function () {
     return 'Hello World';
 });
 
-Route::post('register',[UserController::class,'register']);
+Route::post('/register',[UserController::class,'register']);
