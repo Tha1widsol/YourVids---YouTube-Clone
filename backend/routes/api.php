@@ -23,3 +23,11 @@ Route::get('/hello', function () {
 });
 
 Route::post('/register',[UserController::class,'register']);
+Route::post('/login',[UserController::class,'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/getUser',[UserController::class,'getUser']);
+    Route::post('/logout',[UserController::class,'logout']);
+
+});
+
