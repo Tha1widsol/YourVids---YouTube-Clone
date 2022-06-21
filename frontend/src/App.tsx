@@ -1,12 +1,15 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import Navbar from './components/Navbar/Navbar';
 import PagesRoutes from './components/PagesRoutes/PagesRoutes';
-import axios from 'axios'
+import {useAppDispatch} from './app/hooks';
+import {fetchUser} from './features/Auth/auth';
 
 function App() {
-  axios.get('api/hello').then(response => {
-    console.log(response.data)
-  })
+const dispatch = useAppDispatch()
+
+useEffect(() => {
+  dispatch(fetchUser())
+},[dispatch])
 
   return (
     <div style = {{width: '95%', margin: '0 auto'}}>

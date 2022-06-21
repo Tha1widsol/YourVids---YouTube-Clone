@@ -12,9 +12,12 @@ function handleSubmit(){
 
   axios.post('api/login',JSON.stringify({username: username, password: password}), requestOptions)
   .then(response => {
-    console.log(response.data)
+   const data = response.data
+   console.log(data)
   })
 }
+
+
 
   function handleLogout(){
     axios.post('/api/logout')
@@ -23,6 +26,7 @@ function handleSubmit(){
   return (
     <div style = {{textAlign: 'center'}}>
        <h1><u>Login</u></h1>
+       <button onClick = {handleLogout}>Delete</button>
       <form>
         <label><p>Username:</p></label>
         <input onChange = {e => setUsername(e.target.value)} value = {username} placeholder = 'Username...'/>

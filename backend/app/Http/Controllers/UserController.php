@@ -29,7 +29,7 @@ class UserController extends Controller
         $cookie = cookie('jwt',$token, 68 * 24);
 
         return response([
-            'message' => 'Success'
+            'message' => 'Success',
         ]) -> withCookie($cookie);
     }
 

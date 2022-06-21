@@ -3,6 +3,7 @@ import {combineReducers} from "redux"
 import {
     persistReducer
   } from 'redux-persist'
+import userReducer from '../features/Auth/auth'
 import storage from 'redux-persist/lib/storage'
 
   const persistConfig = {
@@ -12,7 +13,9 @@ import storage from 'redux-persist/lib/storage'
     storage,
   }
   
-  const reducers = combineReducers({})
+  const reducers = combineReducers({
+    user: userReducer
+  })
 
   const persistedReducer = persistReducer(persistConfig, reducers)
 
