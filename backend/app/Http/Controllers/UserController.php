@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Synfony\Component\HttpFoundation\Response;
+use Cookie;
 
 class UserController extends Controller
 {
@@ -26,10 +27,11 @@ class UserController extends Controller
 
         $user = Auth::user();
         $token = $user->createToken('token')->plainTextToken;
-        $cookie = cookie('jwt',$token, 68 * 24);
+        $cookie = cookie('jwt',$token, 1);
 
         return response([
             'message' => 'Success',
+            'token' => $token,
         ]) -> withCookie($cookie);
     }
 
@@ -39,6 +41,7 @@ class UserController extends Controller
 
     public function logout(Request $request){
         $request->user()->tokens()->delete();
+        Cookie::queue(Cookie::forget('jwt'));
         return response([
             'message' => 'Logged out'
         ]);

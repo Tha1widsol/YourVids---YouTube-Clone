@@ -14,7 +14,6 @@ export const fetchUser = createAsyncThunk(
     'user/fetchUser',
      async () => {
         try{
-            if (!initialState.isLoggedIn) return
             const response = await axios.get('/api/getUser')
             return response.data
         }
