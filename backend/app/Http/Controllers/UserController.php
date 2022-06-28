@@ -35,15 +35,15 @@ class UserController extends Controller
         ]) -> withCookie($cookie);
     }
 
-    public function getUser(){
+    public function getUser(Request $request){
         return Auth::user();
     }
 
     public function logout(Request $request){
         $request->user()->tokens()->delete();
-        Cookie::queue(Cookie::forget('jwt'));
+        $cookie = Cookie::forget('jwt');
         return response([
             'message' => 'Logged out'
-        ]);
+        ]) -> withCookie($cookie);
     }
 }

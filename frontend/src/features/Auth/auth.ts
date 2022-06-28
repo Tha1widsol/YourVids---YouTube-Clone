@@ -19,7 +19,7 @@ export const fetchUser = createAsyncThunk(
         }
 
       catch(error){
-          window.location.reload()
+          return initialState
       }
     }
 
@@ -29,9 +29,6 @@ export const userSlice = createSlice({
     name : 'user',
     initialState,
     reducers: {
-        login: (state) => {
-            state.isLoggedIn = true
-        },
 
         logout: (state) => {
             state.isLoggedIn = false
@@ -51,11 +48,12 @@ export const userSlice = createSlice({
 
         [fetchUser.rejected.toString()]: (state) => {
             state.status = 'rejected'
+            state.isLoggedIn = false
         }
     }
 
 })
 
-export const {login,logout} = userSlice.actions
+export const {logout} = userSlice.actions
 
 export default userSlice.reducer

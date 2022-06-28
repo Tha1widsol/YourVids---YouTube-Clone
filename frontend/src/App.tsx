@@ -4,6 +4,7 @@ import PagesRoutes from './components/PagesRoutes/PagesRoutes';
 import {useAppDispatch} from './app/hooks';
 import {fetchUser} from './features/Auth/auth';
 
+
 function App() {
 const dispatch = useAppDispatch()
 

@@ -1,6 +1,6 @@
-import React,{useState, useEffect} from 'react'
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { fetchUser } from '../../features/Auth/auth';
+import React,{useState} from 'react'
+import { useAppDispatch } from '../../app/hooks';
+import {logout} from '../../features/Auth/auth';
 
 import axios from 'axios'
 
@@ -15,13 +15,12 @@ export default function LoginPage() {
     }
 
   axios.post('api/login',JSON.stringify({username: username, password: password}), requestOptions)
-  .then(() => {
-    dispatch(fetchUser())
-  })
 }
 
   function handleLogout(){
     axios.post('api/logout')
+    dispatch(logout())
+
   }
 
   return (
