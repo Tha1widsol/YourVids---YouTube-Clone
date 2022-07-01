@@ -16,7 +16,7 @@ export const fetchUser = createAsyncThunk(
         try{
             const response = await axios.get('/api/getUser')
             return response.data
-        }
+         }
 
       catch(error){
           return initialState
@@ -29,6 +29,10 @@ export const userSlice = createSlice({
     name : 'user',
     initialState,
     reducers: {
+
+        login: (state) => {
+            state.isLoggedIn = true
+        },
 
         logout: (state) => {
             state.isLoggedIn = false
@@ -54,6 +58,6 @@ export const userSlice = createSlice({
 
 })
 
-export const {logout} = userSlice.actions
+export const {login, logout} = userSlice.actions
 
 export default userSlice.reducer
