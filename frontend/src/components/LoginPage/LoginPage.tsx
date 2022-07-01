@@ -1,7 +1,6 @@
 import React,{useState} from 'react'
-import { useAppDispatch } from '../../app/hooks';
-import {logout} from '../../features/Auth/auth';
-
+import {useAppDispatch} from '../../app/hooks';
+import {login} from '../../features/Auth/auth';
 import axios from 'axios'
 
 export default function LoginPage() {
@@ -13,20 +12,17 @@ export default function LoginPage() {
     const requestOptions = { 
       headers:{'Content-Type':'application/json', 'Accept':'application/json'}
     }
-
-  axios.post('api/login',JSON.stringify({username: username, password: password}), requestOptions)
+   axios.post('api/login',JSON.stringify({username: username, password: password}), requestOptions)
+   .then(response => {
+    if (response.status === 200) dispatch(login())
+   })
 }
 
-  function handleLogout(){
-    axios.post('api/logout')
-    dispatch(logout())
 
-  }
 
   return (
     <div style = {{textAlign: 'center'}}>
        <h1><u>Login</u></h1>
-       <button onClick = {handleLogout}>Logout</button>
       <form>
         <label><p>Username:</p></label>
         <input onChange = {e => setUsername(e.target.value)} value = {username} placeholder = 'Username...'/>
