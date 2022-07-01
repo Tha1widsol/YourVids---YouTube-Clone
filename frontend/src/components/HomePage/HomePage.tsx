@@ -3,12 +3,12 @@ import {useAppSelector} from '../../app/hooks'
 
 export default function HomePage() {
   const user = useAppSelector(state => state.user)
- console.log(user)
-
 
   return (
     <div>
-      <p>Welcome, {user.values?.username}</p> 
+      {user.isLoggedIn ? 
+        <p>Welcome, {user.values?.username}</p> 
+        : <h1>Welcome to YourVids</h1>}
     </div>
   )
 }
