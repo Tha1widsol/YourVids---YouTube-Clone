@@ -27,7 +27,7 @@ class UserController extends Controller
 
         $user = Auth::user();
         $token = $user->createToken('token')->plainTextToken;
-        $cookie = cookie('jwt',$token, 1);
+        $cookie = cookie('jwt',$token, 68 * 24);
 
         return response([
             'message' => 'Success',
