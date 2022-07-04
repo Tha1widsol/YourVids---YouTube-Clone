@@ -11,7 +11,9 @@ export default function Navbar() {
 
   function handleLogout(){
     axios.post('api/logout')
-    dispatch(logout())
+    .then(response => {
+      if (response.status === 200) dispatch(logout())
+    })
   }
 
   return (

@@ -24,6 +24,7 @@ Route::get('/hello', function () {
 
 Route::post('/register',[UserController::class,'register']);
 Route::post('/login',[UserController::class,'login']);
+Route::get('/checkAuth',[UserController::class,'checkAuth']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getUser',[UserController::class,'getUser']);

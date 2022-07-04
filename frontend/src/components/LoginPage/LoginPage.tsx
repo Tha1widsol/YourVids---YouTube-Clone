@@ -14,12 +14,12 @@ export default function LoginPage() {
     }
    axios.post('api/login',JSON.stringify({username: username, password: password}), requestOptions)
    .then(response => {
-    if (response.status === 200) dispatch(login())
+    if (response.status === 200) {
+      dispatch(login())
+    }
+    
    })
 }
-
-
-
   return (
     <div style = {{textAlign: 'center'}}>
        <h1><u>Login</u></h1>

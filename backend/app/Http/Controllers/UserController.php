@@ -35,8 +35,21 @@ class UserController extends Controller
         ]) -> withCookie($cookie);
     }
 
-    public function getUser(Request $request){
+    public function getUser(){
         return Auth::user();
+    }
+
+    public function checkAuth(){
+        $isAuth = false;
+
+        if (Cookie::has('jwt')){
+           $isAuth = true;
+        }
+
+        return response([
+            'isAuth' => $isAuth,
+        ]);
+
     }
 
     public function logout(Request $request){
