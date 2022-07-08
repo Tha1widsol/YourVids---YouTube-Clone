@@ -16,13 +16,18 @@ class UserController extends Controller
         $user->username = $request->username;
         $user->password = Hash::make($request->password);
         $user->save();
-        Auth::login($user);
-        return $request-> input();
+        $token = $user->createToken('token')->plainTextToken;
+        $cookie = cookie('jwt',$token, 68 * 24);
+
+        return response([
+            'message' => 'Success',
+            'token' => $token,
+        ]) -> withCookie($cookie);
     }
 
     public function login(Request $request){
         if (!Auth::attempt(['username' => $request->input('username'), 'password' => $request->input('password')])){
-            return response(['Message' => 'Invalid credentials']);
+            return response(['message' => 'Failed']);
         }
 
         $user = Auth::user();
