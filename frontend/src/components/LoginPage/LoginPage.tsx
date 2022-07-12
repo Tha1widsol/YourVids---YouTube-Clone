@@ -1,11 +1,13 @@
 import React,{useState} from 'react'
 import {useAppDispatch} from '../../app/hooks';
 import {login} from '../../features/Auth/auth';
+import Errors from '../Messages/Errors';
 import axios from 'axios'
 
 export default function LoginPage() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [errors, setErrors] = useState<Array<string>>([])
   const dispatch = useAppDispatch()
 
   function handleSubmit(){
@@ -21,14 +23,14 @@ export default function LoginPage() {
       window.location.reload()
     }
 
-    else console.log(response.data.message)
-
-    
+    else setErrors([response.data.message])
    })
 }
   return (
     <div style = {{textAlign: 'center'}}>
        <h1><u>Login</u></h1>
+       <Errors errors = {errors}/>
+       
       <form>
         <label><p>Username:</p></label>
         <input onChange = {e => setUsername(e.target.value)} value = {username} placeholder = 'Username...'/>
