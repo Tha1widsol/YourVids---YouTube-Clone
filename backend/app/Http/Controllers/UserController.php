@@ -20,14 +20,14 @@ class UserController extends Controller
         $cookie = cookie('jwt',$token, 68 * 24);
 
         return response([
-            'message' => 'Success',
+            'message' => 'success',
             'token' => $token,
         ]) -> withCookie($cookie);
     }
 
     public function login(Request $request){
         if (!Auth::attempt(['username' => $request->input('username'), 'password' => $request->input('password')])){
-            return response(['message' => 'Failed']);
+            return response(['message' => 'Username or password is incorrect']);
         }
 
         $user = Auth::user();
@@ -35,7 +35,7 @@ class UserController extends Controller
         $cookie = cookie('jwt',$token, 68 * 24);
 
         return response([
-            'message' => 'Success',
+            'message' => 'success',
             'token' => $token,
         ]) -> withCookie($cookie);
     }
