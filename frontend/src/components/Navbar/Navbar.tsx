@@ -22,7 +22,7 @@ export default function Navbar() {
         <NavLink to = '/home'>Home</NavLink>
         {user.isLoggedIn ?  
         <>
-        <NavLink to = '/channels'>Your channels</NavLink>
+        <NavLink to = {`/user/${user.values?.username}/channels`}>Your channels</NavLink>
         <NavLink to = '/videos'>Your videos</NavLink>
         <button onClick = {handleLogout}>Logout</button>
         </>
