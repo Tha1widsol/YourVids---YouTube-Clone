@@ -17,7 +17,8 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('name');
+            $table->string('name')->unique();
+            $table->mediumText('description');
             $table->bigInteger('subscribers')->default(0);
             $table->bigInteger('views')->default(0);
             $table->string('logo')->nullable();
