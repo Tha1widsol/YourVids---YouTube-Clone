@@ -3,6 +3,7 @@ import {Routes,Route} from 'react-router-dom'
 import HomePage from '../HomePage/HomePage'
 import RegisterPage from '../RegisterPage/RegisterPage'
 import LoginPage from '../LoginPage/LoginPage'
+import UserChannels from '../UserChannels/UserChannels'
 import {CheckAuth} from '../ProtectedRoutes/ProtectedRoutes'
 
 export default function PagesRoutes() {
@@ -11,6 +12,11 @@ export default function PagesRoutes() {
         <Routes>
             <Route path = '/' element = {<HomePage/>}/>
             <Route path = '/home' element = {<HomePage/>}/>
+
+            <Route element = {<CheckAuth/>}>
+              <Route path = '/user/:username/channels' element = {<UserChannels/>}/>
+            </Route>
+
             <Route element = {<CheckAuth checkAuth = {false}/>}>
                 <Route path = '/register' element = {<RegisterPage/>}/>
                 <Route path = '/login' element = {<LoginPage/>}/>
