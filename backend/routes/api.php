@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ChannelController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -28,7 +29,7 @@ Route::get('/checkAuth',[UserController::class,'checkAuth']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getUser',[UserController::class,'getUser']);
+    Route::post('/createChannel',[ChannelController::class,'createChannel']);
     Route::post('/logout',[UserController::class,'logout']);
-
 });
 
