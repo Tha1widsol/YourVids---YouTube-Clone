@@ -2,6 +2,7 @@ import React,{useState, useRef} from 'react'
 import Popup from '../Popup/Popup'
 import Errors from '../Messages/Errors'
 import {FileProps} from '../../app/types/files'
+import axios from 'axios'
 
 export default function UserChannels() {
   const [popup, setPopup] = useState({create: false, ref: useRef<null | HTMLDivElement>(null)})
@@ -28,6 +29,24 @@ export default function UserChannels() {
       channelName?.scrollIntoView()
       return
     }
+
+    const requestOptions = {
+      headers: {'Content-Type': 'multipart/form-data'}
+    }
+
+    let form = new FormData()
+    form.append('name', name.value)
+    form.append('description', description.value)
+    if (logo.value) form.append('logo', logo.value, logo.name)
+    if (banner.value) form.append('banner', banner.value, banner.name)
+
+    axios.post('/api/createChannel',form, requestOptions)
+    .then(response => {
+      if (response.status === 200){
+        console.log(response.data.message)
+        setPopup(prev => {return{...prev, create: false}})
+      }
+    })
   }
 
   return (
