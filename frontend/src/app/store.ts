@@ -4,17 +4,19 @@ import {
     persistReducer
   } from 'redux-persist'
 import userReducer from '../features/Auth/auth'
+import {channelsApi} from '../features/channels/channels'
 import storage from 'redux-persist/lib/storage'
 
   const persistConfig = {
     key: 'root',
     version: 1,
-    blacklist: [],
+    blacklist: [channelsApi.reducerPath],
     storage,
   }
   
   const reducers = combineReducers({
-    user: userReducer
+    user: userReducer,
+    [channelsApi.reducerPath]: channelsApi.reducer
   })
 
   const persistedReducer = persistReducer(persistConfig, reducers)
