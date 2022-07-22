@@ -10,7 +10,7 @@ export default function Navbar() {
   const dispatch = useAppDispatch()
 
   function handleLogout(){
-    axios.post('api/logout')
+    axios.post('/api/logout')
     .then(response => {
       if (response.status === 200) dispatch(logout())
     })

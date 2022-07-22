@@ -15,7 +15,7 @@ export default function LoginPage() {
       headers:{'Content-Type':'application/json', 'Accept':'application/json'}
     }
 
-   axios.post('api/login',JSON.stringify({username: username, password: password}), requestOptions)
+   axios.post('/api/login',JSON.stringify({username: username, password: password}), requestOptions)
    .then(response => {
 
     if (response.data.message === 'success'){
