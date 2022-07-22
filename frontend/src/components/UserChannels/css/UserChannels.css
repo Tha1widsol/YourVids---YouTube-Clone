@@ -1,0 +1,8 @@
+.channelContainer{
+    max-height: 40%;
+    min-width: 28%;
+    border: groove;
+    border-width: 1px;
+    border-radius: 5px;
+    padding: 5px;
+}
