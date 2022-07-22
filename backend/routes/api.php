@@ -19,17 +19,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/hello', function () {
-    return 'Hello World';
-});
-
 Route::post('/register',[UserController::class,'register']);
 Route::post('/login',[UserController::class,'login']);
 Route::get('/checkAuth',[UserController::class,'checkAuth']);
+Route::get('/getChannel',[ChannelController::class,'getChannel']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getUser',[UserController::class,'getUser']);
     Route::post('/createChannel',[ChannelController::class,'createChannel']);
+    Route::get('/userChannels',[ChannelController::class, 'getUserChannels']);
     Route::post('/logout',[UserController::class,'logout']);
 });
 
