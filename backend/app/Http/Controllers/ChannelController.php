@@ -25,4 +25,17 @@ class ChannelController extends Controller
         ]);
     }
 
+    public function getChannel(Request $request){
+        $lookup_url_kwarg = 'id';
+        $id = $request->$lookup_url_kwarg;
+        $channel = DB::table('channels')->where('id', $id)->first();
+        return $channel;
+    }
+
+    public function getUserChannels(Request $request){
+        $user = Auth::user();
+        $channels = DB::table('channels')->where('user_id', $user->id)->get();
+        return $channels;
+    }
+
 }
