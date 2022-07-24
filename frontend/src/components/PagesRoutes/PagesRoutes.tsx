@@ -4,6 +4,7 @@ import HomePage from '../HomePage/HomePage'
 import RegisterPage from '../RegisterPage/RegisterPage'
 import LoginPage from '../LoginPage/LoginPage'
 import UserChannels from '../UserChannels/UserChannels'
+import ChannelPage from '../ChannelPage/ChannelPage'
 import {CheckAuth} from '../ProtectedRoutes/ProtectedRoutes'
 
 export default function PagesRoutes() {
@@ -12,6 +13,7 @@ export default function PagesRoutes() {
         <Routes>
             <Route path = '/' element = {<HomePage/>}/>
             <Route path = '/home' element = {<HomePage/>}/>
+            <Route path = '/channel/:channelID' element = {<ChannelPage/>}/>
 
             <Route element = {<CheckAuth/>}>
               <Route path = '/user/:username/channels' element = {<UserChannels/>}/>
