@@ -24,6 +24,23 @@ input{
   text-align: center;
 }
 
+.disable-select {
+  user-select: none; /* supported by Chrome and Opera */
+ -webkit-user-select: none; /* Safari */
+ -khtml-user-select: none; /* Konqueror HTML */
+ -moz-user-select: none; /* Firefox */
+ -ms-user-select: none; /* Internet Explorer/Edge */
+}
+
+.link:hover{
+  color: red
+}
+
+a{
+  color: inherit;
+  text-decoration: none;
+ }
+
   /* ################
 Button styles
 ##################*/
