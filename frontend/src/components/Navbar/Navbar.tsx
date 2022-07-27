@@ -24,6 +24,7 @@ export default function Navbar() {
         <>
         <NavLink to = {`/user/${user.values?.username}/channels`}>Your channels</NavLink>
         <NavLink to = '/videos'>Your videos</NavLink>
+        <NavLink to = '/upload'>Upload</NavLink>
         <button onClick = {handleLogout}>Logout</button>
         </>
         :
