@@ -84,18 +84,25 @@ export default function UserChannels() {
         <button onClick = {() => setPopup(prev => {return{...prev, create: true}})}>Add channel</button>
 
         <div style = {{display: 'flex', flexDirection: 'column', gap: '10px'}}>
-        {channels.data?.map((channel, index) => {
-          return(
-              <div className = 'channelContainer' key = {index}>
-                <Link to = {`/channel/${channel.id}`}><h2 className = 'link disable-select'>{channel.name}</h2></Link>
-                <p style = {{fontSize: 'small', color: 'gray'}}>Creation date - {channel.created_at}</p>
-                <p>Subscribers - {channel.subscribers}</p>
-                <p>Total views - {channel.views}</p>
+        {channels.isSuccess ? 
+          <>
+            {channels.data?.map((channel, index) => {
+            return (
+                <div className = 'channelContainer' key = {index}>
+                  <Link to = {`/channel/${channel.id}`}><h2 className = 'link disable-select'>{channel.name}</h2></Link>
+                  <p style = {{fontSize: 'small', color: 'gray'}}>Creation date - {channel.created_at}</p>
+                  <p>Subscribers - {channel.subscribers}</p>
+                  <p>Total views - {channel.views}</p>
 
-              </div>
-          )
-        })}
-
+                </div>
+            )
+          })}
+          </>
+        : channels.isLoading ? 
+          <>
+            <p>Loading...</p>
+          </>
+      : null}
         </div>
        
     </div>
