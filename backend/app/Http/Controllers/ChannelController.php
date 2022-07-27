@@ -29,6 +29,7 @@ class ChannelController extends Controller
         $lookup_url_kwarg = 'id';
         $id = $request->$lookup_url_kwarg;
         $channel = DB::table('channels')->where('id', $id)->first();
+        if (!$channel) throw new \ErrorException();
         return $channel;
     }
 
