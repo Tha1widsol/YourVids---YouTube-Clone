@@ -14,11 +14,26 @@ class ChannelController extends Controller
      
         $channel->name = $request->name;
         $channel->description = $request->description;
-        $channel->logo = $request->logo;
-        $channel->banner = $request->banner;
+
+        if ($request->hasFile('logo')){
+            $logo = $request->file('logo');
+            $logoName = $logo->getClientOriginalName();
+            $finalName = date('His') . $logoName;
+            $request->file('logo')->storeAs('logos/', $finalName, 'public');
+            $channel->logo = $request->logo;
+        }
+
+        if ($request->hasFile('banner')){
+            $banner = $request->file('banner');
+            $bannerName = $banner->getClientOriginalName();
+            $finalName = date('His') . $bannerName;
+            $request->file('banner')->storeAs('banners/', $finalName, 'public');
+            $channel->banner = $request->banner;
+        }
+
+        
         $channel->user_id = $user->id;
         $channel->save();
-        $cuser = DB::table('channels')->where('user_id', $user->id)->get();
 
         return response([
             'message' => 'Channel is created'
