@@ -4,6 +4,7 @@ import Popup from '../Popup/Popup'
 import Errors from '../Messages/Errors'
 import {FileProps} from '../../app/types/files'
 import {useGetUserChannelsQuery} from '../../features/channels/channels'
+import ReactScrollableFeed from 'react-scrollable-feed'
 import './css/UserChannels.css'
 import axios from 'axios'
 
@@ -48,6 +49,7 @@ export default function UserChannels() {
     .then(response => {
       if (response.status === 200){
         setPopup(prev => {return{...prev, create: false}})
+        channels.refetch()
       }
     })
   }
@@ -58,7 +60,7 @@ export default function UserChannels() {
             <h2 id = 'popupTop'>Create a channel:</h2>
             <Errors errors = {errors}/>
             
-            <form onSubmit = {handleSubmit}>
+            <form onSubmit = {handleSubmit} encType = 'multipart/form-data'>
               <label htmlFor = 'channelName'><p>Name:</p></label>
               <input id = 'channelName' value = {name.value} onChange = {e => setName(prev => {return{...prev, value: e.target.value}})} placeholder = 'Name...'/>
 
@@ -86,6 +88,7 @@ export default function UserChannels() {
         <div style = {{display: 'flex', flexDirection: 'column', gap: '10px'}}>
         {channels.isSuccess ? 
           <>
+           <ReactScrollableFeed>
             {channels.data?.map((channel, index) => {
             return (
                 <div className = 'channelContainer' key = {index}>
@@ -93,10 +96,10 @@ export default function UserChannels() {
                   <p style = {{fontSize: 'small', color: 'gray'}}>Creation date - {channel.created_at}</p>
                   <p>Subscribers - {channel.subscribers}</p>
                   <p>Total views - {channel.views}</p>
-
                 </div>
             )
           })}
+          </ReactScrollableFeed>
           </>
         : channels.isLoading ? 
           <>
