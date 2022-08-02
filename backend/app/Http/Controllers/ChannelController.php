@@ -19,16 +19,16 @@ class ChannelController extends Controller
             $logo = $request->file('logo');
             $logoName = $logo->getClientOriginalName();
             $finalName = date('His') . $logoName;
-            $request->file('logo')->storeAs('logos/', $finalName, 'public');
-            $channel->logo = $request->logo;
+            $pathName = $request->file('logo')->storeAs('logos/', $finalName, 'public');
+            $channel->logo = $pathName;
         }
 
         if ($request->hasFile('banner')){
             $banner = $request->file('banner');
             $bannerName = $banner->getClientOriginalName();
             $finalName = date('His') . $bannerName;
-            $request->file('banner')->storeAs('banners/', $finalName, 'public');
-            $channel->banner = $request->banner;
+            $pathName = $request->file('banner')->storeAs('banners/', $finalName, 'public');
+            $channel->banner = $pathName;
         }
 
         
