@@ -12,9 +12,12 @@ export default function ChannelPage() {
       <div className = 'center'>
       {channel.isSuccess ? 
       <>
+        {channel.data?.banner ? <img className = 'banner' src = {`/storage/${channel.data?.banner}`} alt = ''/> : null}
         <h1>{channel.data?.name}</h1>
+        {channel.data?.logo ? <img className = 'logo' src = {`/storage/${channel.data?.logo}`} alt = ''/> : null}
         <p>{channel.data?.description}</p>
         <p style = {{color: 'gray'}}>{channel.data?.subscribers} subscribers</p>
+      
         <button type = 'button'>Upload video</button>
         <hr className = 'mt-0-mb-4'/>
       </>
