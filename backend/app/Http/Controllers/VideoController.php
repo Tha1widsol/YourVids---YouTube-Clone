@@ -29,12 +29,16 @@ class VideoController extends Controller
             $file = $request->file('video');
             $fileName = $file->getClientOriginalName();
             $finalName = date('His') . $fileName;
-            $videoName = $file->storeAs('videos/', $finalName, 'public');
-            $channel->pathName = $videoName;
+            $pathName = $file->storeAs('videos/', $finalName, 'public');
+            $channel->pathName = $pathName;
         }
 
         $video->channel_id =  intval($channel_id);
         $video->save();
+
+        return response([
+            'message' => 'Video is created on this channel'
+        ]);
 
 
     }
