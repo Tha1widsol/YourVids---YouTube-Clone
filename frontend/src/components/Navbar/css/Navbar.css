@@ -18,6 +18,33 @@ a{text-decoration: none;}
     text-decoration: none;
   }
 
+.dropdown, .dropdown-content {display: block;}
+
+.dropdown-content {
+    position: absolute;
+    overflow: auto;
+    max-height: 250px;
+    background-color: green;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  }
+
+.dropdown-content p, .dropdown-content button{
+  padding: 0px 16px;
+}
+
+  .dropdown-content a,.dropdown-content p {
+    color: white;
+    text-decoration: none;
+    display: block;
+  }
+
+#navDropBtn{
+  border: unset;
+  color: white;
+  background-color: green;
+}
+
 .nav a:hover{color: whitesmoke}
 
 .nav a.active{
@@ -26,4 +53,14 @@ a{text-decoration: none;}
 
 #yourvids{
     font-size: larger;
+}
+
+.arrow {
+  color: white;
+  padding: 15px;
+}
+
+.left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
 }
