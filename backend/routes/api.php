@@ -28,6 +28,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getUser',[UserController::class,'getUser']);
     Route::post('/createChannel',[ChannelController::class,'createChannel']);
     Route::get('/userChannels',[ChannelController::class, 'getUserChannels']);
+    Route::get('/getCurrentChannel',[ChannelController::class, 'getCurrentChannel']);
+    Route::put('/switchChannel',[ChannelController::class, 'switchChannel']);
     Route::post('/logout',[UserController::class,'logout']);
 });
 

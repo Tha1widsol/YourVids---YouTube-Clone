@@ -10,6 +10,7 @@ interface ChannelProps{
     logo: string
     banner: string
     created_at: string
+    active: boolean
     }
 }
 
@@ -24,6 +25,7 @@ interface ChannelsProps{
     logo: string
     banner: string
     created_at: string
+    active: boolean
     }]
 }
 
@@ -33,6 +35,16 @@ export const channelsApi = createApi({
     endpoints: (builder) => ({
         getUserChannels: builder.query<ChannelsProps['values'], null>({
             query: () => 'userChannels'
+        })
+    })
+})
+
+export const currentChannelApi = createApi({
+    reducerPath: 'currentChannelAPI',
+    baseQuery: fetchBaseQuery({baseUrl:' /api/'}),
+    endpoints: (builder) => ({
+        getCurrentChannel: builder.query<ChannelProps['values'], null>({
+            query: () => 'getCurrentChannel'
         })
     })
 })
@@ -48,4 +60,5 @@ export const channelApi = createApi({
 })
 
 export const {useGetUserChannelsQuery} = channelsApi
+export const {useGetCurrentChannelQuery} = currentChannelApi
 export const {useGetChannelQuery} = channelApi

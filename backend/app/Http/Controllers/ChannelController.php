@@ -6,6 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth, DB;
 use App\Models\Channel;
 
+function switchChannel(Channel $newChannel, Channel $oldChannel){
+    $newChannel->active = true;
+    $newChannel->save();
+    if ($oldChannel) {
+        $oldChannel->active = false;
+        $oldChannel->save();
+    }
+}
+
 class ChannelController extends Controller
 {
     public function createChannel(Request $request){
@@ -30,9 +39,9 @@ class ChannelController extends Controller
             $pathName = $banner->storeAs('banners/', $finalName, 'public');
             $channel->banner = $pathName;
         }
-
-        
+        DB::table('channels')->where('active', true)->update(['active' => null]);
         $channel->user_id = $user->id;
+        $channel->active = true;
         $channel->save();
 
         return response([
@@ -50,8 +59,20 @@ class ChannelController extends Controller
 
     public function getUserChannels(Request $request){
         $user = Auth::user();
-        $channels = DB::table('channels')->where('user_id', $user->id)->get();
+        $channels = DB::table('channels')->where('user_id', $user->id)->where('active', null)->get();
         return $channels;
+    }
+
+    public function getCurrentChannel(){
+        $channel = DB::table('channels')->where('active', true)->first();
+        return $channel;
+    }
+
+    public function switchChannel(Request $request){
+        $lookup_url_kwarg = 'id';
+        $id = $request->$lookup_url_kwarg;
+        DB::table('channels')->where('active', true)->update(['active' => null]);
+        DB::table('channels')->where('id', $id)->update(['active' => true]);
     }
 
 }
