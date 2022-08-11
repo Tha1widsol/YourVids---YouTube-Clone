@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom'
 import Popup from '../Popup/Popup'
 import Errors from '../Messages/Errors'
 import {FileProps} from '../../app/types/files'
-import {useGetUserChannelsQuery} from '../../features/channels/channels'
+import {useGetCurrentChannelQuery} from '../../features/channels/channels'
 import ReactScrollableFeed from 'react-scrollable-feed'
 import './css/UserChannels.css'
 import axios from 'axios'
@@ -15,7 +15,7 @@ export default function UserChannels() {
   const [logo, setLogo] = useState<FileProps>({value: '', name:''})
   const [banner, setBanner] = useState<FileProps>({value: '', name:''})
   const [errors, setErrors] = useState<Array<string>>([])
-  const channels = useGetUserChannelsQuery(null)
+  const channel = useGetCurrentChannelQuery(null)
 
   const validateForm = () => {
     let isValid = true
@@ -49,7 +49,6 @@ export default function UserChannels() {
     .then(response => {
       if (response.status === 200){
         setPopup(prev => {return{...prev, create: false}})
-        channels.refetch()
       }
     })
   }
@@ -82,26 +81,15 @@ export default function UserChannels() {
 
          </Popup>
 
-        <h1>Your channels</h1>
+        <h1>Your channel</h1>
         <button onClick = {() => setPopup(prev => {return{...prev, create: true}})}>Add channel</button>
 
         <div style = {{display: 'flex', flexDirection: 'column', gap: '10px'}}>
-        {channels.isSuccess ? 
+        {channel.isSuccess ? 
           <>
-           <ReactScrollableFeed>
-            {channels.data?.map((channel, index) => {
-            return (
-                <div className = 'channelContainer' key = {index}>
-                  <Link to = {`/channel/${channel.id}`}><h2 className = 'link disable-select'>{channel.name}</h2></Link>
-                  <p style = {{fontSize: 'small', color: 'gray'}}>Creation date - {channel.created_at}</p>
-                  <p>Subscribers - {channel.subscribers}</p>
-                  <p>Total views - {channel.views}</p>
-                </div>
-            )
-          })}
-          </ReactScrollableFeed>
+            <h1>{channel.data?.name}</h1>
           </>
-        : channels.isLoading ? 
+        : channel.isLoading ? 
           <>
             <p>Loading...</p>
           </>
