@@ -3,19 +3,34 @@ import {NavLink} from 'react-router-dom';
 import './css/Navbar.css';
 import {useAppSelector, useAppDispatch} from '../../app/hooks';
 import {logout} from '../../features/Auth/auth';
-import {useGetUserChannelsQuery} from '../../features/channels/channels';
+import {useGetUserChannelsQuery, useGetCurrentChannelQuery} from '../../features/channels/channels';
 import axios from 'axios'
 
 export default function Navbar() {
   const user = useAppSelector(state => state.user)
   const [dropdown, setDropdown] = useState({menu: false, channels: false})
   const channels = useGetUserChannelsQuery(null)
+  const currentChannel = useGetCurrentChannelQuery(null)
   const dispatch = useAppDispatch()
 
   function handleLogout(){
     axios.post('/api/logout')
     .then(response => {
       if (response.status === 200) dispatch(logout())
+    })
+  }
+  
+  function handleSwitchChannel(id: number){
+    const requestOptions = {
+      headers: {'Content-Type': 'multipart/form-data'}
+    }
+
+    axios.put(`/api/switchChannel?id=${id}`,null, requestOptions)
+    .then(response => {
+      if (response.status === 200) {
+        currentChannel.refetch()
+        setDropdown({menu: true, channels: true})
+      }
     })
   }
 
@@ -25,7 +40,7 @@ export default function Navbar() {
         <NavLink to = '/home'>Home</NavLink>
         {user.isLoggedIn ?  
         <>
-        <NavLink to = {`/user/${user.values?.username}/channels`}>Your channel</NavLink>
+        <NavLink to = {`/channel/${currentChannel.data?.id}`}>Your channel</NavLink>
         <NavLink to = '/videos'>Your videos</NavLink>
         <NavLink to = '/upload'>Upload</NavLink>
         <div className = 'dropdown'>
@@ -33,7 +48,7 @@ export default function Navbar() {
               <div className = 'dropdown-content'>
                 {dropdown.menu ? 
                     <>
-                    <p><b>{user.values?.username}</b></p>
+                    <p><b>{currentChannel.data?.name}</b></p>
                     <button id = 'navDropBtn' onClick = {() => setDropdown({menu: false, channels: true})}>Switch channel</button>
                     <NavLink to = '/videos'>My Videos</NavLink>
                     <NavLink to = '/' onClick = {handleLogout}>Logout</NavLink>
@@ -47,7 +62,7 @@ export default function Navbar() {
                     {channels.data?.map((channel, index) => {
                       return (
                         <div key = {index}>
-                          <button id = 'navDropBtn'>{channel.name} <p style = {{fontSize: 'small', color: 'darkgray'}}>{channel.subscribers} subscribers</p></button>
+                          <button id = 'navDropBtn' onClick = {() => handleSwitchChannel(channel.id)}>{channel.name} <p style = {{fontSize: 'small', color: 'darkgray'}}>{channel.subscribers} subscribers</p></button>
                         </div>
                       )
                     })}
