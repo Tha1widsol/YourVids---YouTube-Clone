@@ -11,9 +11,7 @@ body{
   -moz-osx-font-smoothing: grayscale;
 }
 
-input{
-  padding: 5px;
-}
+
 
 .smallGray{
   font-size: small;
@@ -87,9 +85,25 @@ Image styles
   box-shadow: 0px 10px 20px 0px rgba(0,0,0,0.2);
 }
 
+  /* ################
+Form styles
+##################*/
+form{
+  margin: 0px auto;
+  width: 50%;
+}
 
+input, textarea{
+  width: 100%
+}
+input{
+  padding: 5px;
+}
 
-  
+textarea{
+  height: 100px;
+}
+
 
 
 
