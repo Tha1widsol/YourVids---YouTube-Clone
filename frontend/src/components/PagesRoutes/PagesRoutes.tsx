@@ -6,6 +6,7 @@ import LoginPage from '../LoginPage/LoginPage'
 import UserChannels from '../UserChannels/UserChannels'
 import ChannelPage from '../ChannelPage/ChannelPage'
 import {CheckAuth} from '../ProtectedRoutes/ProtectedRoutes'
+import VideoFormPage from '../VideoFormPage/VideoFormPage'
 
 export default function PagesRoutes() {
   return (
@@ -17,6 +18,7 @@ export default function PagesRoutes() {
 
             <Route element = {<CheckAuth/>}>
               <Route path = '/user/:username/channels' element = {<UserChannels/>}/>
+              <Route path = '/upload' element = {<VideoFormPage/>}/>
             </Route>
 
             <Route element = {<CheckAuth checkAuth = {false}/>}>

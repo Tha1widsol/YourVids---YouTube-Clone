@@ -1,5 +1,5 @@
 import React from 'react'
-import {useGetChannelQuery} from '../../features/channels/channels'
+import {useGetChannelQuery} from '../../features/channels/channel'
 import {useParams} from 'react-router-dom'
 
 export default function ChannelPage() {

@@ -3,7 +3,8 @@ import {NavLink} from 'react-router-dom';
 import './css/Navbar.css';
 import {useAppSelector, useAppDispatch} from '../../app/hooks';
 import {logout} from '../../features/Auth/auth';
-import {useGetUserChannelsQuery, useGetCurrentChannelQuery} from '../../features/channels/channels';
+import { useGetUserChannelsQuery} from '../../features/channels/channels';
+import { useGetCurrentChannelQuery } from '../../features/channels/currentChannel';
 import axios from 'axios'
 
 export default function Navbar() {

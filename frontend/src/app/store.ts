@@ -4,7 +4,9 @@ import {
     persistReducer
   } from 'redux-persist'
 import userReducer from '../features/Auth/auth'
-import {channelsApi, channelApi, currentChannelApi} from '../features/channels/channels'
+import {channelsApi} from '../features/channels/channels'
+import { channelApi } from '../features/channels/channel'
+import { currentChannelApi } from '../features/channels/currentChannel'
 import storage from 'redux-persist/lib/storage'
 
   const persistConfig = {
@@ -30,7 +32,7 @@ import storage from 'redux-persist/lib/storage'
         getDefaultMiddleware({
           immutableCheck: false,
           serializableCheck: false
-        }),
+        }).concat([channelsApi.middleware, currentChannelApi.middleware]),
       
     })
       
