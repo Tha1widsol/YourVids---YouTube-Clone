@@ -93,9 +93,10 @@ form{
   width: 50%;
 }
 
-input, textarea{
+.longInput, textarea{
   width: 100%
 }
+
 input{
   padding: 5px;
 }

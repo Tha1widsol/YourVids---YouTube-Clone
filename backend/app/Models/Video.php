@@ -10,7 +10,7 @@ class Video extends Model
     use HasFactory;
     protected $table = 'videos';
 
-    public function users(){
+    public function videos(){
         return $this->hasMany('App\Channel');
     }
 }

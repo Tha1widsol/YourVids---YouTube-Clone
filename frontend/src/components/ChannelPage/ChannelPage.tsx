@@ -1,6 +1,6 @@
 import React from 'react'
 import {useGetChannelQuery} from '../../features/channels/channel'
-import {useParams} from 'react-router-dom'
+import {Link, useParams} from 'react-router-dom'
 
 export default function ChannelPage() {
     const {channelID} = useParams()
@@ -18,7 +18,7 @@ export default function ChannelPage() {
         <p>{channel.data?.description}</p>
         <p style = {{color: 'gray'}}>{channel.data?.subscribers} subscribers</p>
       
-        <button type = 'button'>Upload video</button>
+        <Link to = '/upload'><button type = 'button'>Upload video</button></Link>
         <hr className = 'mt-0-mb-4'/>
       </>
       : channel.isLoading ? 

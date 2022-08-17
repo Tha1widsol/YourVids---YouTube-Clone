@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ChannelController;
+use App\Http\Controllers\VideoController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -30,6 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/userChannels',[ChannelController::class, 'getUserChannels']);
     Route::get('/getCurrentChannel',[ChannelController::class, 'getCurrentChannel']);
     Route::put('/switchChannel',[ChannelController::class, 'switchChannel']);
+    Route::post('/createVideo',[VideoController::class, 'createVideo']);
     Route::post('/logout',[UserController::class,'logout']);
 });
 

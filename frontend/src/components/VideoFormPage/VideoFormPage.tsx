@@ -1,5 +1,7 @@
+import axios from 'axios'
 import React,{useState} from 'react'
 import {FileProps} from '../../app/types/files'
+import { useGetCurrentChannelQuery } from '../../features/channels/currentChannel'
 
 export default function VideoFormPage() {
   const [title, setTitle] = useState({value: '', maxlength: 100})
@@ -7,18 +9,42 @@ export default function VideoFormPage() {
   const [thumbnail, setThumbnail] = useState<FileProps>({value: '', name: ''})
   const [description, setDescription] = useState({value: '', maxlength: 5000})
   const [category, setCategory] = useState({value: ''})
+  const currentChannel = useGetCurrentChannelQuery(null)
+
+
+  function handleSubmitForm(e: React.SyntheticEvent){
+    e.preventDefault()
+    const requestOptions = {
+      headers: {'Content-Type': 'multipart/form-data'}
+    }
+
+    let form = new FormData()
+    form.append('title', title.value)
+    form.append('video', video.value, video.name)
+    if (thumbnail.value) form.append('thumbnail', thumbnail.value, thumbnail.name)
+    form.append('description', description.value)
+    form.append('category', category.value)
+    
+    
+    axios.post(`/api/createVideo?id=${currentChannel.data?.id}`,form, requestOptions)
+    .then(response => {
+      if (response.status === 200){
+        console.log(response.data)
+      }
+    })
+  }
   
 
   return (
     <div>
-        <form>
+        <form onSubmit = {handleSubmitForm}>
             <h1>Upload/Create a video:</h1>
             <hr className = 'mt-0-mb-4'/>
             <label id = 'video'><p>Video file:</p></label>
             <input type = 'file' id = 'video' accept = 'video/*,.mkv'  onChange = {e => {if (!e.target.files) return; setVideo({value: e.target.files[0], name: e.target.files[0].name})}}/>
 
             <label htmlFor = 'videoTitle'><p>Title - {title.maxlength - title.value.length} characters remaining:</p></label>
-            <input type = 'text' id = 'videoTitle' value = {title.value} onChange = {e => setTitle(prev => {return{...prev, value: e.target.value}})} placeholder = 'Title...' maxLength = {title.maxlength}/>
+            <input type = 'text' id = 'videoTitle' className = 'longInput' value = {title.value} onChange = {e => setTitle(prev => {return{...prev, value: e.target.value}})} placeholder = 'Title...' maxLength = {title.maxlength}/>
 
             <label htmlFor = 'videoDescription'><p>Description (Optional) - {description.maxlength - description.value.length} characters remaining:</p></label>
             <textarea id = 'videoDescription' value = {description.value} onChange = {e => setDescription(prev => {return{...prev, value: e.target.value}})} placeholder = 'Description...' maxLength = {description.maxlength}/>

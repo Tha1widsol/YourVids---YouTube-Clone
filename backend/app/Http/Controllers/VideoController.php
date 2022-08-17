@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth, DB;
-use App\Models\Channel, Video;
+use App\Models\Channel;
+use App\Models\Video;
 
 class VideoController extends Controller
 {
@@ -26,14 +27,11 @@ class VideoController extends Controller
         }
 
         if ($request->hasFile('video')){
-            $file = $request->file('video');
-            $fileName = $file->getClientOriginalName();
-            $finalName = date('His') . $fileName;
-            $pathName = $file->storeAs('videos/', $finalName, 'public');
-            $channel->pathName = $pathName;
+            $path = $request->file('video')->store('videos', ['disk' =>'my_uploads']);
+            $channel->pathName = $path;
         }
 
-        $video->channel_id =  intval($channel_id);
+        $video->channel_id = intval($channel_id);
         $video->save();
 
         return response([

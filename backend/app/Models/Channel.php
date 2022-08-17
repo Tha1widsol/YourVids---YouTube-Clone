@@ -10,7 +10,7 @@ class Channel extends Model
     use HasFactory;
     protected $table = 'channels';
 
-    public function users(){
+    public function channels(){
         return $this->hasMany('App\User');
     }
 }
