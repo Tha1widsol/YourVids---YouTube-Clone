@@ -25,14 +25,15 @@ Route::post('/register',[UserController::class,'register']);
 Route::post('/login',[UserController::class,'login']);
 Route::get('/checkAuth',[UserController::class,'checkAuth']);
 Route::get('/getChannel',[ChannelController::class,'getChannel']);
+Route::get('/getVideo',[VideoController::class, 'getVideo']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getUser',[UserController::class,'getUser']);
     Route::post('/createChannel',[ChannelController::class,'createChannel']);
+    Route::post('/createVideo',[VideoController::class, 'createVideo']);
     Route::get('/userChannels',[ChannelController::class, 'getUserChannels']);
     Route::get('/getCurrentChannel',[ChannelController::class, 'getCurrentChannel']);
     Route::put('/switchChannel',[ChannelController::class, 'switchChannel']);
-    Route::post('/createVideo',[VideoController::class, 'createVideo']);
     Route::post('/logout',[UserController::class,'logout']);
 });
 
