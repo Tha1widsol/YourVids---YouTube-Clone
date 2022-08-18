@@ -6,15 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth, DB;
 use App\Models\Channel;
 
-function switchChannel(Channel $newChannel, Channel $oldChannel){
-    $newChannel->active = true;
-    $newChannel->save();
-    if ($oldChannel) {
-        $oldChannel->active = false;
-        $oldChannel->save();
-    }
-}
-
 class ChannelController extends Controller
 {
     public function createChannel(Request $request){
@@ -70,9 +61,9 @@ class ChannelController extends Controller
 
     public function switchChannel(Request $request){
         $lookup_url_kwarg = 'id';
-        $id = $request->$lookup_url_kwarg;
+        $channel_id = $request->$lookup_url_kwarg;
         DB::table('channels')->where('active', true)->update(['active' => null]);
-        DB::table('channels')->where('id', $id)->update(['active' => true]);
+        DB::table('channels')->where('id', $channel_id)->update(['active' => true]);
     }
 
 }
