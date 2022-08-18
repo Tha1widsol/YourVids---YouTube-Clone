@@ -11,7 +11,6 @@ export default function VideoFormPage() {
   const [category, setCategory] = useState({value: ''})
   const currentChannel = useGetCurrentChannelQuery(null)
 
-
   function handleSubmitForm(e: React.SyntheticEvent){
     e.preventDefault()
     const requestOptions = {
@@ -25,7 +24,6 @@ export default function VideoFormPage() {
     form.append('description', description.value)
     form.append('category', category.value)
     
-    
     axios.post(`/api/createVideo?id=${currentChannel.data?.id}`,form, requestOptions)
     .then(response => {
       if (response.status === 200){
@@ -34,10 +32,9 @@ export default function VideoFormPage() {
     })
   }
   
-
   return (
     <div>
-        <form onSubmit = {handleSubmitForm}>
+        <form onSubmit = {handleSubmitForm} method = 'post'>
             <h1>Upload/Create a video:</h1>
             <hr className = 'mt-0-mb-4'/>
             <label id = 'video'><p>Video file:</p></label>
