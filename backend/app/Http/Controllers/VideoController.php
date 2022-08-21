@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth, DB;
+use Illuminate\Support\Facades\Auth, DB, Storage;
 use App\Models\Video;
 
 class VideoController extends Controller
@@ -26,11 +26,10 @@ class VideoController extends Controller
         }
 
         if ($request->hasFile('video')){
-            $path = $request->file('video');
-            $videoName = $path->getClientOriginalName();
-            $finalName = date('His'). $videoName;
-            $pathName = $path->storeAs('videos/', $finalName, 'public');
-            $video->pathName = $pathName;
+            $fileName = $request->video->getClientOriginalName();
+            $filePath = 'videos/' . $fileName;
+            $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
+            $video->pathName = $filePath;
         }
 
         $video->channel_id = $channel_id;
@@ -46,7 +45,7 @@ class VideoController extends Controller
         $lookup_url_kwarg = 'id';
         $video_id = $request->$lookup_url_kwarg;
         $video = DB::table('videos')->where('id', $video_id)->first();
-        if ($video) throw new \ErrorException;
+        if (!$video) throw new \ErrorException;
         return $video;
     }
 
