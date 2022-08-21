@@ -1,0 +1,35 @@
+.title{
+    font-size: larger;
+}
+
+.likesDislikes{
+    display: flex;
+    align-items: center;
+    gap: 17px;
+}
+
+.fa{
+    cursor: pointer;
+}
+
+.fa-thumbs-up:hover{
+    color: green
+}
+
+.fa-thumbs-down:hover{
+    color: red
+}
+
+.description{
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.subscribe{
+    float: right;
+    padding: 10px;
+    margin-left: 20px;
+    color: white;
+    background-color: darkgreen;
+}
+
