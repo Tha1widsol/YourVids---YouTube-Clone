@@ -22,7 +22,7 @@ class VideoController extends Controller
             $thumbnailName = $thumbnail->getClientOriginalName();
             $finalName = date('His') . $thumbnailName;
             $pathName = $thumbnail->storeAs('thumbnails/', $finalName, 'public');
-            $channel->thumbnail = $pathName;
+            $video->thumbnail = $pathName;
         }
 
         if ($request->hasFile('video')){

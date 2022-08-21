@@ -11,7 +11,10 @@ body{
   -moz-osx-font-smoothing: grayscale;
 }
 
-
+.alignRow{
+  display: flex;
+  align-items: center;
+}
 
 .smallGray{
   font-size: small;

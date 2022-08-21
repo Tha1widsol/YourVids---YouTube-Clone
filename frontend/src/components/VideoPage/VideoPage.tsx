@@ -15,7 +15,8 @@ export default function VideoPage() {
         <section style = {{maxWidth: '60%'}}>
             <p className = 'title'>{video.data?.title}</p>
             <ReactPlayer url = {`/storage/${video.data?.pathName}`} controls = {true}/> 
-            <div className = 'likesDislikes'>
+            <div className = 'alignRow likesDislikes'>
+                <p className = 'views smallGray'>{video.data?.views.toLocaleString()} views</p>
                 <i className = 'fa fa-thumbs-up'/>
                 <p>{video.data?.likes}</p>
                 <i className = 'fa fa-thumbs-down'/>
@@ -29,7 +30,7 @@ export default function VideoPage() {
                 <img className = 'logo' style = {{width: '50px', height: '50px'}} src = {`/storage/${channel.data?.logo}`} alt = ''/>
                 <div>
                     <p>{channel.data?.name}</p>
-                    <p style = {{fontSize: 'smaller', color: 'gray'}}>{channel.data?.subscribers} subscribers</p>
+                    <p className = 'smallGray'>{channel.data?.subscribers} subscribers</p>
                 </div>
                 </Link>
             </section>
