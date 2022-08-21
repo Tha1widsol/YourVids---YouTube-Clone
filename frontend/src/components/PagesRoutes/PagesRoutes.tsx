@@ -7,6 +7,7 @@ import UserChannels from '../UserChannels/UserChannels'
 import ChannelPage from '../ChannelPage/ChannelPage'
 import {CheckAuth} from '../ProtectedRoutes/ProtectedRoutes'
 import VideoFormPage from '../VideoFormPage/VideoFormPage'
+import VideoPage from '../VideoPage/VideoPage'
 
 export default function PagesRoutes() {
   return (
@@ -15,6 +16,7 @@ export default function PagesRoutes() {
             <Route path = '/' element = {<HomePage/>}/>
             <Route path = '/home' element = {<HomePage/>}/>
             <Route path = '/channel/:channelID' element = {<ChannelPage/>}/>
+            <Route path = '/video/:videoID' element = {<VideoPage/>}/>
 
             <Route element = {<CheckAuth/>}>
               <Route path = '/user/:username/channels' element = {<UserChannels/>}/>
