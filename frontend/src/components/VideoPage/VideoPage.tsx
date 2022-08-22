@@ -41,5 +41,5 @@ export default function VideoPage() {
         </section>
     
     </div>
- ) : <p>Loading...</p>
+ ) : video.isError ? <p>404 page not found</p> : <p>Loading...</p>
 }

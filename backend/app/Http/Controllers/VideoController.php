@@ -49,4 +49,12 @@ class VideoController extends Controller
         return $video;
     }
 
+    public function getChannelVideos(Request $request){
+        $lookup_url_kwarg = 'id';
+        $channel_id = $request->$lookup_url_kwarg;
+        $videos = DB::table('videos')->where('channel_id', $channel_id)->get();
+        if (!$videos) throw new \ErrorException;
+        return $videos;
+    }
+
 }

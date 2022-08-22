@@ -8,12 +8,13 @@ import {channelsApi} from '../features/channels/channels'
 import { channelApi } from '../features/channels/channel'
 import { currentChannelApi } from '../features/channels/currentChannel'
 import { videoApi } from '../features/videos/video'
+import { channelVideosApi } from '../features/videos/channelVideos'
 import storage from 'redux-persist/lib/storage'
 
   const persistConfig = {
     key: 'root',
     version: 1,
-    blacklist: [channelsApi.reducerPath, channelApi.reducerPath, videoApi.reducerPath, currentChannelApi.reducerPath],
+    blacklist: [channelsApi.reducerPath, channelApi.reducerPath, videoApi.reducerPath, currentChannelApi.reducerPath, channelVideosApi.reducerPath],
     storage,
   }
   
@@ -22,7 +23,8 @@ import storage from 'redux-persist/lib/storage'
     [channelsApi.reducerPath]: channelsApi.reducer,
     [channelApi.reducerPath]: channelApi.reducer,
     [currentChannelApi.reducerPath]: currentChannelApi.reducer,
-    [videoApi.reducerPath]: videoApi.reducer
+    [videoApi.reducerPath]: videoApi.reducer,
+    [channelVideosApi.reducerPath]: channelVideosApi.reducer
   })
 
   const persistedReducer = persistReducer(persistConfig, reducers)
@@ -38,7 +40,8 @@ import storage from 'redux-persist/lib/storage'
           channelsApi.middleware, 
           currentChannelApi.middleware, 
           channelApi.middleware,
-          videoApi.middleware
+          videoApi.middleware,
+          channelVideosApi.middleware
         ]),
       
     })
