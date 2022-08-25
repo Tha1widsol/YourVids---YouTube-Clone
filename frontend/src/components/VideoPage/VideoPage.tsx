@@ -2,19 +2,21 @@ import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useGetVideoQuery } from '../../features/videos/video'
 import { useGetCurrentChannelQuery } from '../../features/channels/currentChannel'
+import { useGetChannelQuery } from '../../features/channels/channel'
 import ReactPlayer from 'react-player'
 import './css/VideoPage.css'
 
 export default function VideoPage() {
     const {videoID} = useParams()
-    const video = useGetVideoQuery(videoID || '')
-    const channel = useGetCurrentChannelQuery(null)
+    const video = useGetVideoQuery(videoID)
+    const currentChannel = useGetCurrentChannelQuery(null)
+    const channel = useGetChannelQuery(video.data?.channel_id)
 
   return video.isSuccess ? (
     <div>
         <section style = {{maxWidth: '60%'}}>
             <p className = 'title'>{video.data?.title}</p>
-            <ReactPlayer url = {`/storage/${video.data?.pathName}`} controls = {true}/> 
+            <ReactPlayer url = {`/storage/${video.data?.pathName}`} controls = {true} playing/> 
             <div className = 'alignRow likesDislikes'>
                 <p className = 'views smallGray'>{video.data?.views.toLocaleString()} views</p>
                 <i className = 'fa fa-thumbs-up'/>
@@ -24,7 +26,8 @@ export default function VideoPage() {
                 <button>Save</button>
             </div>
             <hr className = 'mt-0-mb-4'/>
-            <button type = 'button' className = 'subscribe'>Subscribe</button>
+
+            {channel.data?.id != currentChannel.data?.id ? <button type = 'button' className = 'subscribe'>Subscribe</button> : <button className = 'edit' type = 'button'>Edit</button>}
             <section style = {{display: 'flex', columnGap: '10px'}}>
                 <Link to = {`/channel/${channel.data?.id}`}>
                 <img className = 'logo' style = {{width: '50px', height: '50px'}} src = {`/storage/${channel.data?.logo}`} alt = ''/>
