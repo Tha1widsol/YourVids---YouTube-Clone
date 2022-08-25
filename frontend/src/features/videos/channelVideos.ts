@@ -21,7 +21,7 @@ export const channelVideosApi = createApi({
     baseQuery: fetchBaseQuery({baseUrl: '/api/'}),
     endpoints: (builder) => ({
         getChannelVideos: builder.query<VideosProps['values'], string>({
-            query: (id) => `getchannelVideos?id=${id}`
+            query: (id) => `getChannelVideos?id=${id}`
         })
     })
 })

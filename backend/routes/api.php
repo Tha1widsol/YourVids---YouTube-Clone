@@ -26,7 +26,7 @@ Route::post('/login',[UserController::class,'login']);
 Route::get('/checkAuth',[UserController::class,'checkAuth']);
 Route::get('/getChannel',[ChannelController::class,'getChannel']);
 Route::get('/getVideo',[VideoController::class, 'getVideo']);
-Route::get('/channelVideos',[VideoController::class,'getChannelVideos']);
+Route::get('/getChannelVideos',[VideoController::class,'getChannelVideos']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getUser',[UserController::class,'getUser']);
