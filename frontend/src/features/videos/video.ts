@@ -4,6 +4,7 @@ export interface VideoProps{
     values: {
         id: number
         title: string
+        channel_id: number
         description: string
         views: number
         likes: number
@@ -20,7 +21,7 @@ export const videoApi = createApi({
     reducerPath: 'videoAPI',
     baseQuery: fetchBaseQuery({baseUrl: '/api/'}),
     endpoints: (builder) => ({
-        getVideo: builder.query<VideoProps['values'], string>({
+        getVideo: builder.query<VideoProps['values'], string | number | undefined>({
             query: (id) => `getVideo?id=${id}`
         })
     })
