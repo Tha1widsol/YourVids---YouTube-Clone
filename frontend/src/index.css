@@ -48,9 +48,11 @@ Button styles
 
 button{
   cursor: pointer;
+  border-radius: 5px;
   position: relative;
   border-style: solid;
-  border-color: black;
+  padding: 5px;
+  border-color: darkgreen;
   display: inline-block;
   font-size: 16px;
   margin: 15px 2px;
@@ -58,10 +60,14 @@ button{
   height: auto;
   text-align: center;
   text-decoration: none;
+  background-color: white;
+  color: darkgreen;
 }
 
+
 button:hover{
-  color: gray;
+  color: white;
+  background-color: green;
   opacity: 0.8;
 }
 
@@ -81,7 +87,7 @@ Image styles
 
 .banner{
   width: 100%;
-  height: 270px;
+  height: 200px;
   object-fit: cover;
   border-radius: 5px;
   margin-bottom: 20px;
