@@ -5,7 +5,7 @@ export const currentChannelApi = createApi({
     reducerPath: 'currentChannelAPI',
     baseQuery: fetchBaseQuery({baseUrl:' /api/'}),
     endpoints: (builder) => ({
-        getCurrentChannel: builder.query<ChannelProps['values'], null>({
+        getCurrentChannel: builder.query<ChannelProps['values'], null | undefined>({
             query: () => 'getCurrentChannel'
         })
     })

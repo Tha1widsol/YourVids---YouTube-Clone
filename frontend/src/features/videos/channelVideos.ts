@@ -20,7 +20,7 @@ export const channelVideosApi = createApi({
     reducerPath: 'channelVideosApi',
     baseQuery: fetchBaseQuery({baseUrl: '/api/'}),
     endpoints: (builder) => ({
-        getChannelVideos: builder.query<VideosProps['values'], string>({
+        getChannelVideos: builder.query<VideosProps['values'], string | number>({
             query: (id) => `getChannelVideos?id=${id}`
         })
     })
