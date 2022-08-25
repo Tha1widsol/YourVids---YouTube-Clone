@@ -28,11 +28,24 @@
     overflow-y: auto;
 }
 
-.subscribe{
+
+
+.subscribe, .edit{
     float: right;
     padding: 10px;
     margin-left: 20px;
     color: white;
+}
+
+.subscribe{
     background-color: darkgreen;
 }
 
+.edit{
+    background-color: blue;
+}
+
+.edit:hover{
+    background-color: blue;
+    opacity: 0.5;
+}
