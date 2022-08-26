@@ -32,6 +32,7 @@ class VideoController extends Controller
             $video->pathName = $filePath;
         }
 
+        $video->length = $request->length;
         $video->channel_id = $channel_id;
         $video->save();
 
