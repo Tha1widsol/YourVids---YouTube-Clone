@@ -1,15 +1,43 @@
 import axios from 'axios'
 import React,{useState} from 'react'
-import {FileProps} from '../../app/types/files'
+import {FileProps, VideoProps} from '../../app/types/files'
 import { useGetCurrentChannelQuery } from '../../features/channels/currentChannel'
 
 export default function VideoFormPage() {
   const [title, setTitle] = useState({value: '', maxlength: 100})
-  const [video, setVideo] = useState<FileProps>({value: '', name: ''})
+  const [video, setVideo] = useState<VideoProps>({value: '', name: '', length: '0'})
   const [thumbnail, setThumbnail] = useState<FileProps>({value: '', name: ''})
   const [description, setDescription] = useState({value: '', maxlength: 5000})
   const [category, setCategory] = useState({value: ''})
   const currentChannel = useGetCurrentChannelQuery(null)
+
+  const convertHMS = (secs: number) => {
+    let hours = Math.floor(secs / 3600) // get hours
+    let minutes = Math.floor((secs - (hours * 3600)) / 60); // get minutes
+    let seconds = secs - (hours * 3600) - (minutes * 60); //  get seconds
+    let formatedHours = ''
+    let formatedMins = ''
+    let formatedSecs = ''
+
+    // add 0 if value < 10; Example: 2 => 02
+    
+    if (hours  < 10) formatedHours  = '0' + Math.round(hours)
+    if (minutes < 10) formatedMins = '0' + Math.round(minutes)
+    if (seconds < 10) formatedSecs = '0' + Math.round(seconds)
+
+    return `${formatedHours}:${formatedMins}:${formatedSecs}`; // Return is HH : MM : SS
+}
+  
+  function handleSetFile(e: React.ChangeEvent<HTMLInputElement>){
+    if (!e.target.files) return
+    const vid = document.createElement('video')
+    setVideo({value: e.target.files[0], name: e.target.files[0].name, length: '0'})
+    const fileURL = URL.createObjectURL(e.target.files[0])
+    vid.src = fileURL
+    vid.ondurationchange = () => {
+     setVideo(prev => {return{...prev, length: convertHMS(vid.duration)}})
+    }
+ }
 
   function handleSubmitForm(e: React.SyntheticEvent){
     e.preventDefault()
@@ -20,6 +48,7 @@ export default function VideoFormPage() {
     let form = new FormData()
     form.append('title', title.value)
     form.append('video', video.value, video.name)
+    form.append('length', video.length)
     if (thumbnail.value) form.append('thumbnail', thumbnail.value, thumbnail.name)
     form.append('description', description.value)
     form.append('category', category.value)
@@ -31,14 +60,14 @@ export default function VideoFormPage() {
       }
     })
   }
-  
+
   return (
     <div>
         <form onSubmit = {handleSubmitForm} method = 'post'>
             <h1>Upload/Create a video:</h1>
             <hr className = 'mt-0-mb-4'/>
             <label id = 'video'><p>Video file:</p></label>
-            <input type = 'file' id = 'video' accept = 'video/*,.mkv'  onChange = {e => {if (!e.target.files) return; setVideo({value: e.target.files[0], name: e.target.files[0].name})}}/>
+            <input type = 'file' id = 'video' accept = 'video/*,.mkv'  onChange = {handleSetFile}/>
 
             <label htmlFor = 'videoTitle'><p>Title - {title.maxlength - title.value.length} characters remaining:</p></label>
             <input type = 'text' id = 'videoTitle' className = 'longInput' value = {title.value} onChange = {e => setTitle(prev => {return{...prev, value: e.target.value}})} placeholder = 'Title...' maxLength = {title.maxlength}/>
