@@ -27,7 +27,7 @@ export default function VideoPage() {
             </div>
             <hr className = 'mt-0-mb-4'/>
 
-            {channel.data?.id != currentChannel.data?.id ? <button type = 'button' className = 'subscribe'>Subscribe</button> : <button className = 'edit' type = 'button'>Edit</button>}
+            {channel.data?.id !== currentChannel.data?.id ? <button type = 'button' className = 'subscribe'>Subscribe</button> : <button className = 'edit' type = 'button'>Edit</button>}
             <section style = {{display: 'flex', columnGap: '10px'}}>
                 <Link to = {`/channel/${channel.data?.id}`}>
                 <img className = 'logo' style = {{width: '50px', height: '50px'}} src = {`/storage/${channel.data?.logo}`} alt = ''/>
