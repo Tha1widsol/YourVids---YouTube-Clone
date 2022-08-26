@@ -14,12 +14,15 @@ export default function ChannelVideos({id}: {id: string | number}) {
                 return (
                     <Link to = {`/video/${video.id}`} key = {index}>
                         <div className = 'videoContainer' >
-                            <img className = 'thumbnail' src = {`/storage/${video.thumbnail || video.pathName}`} alt = ''/>
+                            <div className = 'thumbnailContainer'>
+                               <img className = 'thumbnail' src = {`/storage/${video.thumbnail || video.pathName}`} alt = ''/>
+                               <p className = 'duration'>{video.length}</p>
+                            </div>
                             <b><p>{video.title}</p></b>
                             <p className = 'smallGray'>
                                 {video.views} views
                                 - {video.created_at.slice(0, 10)}
-                                </p>
+                            </p>
                         </div>
                     </Link>
                 )
