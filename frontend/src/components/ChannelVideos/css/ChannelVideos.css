@@ -3,6 +3,21 @@
     height: 100px;
 }
 
+.thumbnailContainer{
+    position: relative;
+    color: white;
+    font-size: 12px;
+}
+
+.duration{
+    position: absolute;
+    padding: 0px 3px 0px 3px;
+    border-radius: 2px;
+    background-color: black;
+    bottom: -5px;
+    right: 5px;
+}
+
 .videosContainer{
     display: flex;
     flex-wrap: wrap;
