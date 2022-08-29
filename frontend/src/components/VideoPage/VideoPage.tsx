@@ -16,7 +16,7 @@ export default function VideoPage() {
     <div>
         <section style = {{maxWidth: '60%'}}>
             <p className = 'title'>{video.data?.title}</p>
-            <ReactPlayer url = {`/storage/${video.data?.pathName}`} controls = {true} playing/> 
+            <ReactPlayer url = {`/storage/${video.data?.pathName}`} controls playing/> 
             <div className = 'alignRow likesDislikes'>
                 <p className = 'views smallGray'>{video.data?.views.toLocaleString()} views</p>
                 <i className = 'fa fa-thumbs-up'/>
