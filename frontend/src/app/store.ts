@@ -4,6 +4,7 @@ import {
     persistReducer
   } from 'redux-persist'
 import userReducer from '../features/Auth/auth'
+import VideoProgressReducer from '../features/videos/videoProgress'
 import {channelsApi} from '../features/channels/channels'
 import { channelApi } from '../features/channels/channel'
 import { currentChannelApi } from '../features/channels/currentChannel'
@@ -14,12 +15,13 @@ import storage from 'redux-persist/lib/storage'
   const persistConfig = {
     key: 'root',
     version: 1,
-    blacklist: [channelsApi.reducerPath, channelApi.reducerPath, videoApi.reducerPath, currentChannelApi.reducerPath, channelVideosApi.reducerPath],
+    whitelist: ['user'],
     storage,
   }
   
   const reducers = combineReducers({
     user: userReducer,
+    videoProgress: VideoProgressReducer,
     [channelsApi.reducerPath]: channelsApi.reducer,
     [channelApi.reducerPath]: channelApi.reducer,
     [currentChannelApi.reducerPath]: currentChannelApi.reducer,
