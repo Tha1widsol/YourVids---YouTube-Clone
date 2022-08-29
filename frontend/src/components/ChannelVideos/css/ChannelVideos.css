@@ -18,6 +18,10 @@
     right: 5px;
 }
 
+.disable{
+    opacity: 1
+}
+
 .videosContainer{
     display: flex;
     flex-wrap: wrap;
