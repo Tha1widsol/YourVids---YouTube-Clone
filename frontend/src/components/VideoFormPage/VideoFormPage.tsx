@@ -4,15 +4,17 @@ import {FileProps, VideoProps} from '../../app/types/files'
 import { useAppDispatch } from '../../app/hooks'
 import { setProgress } from '../../features/videos/videoProgress'
 import { useGetCurrentChannelQuery } from '../../features/channels/currentChannel'
+import ReactPlayer from 'react-player'
 
 export default function VideoFormPage() {
   const dispatch = useAppDispatch()
   const [title, setTitle] = useState({value: '', maxlength: 100})
-  const [video, setVideo] = useState<VideoProps>({value: '', name: '', length: '0'})
+  const [video, setVideo] = useState<VideoProps>({value: '', name: '', length: ''})
   const [thumbnail, setThumbnail] = useState<FileProps>({value: '', name: ''})
   const [description, setDescription] = useState({value: '', maxlength: 5000})
   const [category, setCategory] = useState({value: ''})
   const currentChannel = useGetCurrentChannelQuery(null)
+  const [videoFilePath, setVideoFilePath] = useState('')
   
   const convertHMS = (secs: number) => {
     let hours = Math.floor(secs / 3600) // get hours
@@ -34,12 +36,12 @@ export default function VideoFormPage() {
 function handleSetFile(e: React.ChangeEvent<HTMLInputElement>){
     if (!e.target.files) return
     const vid = document.createElement('video')
+    setVideoFilePath(URL.createObjectURL(e.target.files[0]));
     setVideo({value: e.target.files[0], name: e.target.files[0].name, length: '0'})
     const fileURL = URL.createObjectURL(e.target.files[0])
     vid.src = fileURL
     vid.ondurationchange = () => {
      setVideo(prev => {return{...prev, length: convertHMS(vid.duration)}})
-     console.log(convertHMS(vid.duration))
     }
  }
 
@@ -57,10 +59,10 @@ function handleSetFile(e: React.ChangeEvent<HTMLInputElement>){
     let form = new FormData()
     form.append('title', title.value)
     form.append('video', video.value, video.name)
-    form.append('length', video.length)
     if (thumbnail.value) form.append('thumbnail', thumbnail.value, thumbnail.name)
     form.append('description', description.value)
     form.append('category', category.value)
+    form.append('length', video.length)
     
     axios.post(`/api/createVideo?id=${currentChannel.data?.id}`,form, requestOptions)
     .then(response => {
@@ -73,6 +75,8 @@ function handleSetFile(e: React.ChangeEvent<HTMLInputElement>){
   return (
       <form onSubmit = {handleSubmitForm} method = 'post'>
           <h1>Upload/Create a video:</h1>
+          {videoFilePath ? <p>Preview:</p> : null}
+          <ReactPlayer url = {videoFilePath} width = '100%' height = '100%' controls/>
           <hr className = 'mt-0-mb-4'/>
           <label id = 'video'><p>Video file:</p></label>
           <input type = 'file' id = 'video' accept = 'video/*,.mkv'  onChange = {handleSetFile}/>
