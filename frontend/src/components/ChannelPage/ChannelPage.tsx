@@ -8,7 +8,7 @@ import './css/ChannelPage.css'
 export default function ChannelPage() {
     const {channelID} = useParams()
     const currentChannel = useGetCurrentChannelQuery(null)
-    const channel = useGetChannelQuery(channelID || '')
+    const channel = useGetChannelQuery(channelID)
     
   return (
     <div>
@@ -25,7 +25,7 @@ export default function ChannelPage() {
         </div>
          
          <div>
-            {channelID != currentChannel.data?.id ? 
+            {Number(channelID) !== currentChannel.data?.id ? 
             <>
             <button>Subscribe</button> 
             <button>Notify</button>
