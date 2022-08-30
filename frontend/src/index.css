@@ -119,3 +119,26 @@ textarea{
 Icon styles
 ##################*/
 
+
+
+  /* ################
+Skeleton styles
+##################*/
+.skeleton{
+  animation: skeleton-loading 1s linear infinite alternate;
+  background-size: cover;
+}
+
+@keyframes skeleton-loading{
+  0%{
+      background-color: hsl(200, 20%, 70%);
+  }
+
+  100%{
+      background-color: hsl(200, 20%, 95%);
+  }
+}
+
+.blank{
+  background-color: lightgreen;
+}
