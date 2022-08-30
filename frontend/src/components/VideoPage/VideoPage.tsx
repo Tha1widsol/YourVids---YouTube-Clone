@@ -1,22 +1,40 @@
-import React from 'react'
+import React,{useState, useEffect} from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useGetVideoQuery } from '../../features/videos/video'
 import { useGetCurrentChannelQuery } from '../../features/channels/currentChannel'
 import { useGetChannelQuery } from '../../features/channels/channel'
+
 import ReactPlayer from 'react-player'
 import './css/VideoPage.css'
+import axios from 'axios'
 
 export default function VideoPage() {
     const {videoID} = useParams()
     const video = useGetVideoQuery(videoID)
     const currentChannel = useGetCurrentChannelQuery(null)
     const channel = useGetChannelQuery(video.data?.channel_id)
+    const [videoFilePath, setVideoFilePath] = useState('')
+
+    useEffect(() => {
+        axios({
+            method: 'get',
+            url: `/storage/${video.data?.pathName}`,
+            responseType: 'blob',
+        })
+
+        .then(response => {
+            const blob = response.data
+            const url = URL.createObjectURL(blob);
+            setVideoFilePath(url)
+        })
+    },[video.data?.pathName])
 
   return video.isSuccess ? (
     <div>
         <section style = {{maxWidth: '60%'}}>
             <p className = 'title'>{video.data?.title}</p>
-            <ReactPlayer url = {`/storage/${video.data?.pathName}`} controls playing/> 
+            <ReactPlayer className = 'skeleton' url = {videoFilePath} controls playing/> 
+           
             <div className = 'alignRow likesDislikes'>
                 <p className = 'views smallGray'>{video.data?.views.toLocaleString()} views</p>
                 <i className = 'fa fa-thumbs-up'/>
