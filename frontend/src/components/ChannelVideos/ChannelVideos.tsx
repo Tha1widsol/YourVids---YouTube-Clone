@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAppSelector } from '../../app/hooks'
 import { useGetChannelVideosQuery } from '../../features/videos/channelVideos'
+import ReactPlayer from 'react-player'
 import './css/ChannelVideos.css'
 
 export default function ChannelVideos({id}: {id: string | number}) {
@@ -18,7 +19,7 @@ export default function ChannelVideos({id}: {id: string | number}) {
                     <Link to = {`/video/${video.id}`} key = {index}>
                         <div className = 'videoContainer'>
                             <div className = 'thumbnailContainer'>
-                               <img className = 'thumbnail' src = {`/storage/${video.thumbnail || video.pathName}`} alt = ''/>
+                            <ReactPlayer width = '200px' height = '100px' url = {`/storage/${video.pathName}` } light = {video.thumbnail ? `/storage/${video.thumbnail}` : false} playIcon = {<></>}/>
                                <p className = 'duration'>{video.length}</p>
                             </div>
                             <b><p>{video.title}</p></b>
