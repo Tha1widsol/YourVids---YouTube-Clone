@@ -1,20 +1,19 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { VideosProps } from '../../features/videos/channelVideos'
 import { useAppSelector } from '../../app/hooks'
-import { useGetChannelVideosQuery } from '../../features/videos/channelVideos'
 import ReactPlayer from 'react-player'
-import './css/ChannelVideos.css'
+import './css/Videos.css'
 
-export default function ChannelVideos({id}: {id: string | number}) {
-  const videos = useGetChannelVideosQuery(id)
+export default function Videos({videos, isRow = true, isOwnVideos = false}: {videos: VideosProps['values'] | undefined, isRow?: boolean, isOwnVideos?: boolean}) {
   const videoProgress = useAppSelector(state => state.videoProgress.value)
   
-  return videos.isSuccess ? (
+  return videos ? (
     <>
-       {videos.data?.length ? 
+       {videos?.length ? 
        <>
-          <section className = 'videosContainer'>
-                {videos.data?.map((video, index) =>{
+          <section className = {`videosContainer ${isRow ? 'row' : 'col'} `}>
+                {videos?.map((video, index) =>{
                 return (
                     <Link to = {`/video/${video.id}`} key = {index}>
                         <div className = 'videoContainer'>
@@ -31,7 +30,7 @@ export default function ChannelVideos({id}: {id: string | number}) {
                     </Link>
                 )
                 })}
-                {videoProgress > 0 ? 
+                {isOwnVideos && videoProgress > 0 ? 
                     <div className = 'thumbnail skeleton center'>
                         <p>Progress - {videoProgress}</p>
                     </div>

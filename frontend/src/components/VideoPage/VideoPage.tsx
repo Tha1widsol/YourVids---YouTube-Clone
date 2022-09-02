@@ -35,7 +35,7 @@ export default function VideoPage() {
             <p className = 'title'>{video.data?.title}</p>
             <ReactPlayer className = 'skeleton' url = {videoFilePath} controls playing/> 
            
-            <div className = 'alignRow likesDislikes'>
+            <div className = 'row likesDislikes'>
                 <p className = 'views smallGray'>{video.data?.views.toLocaleString()} views</p>
                 <i className = 'fa fa-thumbs-up'/>
                 <p>{video.data?.likes}</p>

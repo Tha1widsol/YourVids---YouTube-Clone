@@ -4,6 +4,7 @@
 
 
 .likesDislikes{
+    align-items: center;
     gap: 17px;
 }
 

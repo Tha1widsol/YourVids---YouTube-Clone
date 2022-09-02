@@ -1,13 +1,15 @@
 import React from 'react'
 import {useGetChannelQuery} from '../../features/channels/channel'
+import { useGetChannelVideosQuery } from '../../features/videos/channelVideos'
 import { useGetCurrentChannelQuery } from '../../features/channels/currentChannel'
 import {Link, useParams} from 'react-router-dom'
-import ChannelVideos from '../ChannelVideos/ChannelVideos'
+import Videos from '../Videos/Videos'
 import './css/ChannelPage.css'
 
 export default function ChannelPage() {
     const {channelID} = useParams()
     const currentChannel = useGetCurrentChannelQuery(null)
+    const videos = useGetChannelVideosQuery(currentChannel.data?.id || '')
     const channel = useGetChannelQuery(channelID)
     
   return (
@@ -42,7 +44,7 @@ export default function ChannelPage() {
       
         <hr className = 'mt-0-mb-4'/>
         <p>Videos:</p>
-        <ChannelVideos id = {channel.data?.id || ''}/>
+        <Videos videos = {videos.data} isOwnVideos = {true}/>
       </>
       : channel.isLoading ? 
       <>
