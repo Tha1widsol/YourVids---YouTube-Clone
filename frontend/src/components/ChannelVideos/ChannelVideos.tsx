@@ -32,7 +32,7 @@ export default function ChannelVideos({id}: {id: string | number}) {
                 )
                 })}
                 {videoProgress > 0 ? 
-                    <div className = 'thumbnail'>
+                    <div className = 'thumbnail skeleton center'>
                         <p>Progress - {videoProgress}</p>
                     </div>
                 : null}
