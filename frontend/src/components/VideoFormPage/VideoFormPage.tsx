@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React,{useState} from 'react'
+import { useNavigate } from 'react-router-dom'
 import {FileProps, VideoProps} from '../../app/types/files'
 import { useAppDispatch } from '../../app/hooks'
 import { setProgress } from '../../features/videos/videoProgress'
@@ -8,6 +9,7 @@ import ReactPlayer from 'react-player'
 
 export default function VideoFormPage() {
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const [title, setTitle] = useState({value: '', maxlength: 100})
   const [video, setVideo] = useState<VideoProps>({value: '', name: '', length: ''})
   const [thumbnail, setThumbnail] = useState<FileProps>({value: '', name: ''})
@@ -67,7 +69,7 @@ function handleSetFile(e: React.ChangeEvent<HTMLInputElement>){
     axios.post(`/api/createVideo?id=${currentChannel.data?.id}`,form, requestOptions)
     .then(response => {
       if (response.status === 200){
-        console.log(response.data)
+        navigate('/videos')
       }
     })
   }
