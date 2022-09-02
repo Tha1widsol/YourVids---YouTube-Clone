@@ -11,9 +11,12 @@ body{
   -moz-osx-font-smoothing: grayscale;
 }
 
-.alignRow{
+.row, .col{
   display: flex;
-  align-items: center;
+}
+
+.col{
+  flex-direction: column;
 }
 
 .smallGray{
