@@ -58,4 +58,11 @@ class VideoController extends Controller
         return $videos;
     }
 
+    public function getHomeVideos(){
+        $videos = DB::table('videos')->get();
+        if (!$videos) throw new \ErrorException;
+        return $videos;
+    }
+
+
 }
