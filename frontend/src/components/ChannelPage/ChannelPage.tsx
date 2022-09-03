@@ -5,12 +5,26 @@ import { useGetCurrentChannelQuery } from '../../features/channels/currentChanne
 import {Link, useParams} from 'react-router-dom'
 import Videos from '../Videos/Videos'
 import './css/ChannelPage.css'
+import axios from 'axios'
 
 export default function ChannelPage() {
     const {channelID} = useParams()
     const currentChannel = useGetCurrentChannelQuery(null)
     const videos = useGetChannelVideosQuery(currentChannel.data?.id || '')
     const channel = useGetChannelQuery(channelID)
+
+    function handleSubscribe(e: React.SyntheticEvent){
+      e.preventDefault()
+      const requestOptions = {
+        headers: {'Content-Type': 'multipart/form-data'}
+      }
+      axios.put(`/api/subscribe?id=${channelID}`,null, requestOptions)
+      .then(response => {
+        if (response.status === 200) {
+           channel.refetch()
+        }
+      })
+    }
     
   return (
     <div>
@@ -29,7 +43,7 @@ export default function ChannelPage() {
          <div>
             {Number(channelID) !== currentChannel.data?.id ? 
             <>
-            <button>Subscribe</button> 
+            <button onClick = {handleSubscribe}>Subscribe</button> 
             <button>Notify</button>
             </>
             : 
