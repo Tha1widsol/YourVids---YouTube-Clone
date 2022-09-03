@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth, DB;
 use App\Models\Channel;
+use App\Models\Subscription;
 
 class ChannelController extends Controller
 {
@@ -66,4 +67,18 @@ class ChannelController extends Controller
         DB::table('channels')->where('id', $channel_id)->update(['active' => true]);
     }
 
-}
+    public function subscribe(Request $request){
+        $lookup_url_kwarg = 'id';
+        $channel_id = $request->$lookup_url_kwarg;
+        $user = Auth::user();
+        $userChannel = DB::table('channels')->where('user_id', $user->id)->where('active', true)->first();
+        $channel = DB::table('channels')->where('id', $channel_id)->first();
+        $newSubscription = new Subscription;
+        $newSubscription->subscriber_id = $channel->id;
+        $newSubscription->subscribing_id = $userChannel->id;
+        $newSubscription->save();
+        $subCount = $channel->subscribers + 1;
+        DB::table('channels')->where('id', $channel_id)->update(['subscribers' => $subCount]);
+    }
+
+}      
