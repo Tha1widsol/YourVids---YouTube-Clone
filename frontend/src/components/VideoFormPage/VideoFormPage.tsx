@@ -67,11 +67,7 @@ function handleSetFile(e: React.ChangeEvent<HTMLInputElement>){
     form.append('length', video.length)
     
     axios.post(`/api/createVideo?id=${currentChannel.data?.id}`,form, requestOptions)
-    .then(response => {
-      if (response.status === 200){
-        navigate('/videos')
-      }
-    })
+    navigate('/videos')
   }
 
   return (
