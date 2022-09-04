@@ -71,14 +71,11 @@ class ChannelController extends Controller
         $lookup_url_kwarg = 'id';
         $channel_id = $request->$lookup_url_kwarg;
         $user = Auth::user();
-        $userChannel = DB::table('channels')->where('user_id', $user->id)->where('active', true)->first();
-        $channel = DB::table('channels')->where('id', $channel_id)->first();
-        $newSubscription = new Subscription;
-        $newSubscription->subscriber_id = $channel->id;
-        $newSubscription->subscribing_id = $userChannel->id;
-        $newSubscription->save();
+        $userChannel = Channel::where('user_id', $user->id)->where('active', true)->first();
+        $channel = Channel::where('id', $channel_id)->first();
+        $userChannel->subscribing()->attach($channel);
         $subCount = $channel->subscribers + 1;
-        DB::table('channels')->where('id', $channel_id)->update(['subscribers' => $subCount]);
+        Channel::where('id', $channel_id)->update(['subscribers' => $subCount]);
     }
 
 }      
