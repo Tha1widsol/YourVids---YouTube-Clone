@@ -78,4 +78,24 @@ class ChannelController extends Controller
         Channel::where('id', $channel_id)->update(['subscribers' => $subCount]);
     }
 
+    public function unsubscribe(Request $request){
+        $lookup_url_kwarg = 'id';
+        $channel_id = $request->$lookup_url_kwarg;
+        $user = Auth::user();
+        $userChannel = Channel::where('user_id', $user->id)->where('active', true)->first();
+        $channel = Channel::where('id', $channel_id)->first();
+        $userChannel->subscribing()->detach($channel);
+        $subCount = $channel->subscribers - 1;
+        Channel::where('id', $channel_id)->update(['subscribers' => $subCount]);
+    }
+
+    public function getSubscribers(Request $request){
+        $lookup_url_kwarg = 'id';
+        $channel_id = $request->$lookup_url_kwarg;
+        $channel = Channel::where('id', $channel_id)->first();
+        if (!$channel) throw new \ErrorException();
+        $subscribers = $channel->subscribers()->get();
+        return $subscribers;
+    }
+
 }      
