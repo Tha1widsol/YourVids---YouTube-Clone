@@ -42,7 +42,7 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
         <>
       
         <p>No videos posted...</p>
-        <Link to = '/upload'><button>Upload</button></Link>
+        {isOwnVideos ? <Link to = '/upload'><button>Upload</button></Link> : null}
         </>}
     </>
   ) : <p>Loading...</p>
