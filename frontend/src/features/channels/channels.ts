@@ -14,7 +14,7 @@ export interface ChannelProps{
     }
 }
 
-interface ChannelsProps{
+export interface ChannelsProps{
     values:
     [{
     id: number
