@@ -1,7 +1,8 @@
-import React from 'react'
+import React,{useState, useEffect} from 'react'
 import {useGetChannelQuery} from '../../features/channels/channel'
 import { useGetChannelVideosQuery } from '../../features/videos/channelVideos'
 import { useGetCurrentChannelQuery } from '../../features/channels/currentChannel'
+import { useGetSubscribersQuery } from '../../features/subscribers/getSubscribers'
 import {Link, useParams} from 'react-router-dom'
 import Videos from '../Videos/Videos'
 import './css/ChannelPage.css'
@@ -10,18 +11,24 @@ import axios from 'axios'
 export default function ChannelPage() {
     const {channelID} = useParams()
     const currentChannel = useGetCurrentChannelQuery(null)
-    const videos = useGetChannelVideosQuery(currentChannel.data?.id || '')
+    const videos = useGetChannelVideosQuery(channelID || '')
+    const [alreadySubscribed, setAlreadySubscribed] = useState(false)
     const channel = useGetChannelQuery(channelID)
+    const subscribers = useGetSubscribersQuery(channelID)
 
-    function handleSubscribe(e: React.SyntheticEvent){
-      e.preventDefault()
+    useEffect(() => {
+      if (subscribers.data?.find(sub => sub.id === currentChannel.data?.id)) setAlreadySubscribed(true)
+    },[currentChannel?.data?.id, subscribers.data])
+
+    function handleToggleSubscribe(isSubscribing = true){
       const requestOptions = {
         headers: {'Content-Type': 'multipart/form-data'}
       }
-      axios.put(`/api/subscribe?id=${channelID}`,null, requestOptions)
+      axios.put(`/api/${isSubscribing ? 'subscribe' : 'unsubscribe'}?id=${channelID}`,null, requestOptions)
       .then(response => {
         if (response.status === 200) {
-           channel.refetch()
+            setAlreadySubscribed(isSubscribing ? true : false)
+            channel.refetch()
         }
       })
     }
@@ -43,7 +50,8 @@ export default function ChannelPage() {
          <div>
             {Number(channelID) !== currentChannel.data?.id ? 
             <>
-            <button onClick = {handleSubscribe}>Subscribe</button> 
+            {!alreadySubscribed ? <button type = 'button' onClick = {() => handleToggleSubscribe()}>Subscribe</button> : <button type = 'button' className = 'unsubscribe' onClick = {() => handleToggleSubscribe(false)}>Unsubscribe</button>}
+          
             <button>Notify</button>
             </>
             : 
@@ -58,7 +66,7 @@ export default function ChannelPage() {
       
         <hr className = 'mt-0-mb-4'/>
         <p>Videos:</p>
-        <Videos videos = {videos.data} isOwnVideos = {true}/>
+        <Videos videos = {videos.data} isOwnVideos = {Number(channelID) === currentChannel.data?.id}/>
       </>
       : channel.isLoading ? 
       <>
