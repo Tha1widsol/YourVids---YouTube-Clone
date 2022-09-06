@@ -3,7 +3,7 @@ import {useGetChannelQuery} from '../../features/channels/channel'
 import { useGetChannelVideosQuery } from '../../features/videos/channelVideos'
 import { useGetCurrentChannelQuery } from '../../features/channels/currentChannel'
 import { useGetSubscribersQuery } from '../../features/subscribers/getSubscribers'
-import {Link, useParams} from 'react-router-dom'
+import {Link, useNavigate, useParams} from 'react-router-dom'
 import Videos from '../Videos/Videos'
 import './css/ChannelPage.css'
 import axios from 'axios'
@@ -15,12 +15,15 @@ export default function ChannelPage() {
     const [alreadySubscribed, setAlreadySubscribed] = useState(false)
     const channel = useGetChannelQuery(channelID)
     const subscribers = useGetSubscribersQuery(channelID)
+    const navigate = useNavigate()
 
     useEffect(() => {
       if (subscribers.data?.find(sub => sub.id === currentChannel.data?.id)) setAlreadySubscribed(true)
     },[currentChannel?.data?.id, subscribers.data])
 
     function handleToggleSubscribe(isSubscribing = true){
+      if (currentChannel.isError) navigate('/login')
+
       const requestOptions = {
         headers: {'Content-Type': 'multipart/form-data'}
       }
