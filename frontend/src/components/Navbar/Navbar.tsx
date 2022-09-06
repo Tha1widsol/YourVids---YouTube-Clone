@@ -30,6 +30,7 @@ export default function Navbar() {
     .then(response => {
       if (response.status === 200) {
         currentChannel.refetch()
+        window.location.reload()
         setDropdown({menu: true, channels: true})
       }
     })
