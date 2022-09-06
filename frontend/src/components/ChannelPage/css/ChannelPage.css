@@ -3,3 +3,12 @@
     justify-content: space-between;
     margin: 0px 25px 0px 25px;
 }
+
+.unsubscribe{
+    color: red;
+    border-color: red;
+}
+
+.unsubscribe:hover{
+    background-color: red;
+}
