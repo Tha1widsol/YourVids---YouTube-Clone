@@ -2,6 +2,17 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export interface VideoProps{
     values: {
+        channel: {
+            id: number
+            name: string
+            description: string
+            subscribers: number
+            views: number
+            logo: string
+            banner: string
+            created_at: string
+            active: boolean
+        }
         id: number
         title: string
         channel_id: number

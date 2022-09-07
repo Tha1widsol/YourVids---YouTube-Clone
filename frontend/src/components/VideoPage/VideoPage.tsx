@@ -2,8 +2,6 @@ import React,{useState, useEffect} from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useGetVideoQuery } from '../../features/videos/video'
 import { useGetCurrentChannelQuery } from '../../features/channels/currentChannel'
-import { useGetChannelQuery } from '../../features/channels/channel'
-
 import ReactPlayer from 'react-player'
 import './css/VideoPage.css'
 import axios from 'axios'
@@ -12,10 +10,10 @@ export default function VideoPage() {
     const {videoID} = useParams()
     const video = useGetVideoQuery(videoID)
     const currentChannel = useGetCurrentChannelQuery(null)
-    const channel = useGetChannelQuery(video.data?.channel_id)
     const [videoFilePath, setVideoFilePath] = useState('')
 
     useEffect(() => {
+        if (!video.data?.pathName) return
         axios({
             method: 'get',
             url: `/storage/${video.data?.pathName}`,
@@ -45,13 +43,13 @@ export default function VideoPage() {
             </div>
             <hr className = 'mt-0-mb-4'/>
 
-            {channel.data?.id !== currentChannel.data?.id ? <button type = 'button' className = 'subscribe'>Subscribe</button> : <button className = 'edit' type = 'button'>Edit</button>}
+            {video.data.channel_id !== currentChannel.data?.id ? <button type = 'button' className = 'subscribe'>Subscribe</button> : <button className = 'edit' type = 'button'>Edit</button>}
             <section style = {{display: 'flex', columnGap: '10px'}}>
-                <Link to = {`/channel/${channel.data?.id}`}>
-                <img className = 'logo' style = {{width: '50px', height: '50px'}} src = {`/storage/${channel.data?.logo}`} alt = ''/>
+                <Link to = {`/channel/${video.data.channel_id}`}>
+                {video.data?.channel?.logo ?   <img className = 'logo' style = {{width: '50px', height: '50px'}} src = {`/storage/${video.data?.channel?.logo}`} alt = ''/> : null}
                 <div>
-                    <p>{channel.data?.name}</p>
-                    <p className = 'smallGray'>{channel.data?.subscribers} subscribers</p>
+                    <p>{video.data?.channel?.name}</p>
+                    <p className = 'smallGray'>{video.data?.channel?.subscribers} subscribers</p>
                 </div>
                 </Link>
             </section>

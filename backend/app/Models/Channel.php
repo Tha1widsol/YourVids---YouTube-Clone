@@ -16,11 +16,15 @@ class Channel extends Model
     }
     
     public function subscribing() {
-        return $this->belongsToMany(Channel::class, 'subscriptions', 'subscriber_id', 'subscribing_id')->withTimestamps();;
+        return $this->belongsToMany(Channel::class, 'subscriptions', 'subscriber_id', 'subscribing_id')->withTimestamps();
     }
     
     public function subscribers() {
-        return $this->belongsToMany(channel::class, 'subscriptions', 'subscribing_id', 'subscriber_id')->withTimestamps();;
+        return $this->belongsToMany(channel::class, 'subscriptions', 'subscribing_id', 'subscriber_id')->withTimestamps();
+    }
+
+    public function videos(){
+        return $this->hasMany('App\Models\Video', 'channel_id');
     }
 
 

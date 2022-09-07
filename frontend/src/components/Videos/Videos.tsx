@@ -22,10 +22,11 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
                                <p className = 'duration'>{video.length}</p>
                             </div>
                             <b><p>{video.title}</p></b>
-                            <p className = 'smallGray'>
-                                {video.views} views
+                            <div className = 'smallGray'>
+                                <p>{video.channel?.name}</p>
+                                  {video.views} views
                                 - {video.created_at.slice(0, 10)}
-                            </p>
+                            </div>
                         </div>
                     </Link>
                 )

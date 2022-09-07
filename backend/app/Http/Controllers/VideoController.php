@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth, DB, Storage;
 use App\Models\Video;
 use App\Models\Channel;
 use App\Models\Subscription;
-use Illuminate\Support\Str;
 
 class VideoController extends Controller
 {
@@ -36,7 +35,9 @@ class VideoController extends Controller
         }
 
         $video->length = $request->length;
-        $video->channel_id = $channel_id;
+
+        $channel = Channel::where('id', $channel_id)->first();
+        $channel->videos()->save($video);
         $video->save();
 
         return response([
@@ -48,7 +49,7 @@ class VideoController extends Controller
     public function getVideo(Request $request){
         $lookup_url_kwarg = 'id';
         $video_id = $request->$lookup_url_kwarg;
-        $video = DB::table('videos')->where('id', $video_id)->first();
+        $video = Video::with('channel')->where('id', $video_id)->first();
         if (!$video) throw new \ErrorException;
         return $video;
     }
@@ -56,13 +57,13 @@ class VideoController extends Controller
     public function getChannelVideos(Request $request){
         $lookup_url_kwarg = 'id';
         $channel_id = $request->$lookup_url_kwarg;
-        $videos = DB::table('videos')->where('channel_id', $channel_id)->get();
-        if (!$videos) throw new \ErrorException;
+        $channel = Channel::where('id', $channel_id)->first();
+        $videos = Video::with('channel')->where('channel_id', $channel_id)->get();
         return $videos;
     }
 
     public function getHomeVideos(){
-        $videos = DB::table('videos')->get();
+        $videos = Video::with('channel')->get();
         if (!$videos) throw new \ErrorException;
         return $videos;
     }
