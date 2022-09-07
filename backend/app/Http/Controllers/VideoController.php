@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth, DB, Storage;
 use App\Models\Video;
+use App\Models\Channel;
+use App\Models\Subscription;
+use Illuminate\Support\Str;
 
 class VideoController extends Controller
 {
@@ -61,6 +64,24 @@ class VideoController extends Controller
     public function getHomeVideos(){
         $videos = DB::table('videos')->get();
         if (!$videos) throw new \ErrorException;
+        return $videos;
+    }
+
+    public function getSubscriptionVideos(){
+        $videos = collect();
+        $user = Auth::user();
+        $userChannel = Channel::where('user_id', $user->id)->where('active', true)->first();
+        $channels = $userChannel->subscribing()->get();
+        foreach ($channels as $channel){
+            $subscriptions = Subscription::where('subscriber_id', $userChannel->id)->get();
+            foreach ($subscriptions as $subscription){
+                $channelVideos = Video::where('channel_id', $channel->id)->whereDate('created_at','>=',$subscription->created_at)->get();
+                foreach ($channelVideos as $video){
+                    $videos->push($video);
+                 }
+            }
+        }
+        
         return $videos;
     }
 

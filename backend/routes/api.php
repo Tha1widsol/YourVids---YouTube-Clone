@@ -36,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/userChannels',[ChannelController::class, 'getUserChannels']);
     Route::put('/subscribe',[ChannelController::class, 'subscribe']);
     Route::put('/unsubscribe',[ChannelController::class, 'unsubscribe']);
+    Route::get('/getSubscriptionVideos',[VideoController::class, 'getSubscriptionVideos']);
     Route::get('/getSubscribers',[ChannelController::class, 'getSubscribers']);
     Route::get('/getCurrentChannel',[ChannelController::class, 'getCurrentChannel']);
     Route::put('/switchChannel',[ChannelController::class, 'switchChannel']);
