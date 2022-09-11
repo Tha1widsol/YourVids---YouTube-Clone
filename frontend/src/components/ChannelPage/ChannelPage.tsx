@@ -1,8 +1,10 @@
 import React,{useState, useEffect} from 'react'
-import {useGetChannelQuery} from '../../features/channels/channel'
-import { useGetChannelVideosQuery } from '../../features/videos/channelVideos'
-import { useGetCurrentChannelQuery } from '../../features/channels/currentChannel'
-import { useGetSubscribersQuery } from '../../features/subscribers/getSubscribers'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { fetchChannel } from '../../features/channels/channel'
+import { fetchCurrentChannel } from '../../features/channels/currentChannel'
+import { fetchChannelVideos } from '../../features/videos/channelVideos'
+import { fetchChannelSubscribers } from '../../features/channels/channelSubscribers'
+import { incrementSubscribers } from '../../features/channels/channel'
 import {Link, useNavigate, useParams} from 'react-router-dom'
 import Videos from '../Videos/Videos'
 import './css/ChannelPage.css'
@@ -10,19 +12,25 @@ import axios from 'axios'
 
 export default function ChannelPage() {
     const {channelID} = useParams()
-    const currentChannel = useGetCurrentChannelQuery(null)
-    const videos = useGetChannelVideosQuery(channelID || '')
+    const dispatch = useAppDispatch()
+    const channel = useAppSelector(state => state.channel)
+    const currentChannel = useAppSelector(state => state.currentChannel)
+    const videos = useAppSelector(state => state.channelVideos)
+    const subscribers = useAppSelector(state => state.channelSubscribers)
     const [alreadySubscribed, setAlreadySubscribed] = useState(false)
-    const channel = useGetChannelQuery(channelID)
-    const subscribers = useGetSubscribersQuery(channelID)
     const navigate = useNavigate()
 
     useEffect(() => {
-      if (subscribers.data?.find(sub => sub.id === currentChannel.data?.id)) setAlreadySubscribed(true)
-    },[currentChannel?.data?.id, subscribers.data])
+      dispatch(fetchChannel(channelID))
+      dispatch(fetchCurrentChannel())
+      dispatch(fetchChannelSubscribers(channelID))
+      dispatch(fetchChannelVideos(channelID))
+  
+      if (subscribers.values?.find(sub => sub.id === currentChannel.values?.id)) setAlreadySubscribed(true)
+    },[currentChannel?.values?.id, subscribers.values])
 
     function handleToggleSubscribe(isSubscribing = true){
-      if (currentChannel.isError) navigate('/login')
+      if (currentChannel.status === 'rejected') navigate('/login')
 
       const requestOptions = {
         headers: {'Content-Type': 'multipart/form-data'}
@@ -31,27 +39,27 @@ export default function ChannelPage() {
       .then(response => {
         if (response.status === 200) {
             setAlreadySubscribed(isSubscribing ? true : false)
-            channel.refetch()
+            dispatch(incrementSubscribers())
         }
       })
     }
     
   return (
     <div>
-      {channel.isSuccess ? 
+      {channel.status === 'success' ? 
       <>
-        {channel.data?.banner ? <img className = 'banner' src = {`/storage/${channel.data?.banner}`} alt = ''/> : null}
+        {channel.values?.banner ? <img className = 'banner' src = {`/storage/${channel.values?.banner}`} alt = ''/> : null}
        <header className = 'channelHeader'>
         <div style = {{display: 'flex', gap: '20px'}}>
-           {channel.data?.logo ? <img className = 'logo' src = {`/storage/${channel.data?.logo}`} alt = ''/> : null}
+           {channel.values?.logo ? <img className = 'logo' src = {`/storage/${channel.values?.logo}`} alt = ''/> : null}
            <div>
-              <p style = {{fontSize: 'larger'}}>{channel.data?.name}</p>
-              <p style = {{color: 'gray'}}>{channel.data?.subscribers} subscribers</p>
+              <p style = {{fontSize: 'larger'}}>{channel.values?.name}</p>
+              <p style = {{color: 'gray'}}>{channel.values?.subscribers} subscribers</p>
            </div>
         </div>
          
          <div>
-            {Number(channelID) !== currentChannel.data?.id ? 
+            {Number(channelID) !== currentChannel.values?.id ? 
             <>
             {!alreadySubscribed ? <button type = 'button' onClick = {() => handleToggleSubscribe()}>Subscribe</button> : <button type = 'button' className = 'unsubscribe' onClick = {() => handleToggleSubscribe(false)}>Unsubscribe</button>}
           
@@ -69,9 +77,9 @@ export default function ChannelPage() {
       
         <hr className = 'mt-0-mb-4'/>
         <p>Videos:</p>
-        <Videos videos = {videos.data} isOwnVideos = {Number(channelID) === currentChannel.data?.id}/>
+        <Videos videos = {videos.values} isOwnVideos = {Number(channelID) === currentChannel.values?.id}/>
       </>
-      : channel.isLoading ? 
+      : channel.status === 'loading' ? 
       <>
           <p>Loading...</p>
         </>

@@ -1,41 +1,81 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
+import { VideoProps } from './types/VideoProps';
+import axios from 'axios';
 
-export interface VideoProps{
+const initialState = {
     values: {
         channel: {
-            id: number
-            name: string
-            description: string
-            subscribers: number
-            views: number
-            logo: string
-            banner: string
-            created_at: string
-            active: boolean
-        }
-        id: number
-        title: string
-        channel_id: number
-        description: string
-        views: number
-        likes: number
-        dislikes: number
-        thumbnail: string
-        category: string
-        length: string
-        pathName: string
-        created_at: string
-    }
-}
+            id: 0,
+            name: '',
+            description: '',
+            subscribers: 0,
+            views: 0,
+            logo: '',
+            banner: '',
+            created_at: '',
+            active: false
+        },
+        id: 0,
+        title: '',
+        description: '',
+        views: 0,
+        likes: 0,
+        dislikes: 0,
+        thumbnail: '',
+        category: '',
+        length: '',
+        pathName: '',
+        created_at: ''
+    },
+    status: ''
+} as VideoProps
 
-export const videoApi = createApi({
-    reducerPath: 'videoAPI',
-    baseQuery: fetchBaseQuery({baseUrl: '/api/'}),
-    endpoints: (builder) => ({
-        getVideo: builder.query<VideoProps['values'], string | number | undefined>({
-            query: (id) => `getVideo?id=${id}`
-        })
-    })
+export const fetchVideo = createAsyncThunk(
+    'videos/fetchVideoById',
+    async (id: string | number | undefined) => {
+        const response = await axios.get(`/api/getVideo?id=${id}`)
+        return response.data
+    }
+)
+
+export const videoSlice = createSlice({
+    name: 'videos',
+    initialState,
+    reducers: {
+        setVideo: (state, action) => {
+            state.values = action.payload
+        },
+
+        incrementViews: (state) => {
+            state.values.views += 1
+        },
+
+        incrementLikes: (state) => {
+            state.values.likes += 1
+        },
+
+        incrementDislikes: (state) => {
+            state.values.dislikes += 1
+        }
+    },
+
+    extraReducers(builder){
+        builder
+            .addCase(fetchVideo.pending, (state) => {
+                state.status = 'loading'
+            })
+            
+            .addCase(fetchVideo.fulfilled, (state, action) => {
+                state.status = 'success'
+                state.values = action.payload
+            })
+
+            .addCase(fetchVideo.rejected, (state) => {
+                state.status = 'rejected'
+            })
+    }
+
 })
 
-export const {useGetVideoQuery} = videoApi
+export const {setVideo, incrementViews, incrementLikes, incrementDislikes} = videoSlice.actions
+export default videoSlice.reducer

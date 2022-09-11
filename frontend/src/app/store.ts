@@ -5,13 +5,13 @@ import {
   } from 'redux-persist'
 import userReducer from '../features/Auth/auth'
 import VideoProgressReducer from '../features/videos/videoProgress'
-import {channelsApi} from '../features/channels/channels'
-import { channelApi } from '../features/channels/channel'
-import { currentChannelApi } from '../features/channels/currentChannel'
-import { videoApi } from '../features/videos/video'
-import { channelVideosApi } from '../features/videos/channelVideos'
-import { homeVideosApi } from '../features/videos/homeVideos'
-import { subscribersApi } from '../features/subscribers/getSubscribers'
+import channelsReducer from '../features/channels/channels'
+import channelReducer from '../features/channels/channel'
+import  currentChannelReducer from '../features/channels/currentChannel'
+import videoReducer from '../features/videos/video'
+import channelVideosReducer from '../features/videos/channelVideos'
+import homeVideosReducer from '../features/videos/homeVideos'
+import channelSubscribersReducer from '../features/channels/channelSubscribers'
 import storage from 'redux-persist/lib/storage'
 
   const persistConfig = {
@@ -24,13 +24,13 @@ import storage from 'redux-persist/lib/storage'
   const reducers = combineReducers({
     user: userReducer,
     videoProgress: VideoProgressReducer,
-    [channelsApi.reducerPath]: channelsApi.reducer,
-    [channelApi.reducerPath]: channelApi.reducer,
-    [currentChannelApi.reducerPath]: currentChannelApi.reducer,
-    [videoApi.reducerPath]: videoApi.reducer,
-    [channelVideosApi.reducerPath]: channelVideosApi.reducer,
-    [homeVideosApi.reducerPath]: homeVideosApi.reducer,
-    [subscribersApi.reducerPath]: subscribersApi.reducer
+    channel: channelReducer,
+    channels: channelsReducer,
+    currentChannel: currentChannelReducer,
+    channelSubscribers: channelSubscribersReducer,
+    channelVideos: channelVideosReducer,
+    video: videoReducer,
+    homeVideos: homeVideosReducer
   })
 
   const persistedReducer = persistReducer(persistConfig, reducers)
@@ -43,13 +43,7 @@ import storage from 'redux-persist/lib/storage'
           immutableCheck: false,
           serializableCheck: false
         }).concat([
-          channelsApi.middleware, 
-          currentChannelApi.middleware, 
-          channelApi.middleware,
-          videoApi.middleware,
-          channelVideosApi.middleware,
-          homeVideosApi.middleware,
-          subscribersApi.middleware
+
         ]),
       
     })

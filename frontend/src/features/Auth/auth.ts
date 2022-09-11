@@ -1,4 +1,4 @@
-import {createAsyncThunk,createSlice} from '@reduxjs/toolkit'
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import axios from 'axios'
 
 const initialState = {
@@ -13,23 +13,15 @@ const initialState = {
 export const fetchUser = createAsyncThunk(
     'user/fetchUser',
      async () => {
-        try{
-            const response = await axios.get('/api/getUser')
-            return response.data
-         }
-
-      catch(error){
-          return initialState
-      }
+        const response = await axios.get('/api/getUser')
+        return response.data
     }
-
 )
 
 export const userSlice = createSlice({
-    name : 'user',
+    name: 'user',
     initialState,
     reducers: {
-
         login: (state) => {
             state.isLoggedIn = true
         },
@@ -40,20 +32,20 @@ export const userSlice = createSlice({
         }
     },
 
-    extraReducers: {
-        [fetchUser.pending.toString()]: (state) => {
-            state.status = 'loading'
-        },
-        
-        [fetchUser.fulfilled.toString()]: (state,action) => {
-            state.values = action.payload
-            state.status = 'success'
-        },
+    extraReducers(builder){
+        builder
+            .addCase(fetchUser.pending, (state) => {
+                state.status = 'loading'
+            })
+            .addCase(fetchUser.fulfilled, (state, action) => {
+                state.status = 'success'
+                state.values = action.payload
+            })
 
-        [fetchUser.rejected.toString()]: (state) => {
-            state.status = 'rejected'
-            state.isLoggedIn = false
-        }
+            .addCase(fetchUser.rejected, (state) => {
+                state.status = 'rejected'
+                state.isLoggedIn = false
+            })
     }
 
 })

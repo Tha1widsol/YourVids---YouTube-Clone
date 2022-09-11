@@ -18,16 +18,16 @@ const initialState = {
 } as ChannelsProps
 
 
-export const fetchChannels = createAsyncThunk(
-    'channel/fetchChannels',
-    async () => {
-        const response = await axios.get(`/api/userChannels`)
+export const fetchChannelSubscribers = createAsyncThunk(
+    'channel/fetchChannelSubscriberById',
+    async (id: string | number | undefined) => {
+        const response = await axios.get(`/api/getSubscribers?id=${id}`)
         return response.data
     }
 )
 
-export const channelsSlice = createSlice({
-    name: 'channels',
+export const channelSubscribersSlice = createSlice({
+    name: 'channelSubscribers',
     initialState,
     reducers: {
         setChannels: (state, action) => {
@@ -37,21 +37,21 @@ export const channelsSlice = createSlice({
 
     extraReducers(builder){
         builder
-            .addCase(fetchChannels.pending, (state) => {
+            .addCase(fetchChannelSubscribers.pending, (state) => {
                 state.status = 'loading'
             })
             
-            .addCase(fetchChannels.fulfilled, (state, action) => {
+            .addCase(fetchChannelSubscribers.fulfilled, (state, action) => {
                 state.status = 'success'
                 state.values = action.payload
             })
 
-            .addCase(fetchChannels.rejected, (state) => {
+            .addCase(fetchChannelSubscribers.rejected, (state) => {
                 state.status = 'rejected'
             })
     }
 
 })
 
-export const {setChannels} = channelsSlice.actions
-export default channelsSlice.reducer
+export const {setChannels} = channelSubscribersSlice.actions
+export default channelSubscribersSlice.reducer
