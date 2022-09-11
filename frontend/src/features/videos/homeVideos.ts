@@ -32,7 +32,7 @@ const initialState = {
 
 export const fetchHomeVideos = createAsyncThunk(
     'videos/fetchHomeVideos',
-    async (id: string | number | undefined) => {
+    async () => {
         const response = await axios.get(`/api/getVideos`)
         return response.data
     }

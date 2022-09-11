@@ -44,7 +44,6 @@ export const userSlice = createSlice({
 
             .addCase(fetchUser.rejected, (state) => {
                 state.status = 'rejected'
-                state.isLoggedIn = false
             })
     }
 

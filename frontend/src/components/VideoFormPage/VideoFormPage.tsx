@@ -1,10 +1,10 @@
 import axios from 'axios'
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
 import {FileProps, VideoProps} from '../../app/types/files'
-import { useAppDispatch } from '../../app/hooks'
 import { setProgress } from '../../features/videos/videoProgress'
-import { useGetCurrentChannelQuery } from '../../features/channels/currentChannel'
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
+import { fetchCurrentChannel } from '../../features/channels/currentChannel'
 import ReactPlayer from 'react-player'
 
 export default function VideoFormPage() {
@@ -15,8 +15,12 @@ export default function VideoFormPage() {
   const [thumbnail, setThumbnail] = useState<FileProps>({value: '', name: ''})
   const [description, setDescription] = useState({value: '', maxlength: 5000})
   const [category, setCategory] = useState({value: ''})
-  const currentChannel = useGetCurrentChannelQuery(null)
+  const currentChannel = useAppSelector(state => state.currentChannel)
   const [videoFilePath, setVideoFilePath] = useState('')
+
+  useEffect(() => {
+    dispatch(fetchCurrentChannel())
+  },[dispatch])
   
   const convertHMS = (secs: number) => {
     let hours = Math.floor(secs / 3600) // get hours
@@ -66,7 +70,7 @@ function handleSetFile(e: React.ChangeEvent<HTMLInputElement>){
     form.append('category', category.value)
     form.append('length', video.length)
     
-    axios.post(`/api/createVideo?id=${currentChannel.data?.id}`,form, requestOptions)
+    axios.post(`/api/createVideo?id=${currentChannel.values?.id}`,form, requestOptions)
     navigate('/videos')
   }
 

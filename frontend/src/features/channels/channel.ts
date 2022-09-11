@@ -34,8 +34,8 @@ export const channelSlice = createSlice({
             state.values = action.payload
         },
 
-         incrementSubscribers: (state) => {
-            state.values.subscribers += 1
+         setSubscribers: (state, action) => {
+            state.values.subscribers = action.payload
          },
 
          incrementViews: (state) => {
@@ -61,5 +61,5 @@ export const channelSlice = createSlice({
 
 })
 
-export const {setChannel, incrementSubscribers, incrementViews} = channelSlice.actions
+export const {setChannel, setSubscribers, incrementViews} = channelSlice.actions
 export default channelSlice.reducer

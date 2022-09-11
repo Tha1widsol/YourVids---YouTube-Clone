@@ -1,20 +1,25 @@
-import React,{useState, useRef} from 'react'
-import {Link} from 'react-router-dom'
+import React,{useState, useRef, useEffect} from 'react'
 import Popup from '../Popup/Popup'
 import Errors from '../Messages/Errors'
 import {FileProps} from '../../app/types/files'
-import {useGetCurrentChannelQuery} from '../../features/channels/currentChannel'
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import './css/UserChannels.css'
 import axios from 'axios'
+import { fetchCurrentChannel } from '../../features/channels/currentChannel'
 
 export default function UserChannels() {
+  const dispatch = useAppDispatch()
   const [popup, setPopup] = useState({create: false, ref: useRef<null | HTMLDivElement>(null)})
   const [name, setName] = useState({value: '', isValid: false, errorMsg: 'Name field is required'})
   const [description, setDescription] = useState({value: '', maxChars: 500})
   const [logo, setLogo] = useState<FileProps>({value: '', name:''})
   const [banner, setBanner] = useState<FileProps>({value: '', name:''})
   const [errors, setErrors] = useState<Array<string>>([])
-  const channel = useGetCurrentChannelQuery(null)
+  const currentChannel = useAppSelector(state => state.currentChannel)
+
+  useEffect(() => {
+    dispatch(fetchCurrentChannel())
+  },[dispatch])
 
   const validateForm = () => {
     let isValid = true
@@ -84,11 +89,11 @@ export default function UserChannels() {
         <button onClick = {() => setPopup(prev => {return{...prev, create: true}})}>Add channel</button>
 
         <div style = {{display: 'flex', flexDirection: 'column', gap: '10px'}}>
-        {channel.isSuccess ? 
+        {currentChannel.status === 'success' ? 
           <>
-            <h1>{channel.data?.name}</h1>
+            <h1>{currentChannel.values?.name}</h1>
           </>
-        : channel.isLoading ? 
+        : currentChannel.status === 'loading'? 
           <>
             <p>Loading...</p>
           </>

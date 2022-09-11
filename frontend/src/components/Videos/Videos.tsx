@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { VideosProps } from '../../features/videos/channelVideos'
+import { VideosProps } from '../../features/videos/types/VideoProps'
 import { useAppSelector } from '../../app/hooks'
 import ReactPlayer from 'react-player'
 import './css/Videos.css'
