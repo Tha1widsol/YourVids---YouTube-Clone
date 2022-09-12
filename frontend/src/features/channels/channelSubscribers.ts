@@ -15,7 +15,7 @@ const initialState = {
         active: false
     }],
     status: ''
-} as ChannelsProps
+} 
 
 
 export const fetchChannelSubscribers = createAsyncThunk(

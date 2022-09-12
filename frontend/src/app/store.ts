@@ -12,6 +12,7 @@ import videoReducer from '../features/videos/video'
 import channelVideosReducer from '../features/videos/channelVideos'
 import homeVideosReducer from '../features/videos/homeVideos'
 import channelSubscribersReducer from '../features/channels/channelSubscribers'
+import { channelSubscribersApi } from '../features/channels/getSubscribers'
 import storage from 'redux-persist/lib/storage'
 
   const persistConfig = {
@@ -30,7 +31,9 @@ import storage from 'redux-persist/lib/storage'
     channelSubscribers: channelSubscribersReducer,
     channelVideos: channelVideosReducer,
     video: videoReducer,
-    homeVideos: homeVideosReducer
+    homeVideos: homeVideosReducer,
+    [channelSubscribersApi.reducerPath]: channelSubscribersApi.reducer
+
   })
 
   const persistedReducer = persistReducer(persistConfig, reducers)
@@ -43,7 +46,7 @@ import storage from 'redux-persist/lib/storage'
           immutableCheck: false,
           serializableCheck: false
         }).concat([
-
+          channelSubscribersApi.middleware
         ]),
       
     })

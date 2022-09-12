@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { fetchChannel } from '../../features/channels/channel'
 import { fetchCurrentChannel } from '../../features/channels/currentChannel'
 import { fetchChannelVideos } from '../../features/videos/channelVideos'
-import { fetchChannelSubscribers } from '../../features/channels/channelSubscribers'
+import {useGetSubscribersQuery } from '../../features/channels/getSubscribers'
 import { setSubscribers } from '../../features/channels/channel'
 import {Link, useNavigate, useParams} from 'react-router-dom'
 import Videos from '../Videos/Videos'
@@ -17,22 +17,22 @@ export default function ChannelPage() {
     const channel = useAppSelector(state => state.channel)
     const currentChannel = useAppSelector(state => state.currentChannel)
     const videos = useAppSelector(state => state.channelVideos)
-    const subscribers = useAppSelector(state => state.channelSubscribers)
+    const subscribers = useGetSubscribersQuery(channelID)
     const [alreadySubscribed, setAlreadySubscribed] = useState(false)
     const navigate = useNavigate()
+
+    const checkSubbed = () => {
+      return subscribers.data?.find(sub => sub.id === currentChannel.values.id)
+    }
 
     useEffect(() => {
       dispatch(fetchChannel(channelID))
       dispatch(fetchChannelVideos(channelID))
 
       if (!user.isLoggedIn) return
-      
         dispatch(fetchCurrentChannel())
-        dispatch(fetchChannelSubscribers(channelID))
-        if (subscribers.values?.find(sub => sub.id === currentChannel.values?.id)) {
-          setAlreadySubscribed(true) 
-        }
-    },[dispatch, alreadySubscribed])
+
+    },[dispatch])
 
     function handleToggleSubscribe(isSubscribing = true){
       if (!currentChannel.status) {
@@ -56,6 +56,7 @@ export default function ChannelPage() {
           setAlreadySubscribed(false)
         }
       })
+      window.location.reload()
     }
     
   return (
@@ -75,7 +76,7 @@ export default function ChannelPage() {
          <div>
             {Number(channelID) !== currentChannel.values?.id ? 
             <>
-            {!alreadySubscribed ? <button type = 'button' onClick = {() => handleToggleSubscribe()}>Subscribe</button> : <button type = 'button' className = 'unsubscribe' onClick = {() => handleToggleSubscribe(false)}>Unsubscribe</button>}
+            {!checkSubbed() ? <button type = 'button' onClick = {() => handleToggleSubscribe()}>Subscribe</button> : <button type = 'button' className = 'unsubscribe' onClick = {() => handleToggleSubscribe(false)}>Unsubscribe</button>}
           
             <button>Notify</button>
             </>
