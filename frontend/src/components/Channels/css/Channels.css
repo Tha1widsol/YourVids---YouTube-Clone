@@ -1,0 +1,13 @@
+.channel{
+    gap: 20px;
+    align-items: center;
+}
+
+.logo{
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    border-width: 1.2px;
+    border-style: solid;
+    object-fit: cover;
+}
