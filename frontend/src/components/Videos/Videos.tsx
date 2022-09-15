@@ -21,12 +21,20 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
                             <ReactPlayer width = '200px' height = '100px' url = {`/storage/${video.pathName}` } light = {video.thumbnail ? `/storage/${video.thumbnail}` : false} playIcon = {<></>}/>
                                <p className = 'duration'>{video.length}</p>
                             </div>
-                            <b><p>{video.title}</p></b>
-                            <div className = 'smallGray'>
-                                <p>{video.channel?.name}</p>
-                                  {video.views} views
-                                - {video.created_at.slice(0, 10)}
+
+                            <div className = 'description'>
+                                <b>{video.title}</b>
+                                <div className = 'smallGray'>
+                                    <div className = 'logoSection row'>
+                                    {video.channel?.logo ? <img className = 'videoChannelLogo' src = {`/storage/${video.channel?.logo}`} alt = ''/> : null}
+                                        <p>{video.channel?.name}</p>
+                                    </div>
+                                
+                                    {video.views} views
+                                    - {video.created_at.slice(0, 10)}
+                                </div>
                             </div>
+                           
                         </div>
                     </Link>
                 )
