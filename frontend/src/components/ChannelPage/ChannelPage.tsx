@@ -1,11 +1,12 @@
-import React,{useState, useEffect} from 'react'
+import React,{useEffect} from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { fetchChannel } from '../../features/channels/channel'
 import { fetchCurrentChannel } from '../../features/channels/currentChannel'
 import { fetchChannelVideos } from '../../features/videos/channelVideos'
-import {useGetSubscribersQuery } from '../../features/channels/getSubscribers'
+import { fetchChannelSubscribers } from '../../features/channels/channelSubscribers'
 import { setSubscribers } from '../../features/channels/channel'
 import {Link, useNavigate, useParams} from 'react-router-dom'
+import Channels from '../Channels/Channels'
 import Videos from '../Videos/Videos'
 import './css/ChannelPage.css'
 import axios from 'axios'
@@ -17,22 +18,21 @@ export default function ChannelPage() {
     const channel = useAppSelector(state => state.channel)
     const currentChannel = useAppSelector(state => state.currentChannel)
     const videos = useAppSelector(state => state.channelVideos)
-    const subscribers = useGetSubscribersQuery(channelID)
-    const [alreadySubscribed, setAlreadySubscribed] = useState(false)
+    const subscribers = useAppSelector(state => state.channelSubscribers)
     const navigate = useNavigate()
 
     const checkSubbed = () => {
-      return subscribers.data?.find(sub => sub.id === currentChannel.values.id)
+      return subscribers.values?.find(sub => sub.id === currentChannel.values.id)
     }
 
     useEffect(() => {
       dispatch(fetchChannel(channelID))
       dispatch(fetchChannelVideos(channelID))
-
+      
       if (!user.isLoggedIn) return
+        dispatch(fetchChannelSubscribers(channelID))
         dispatch(fetchCurrentChannel())
-
-    },[dispatch])
+    },[dispatch, channelID, user.isLoggedIn])
 
     function handleToggleSubscribe(isSubscribing = true){
       if (!currentChannel.status) {
@@ -48,12 +48,10 @@ export default function ChannelPage() {
         if (response.status === 200) {
           if (isSubscribing){
             dispatch(setSubscribers(channel.values.subscribers + 1))
-            setAlreadySubscribed(true)
             return 
           }
 
           dispatch(setSubscribers(channel.values.subscribers - 1))
-          setAlreadySubscribed(false)
         }
       })
       window.location.reload()
@@ -87,12 +85,19 @@ export default function ChannelPage() {
            </>}
         
          </div>
-
        </header>
       
         <hr className = 'mt-0-mb-4'/>
         <p>Videos:</p>
         <Videos videos = {videos.values} isOwnVideos = {Number(channelID) === currentChannel.values?.id}/>
+        {Number(channelID) === currentChannel.values?.id ? 
+        <>
+         <hr className = 'mt-0-mb-4'/>
+          <h3><b>Recent subscribers</b></h3>
+          <Channels channels = {subscribers.values}/>
+        </>
+        : null}
+      
       </>
       : channel.status === 'loading' ? 
       <>
