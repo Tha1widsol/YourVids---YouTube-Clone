@@ -2,7 +2,7 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import {ChannelsProps} from './types/ChannelProps';
 import axios from 'axios';
 
-const initialState = {
+const initialState: ChannelsProps = {
     values: [{
         id: 0,
         name: '',
