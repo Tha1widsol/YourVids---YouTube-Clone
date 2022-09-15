@@ -2,6 +2,7 @@
     position: relative;
     color: white;
     font-size: 12px;
+    margin-bottom: 15px;
 }
 
 .duration{
@@ -12,6 +13,21 @@
     bottom: -5px;
     right: 5px;
 }
+
+.videoChannelLogo{
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    border-width: 1.2px;
+    border-style: solid;
+    object-fit: cover;
+}
+
+.logoSection{
+    align-items: center;
+    gap: 7px;
+}
+
 
 .disable{
     opacity: 1
@@ -24,6 +40,10 @@
 
 .videoContainer{
     cursor: pointer;
+}
+
+.description{
+    margin-left: 10px;
 }
 
 .videoContainer:hover{
