@@ -3,6 +3,7 @@ import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { fetchChannelVideos } from '../../features/videos/channelVideos'
 import './css/ChannelVideosPage.css'
 import Videos from '../Videos/Videos'
+import { fetchCurrentChannel } from '../../features/channels/currentChannel'
 
 export default function ChannelVideosPage() {
   const dispatch = useAppDispatch()
@@ -10,6 +11,7 @@ export default function ChannelVideosPage() {
   const videos = useAppSelector(state => state.channelVideos)
 
   useEffect(() => {
+    dispatch(fetchCurrentChannel())
     dispatch(fetchChannelVideos(currentChannel.values?.id))
   },[dispatch, currentChannel.values?.id])
   
