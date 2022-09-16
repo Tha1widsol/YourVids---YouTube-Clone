@@ -18,7 +18,7 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
                     <Link to = {`/video/${video.id}`} key = {index}>
                         <div className = 'videoContainer'>
                             <div className = 'thumbnailContainer'>
-                            <ReactPlayer width = '200px' height = '100px' url = {`/storage/${video.pathName}` } light = {video.thumbnail ? `/storage/${video.thumbnail}` : false} playIcon = {<></>}/>
+                            <ReactPlayer width = '200px' height = '100px' url = {video.pathName ? `/storage/${video.pathName}`: ''} light = {video.thumbnail ? `/storage/${video.thumbnail}` : false} playIcon = {<></>}/>
                                <p className = 'duration'>{video.length}</p>
                             </div>
 
