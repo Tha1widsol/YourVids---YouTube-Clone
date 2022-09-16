@@ -1,17 +1,20 @@
 import React,{useEffect} from 'react'
-import axios from 'axios'
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
+import Videos from '../Videos/Videos'
+import { fetchSubscriptionVideos } from '../../features/videos/subscriptionVideos'
 
 export default function SubscriptionVideosPage() {
+  const dispatch = useAppDispatch()
+  const videos = useAppSelector(state => state.subscriptionVideos)
+
   useEffect(() => {
-    axios.get('/api/getSubscriptionVideos').
-    then(response => {
-      console.log(response.data)
-    })
-  },[])
-  
+    dispatch(fetchSubscriptionVideos())
+  },[dispatch])
+
   return (
     <div>
-        SubscriptionVideosPage
+        <h3><b>Today</b></h3>
+       <Videos videos = {videos.values}/>
     </div>
   )
 }
