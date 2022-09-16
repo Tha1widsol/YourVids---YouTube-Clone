@@ -10,6 +10,7 @@ import channelReducer from '../features/channels/channel'
 import  currentChannelReducer from '../features/channels/currentChannel'
 import videoReducer from '../features/videos/video'
 import channelVideosReducer from '../features/videos/channelVideos'
+import subscriptionVideosReducer from '../features/videos/subscriptionVideos'
 import homeVideosReducer from '../features/videos/homeVideos'
 import channelSubscribersReducer from '../features/channels/channelSubscribers'
 import { channelSubscribersApi } from '../features/channels/getSubscribers'
@@ -18,7 +19,7 @@ import storage from 'redux-persist/lib/storage'
   const persistConfig = {
     key: 'root',
     version: 1,
-    whitelist: ['user'],
+    whitelist: ['user', 'currentChannel'],
     storage,
   }
   
@@ -30,10 +31,10 @@ import storage from 'redux-persist/lib/storage'
     currentChannel: currentChannelReducer,
     channelSubscribers: channelSubscribersReducer,
     channelVideos: channelVideosReducer,
+    subscriptionVideos: subscriptionVideosReducer,
     video: videoReducer,
     homeVideos: homeVideosReducer,
     [channelSubscribersApi.reducerPath]: channelSubscribersApi.reducer
-
   })
 
   const persistedReducer = persistReducer(persistConfig, reducers)
