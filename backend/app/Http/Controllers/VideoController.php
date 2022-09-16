@@ -76,7 +76,7 @@ class VideoController extends Controller
         foreach ($channels as $channel){
             $subscriptions = Subscription::where('subscriber_id', $userChannel->id)->get();
             foreach ($subscriptions as $subscription){
-                $channelVideos = Video::where('channel_id', $channel->id)->whereDate('created_at','>=',$subscription->created_at)->get();
+                $channelVideos = Video::with('channel')->where('channel_id', $channel->id)->whereDate('created_at','>=',$subscription->created_at)->get();
                 foreach ($channelVideos as $video){
                     $videos->push($video);
                  }
