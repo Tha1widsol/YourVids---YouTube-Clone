@@ -90,7 +90,7 @@ export default function ChannelPage() {
         <hr className = 'mt-0-mb-4'/>
         <p>Videos:</p>
         <Videos videos = {videos.values} isOwnVideos = {Number(channelID) === currentChannel.values?.id}/>
-        {Number(channelID) === currentChannel.values?.id ? 
+        {Number(channelID) === currentChannel.values?.id && subscribers.values.length ? 
         <>
          <hr className = 'mt-0-mb-4'/>
           <h3><b>Recent subscribers</b></h3>
