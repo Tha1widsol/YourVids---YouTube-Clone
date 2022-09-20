@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { fetchVideo } from '../../features/videos/video'
 import { fetchCurrentChannel } from '../../features/channels/currentChannel'
+import { setLikes, setDislikes } from '../../features/videos/video'
 import ReactPlayer from 'react-player'
 import './css/VideoPage.css'
 import axios from 'axios'
@@ -14,6 +15,8 @@ export default function VideoPage() {
     const video = useAppSelector(state => state.video)
     const currentChannel = useAppSelector(state => state.currentChannel)
     const [videoFilePath, setVideoFilePath] = useState('')
+    const [liked, setLiked] = useState(false)
+    const [disliked, setDisliked] = useState(false)
 
     useEffect(() => {
         if (user.isLoggedIn) dispatch(fetchCurrentChannel())
@@ -33,6 +36,16 @@ export default function VideoPage() {
         })
     },[video.values?.pathName, dispatch, videoID, user.isLoggedIn])
 
+    function handleLikeVideo(){
+        setLiked(!liked)
+        !liked ? dispatch(setLikes(video.values?.likes + 1)) : dispatch(setLikes(video.values?.likes - 1))
+    }
+
+    function handleDislikeVideo(){
+        setDisliked(!disliked)
+        !disliked ? dispatch(setDislikes(video.values?.dislikes + 1)) : dispatch(setDislikes(video.values?.dislikes - 1))
+    }
+
   return video.status === 'success' ? (
     <div>
         <section style = {{maxWidth: '60%'}}>
@@ -41,9 +54,9 @@ export default function VideoPage() {
            
             <div className = 'row likesDislikes'>
                 <p className = 'views smallGray'>{video.values?.views.toLocaleString()} views</p>
-                <i className = 'fa fa-thumbs-up'/>
+                <i className = 'fa fa-thumbs-up' style = {liked ? {color: 'green'} : {}} onClick = {handleLikeVideo}/>
                 <p>{video.values?.likes}</p>
-                <i className = 'fa fa-thumbs-down'/>
+                <i className = 'fa fa-thumbs-down' style = {disliked ? {color: 'red'} : {}} onClick = {handleDislikeVideo}/>
                 <p>{video.values?.dislikes}</p>
                 <button>Save</button>
             </div>
@@ -52,7 +65,7 @@ export default function VideoPage() {
             {video.values.channel.id !== currentChannel.values?.id ? <button type = 'button' className = 'subscribe'>Subscribe</button> : <button className = 'edit' type = 'button'>Edit</button>}
             <section style = {{display: 'flex', columnGap: '10px'}}>
                 <Link to = {`/channel/${video.values.channel.id}`}>
-                {video.values?.channel?.logo ?   <img className = 'logo' style = {{width: '50px', height: '50px'}} src = {`/storage/${video.values?.channel?.logo}`} alt = ''/> : null}
+                {video.values?.channel?.logo ?  <img className = 'logo' style = {{width: '50px', height: '50px'}} src = {`/storage/${video.values?.channel?.logo}`} alt = ''/> : null}
                 <div>
                     <p>{video.values?.channel?.name}</p>
                     <p className = 'smallGray'>{video.values?.channel?.subscribers} subscribers</p>
