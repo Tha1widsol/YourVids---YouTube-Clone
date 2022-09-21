@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth, DB, Storage;
 use App\Models\Video;
 use App\Models\Channel;
 use App\Models\Subscription;
+use App\Models\Like_Dislike;
 
 class VideoController extends Controller
 {
@@ -82,9 +83,30 @@ class VideoController extends Controller
                  }
             }
         }
-        
         return $videos;
     }
 
+    public function likeVideo(Request $request){
+        $lookup_url_kwarg = 'id';
+        $video_id = $request->$lookup_url_kwarg;
+        Like_Dislike::updateOrCreate(
+            ['channel_id' => $request->channel_id, 'video_id' => $video_id, 'liked' => true, 'disliked' => false]
+        );
+    }
+
+    public function dislikeVideo(Request $request){
+        $lookup_url_kwarg = 'id';
+        $video_id = $request->$lookup_url_kwarg;
+        Like_Dislike::updateOrCreate(
+            ['channel_id' => $request->channel_id, 'video_id' => $video_id, 'liked' => false, 'disliked' => true]
+        );
+    }
+
+    public function removeLikeDislike(){
+        $lookup_url_kwarg = 'id';
+        $video_id = $request->$lookup_url_kwarg;
+        $channel_id = $request->$channel_id;
+        Like_Dislike::where(['channel_id','=',$channel_id], ['video_id','=',$video_id])->delete();
+    }
 
 }
