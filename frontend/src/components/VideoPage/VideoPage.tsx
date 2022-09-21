@@ -38,12 +38,24 @@ export default function VideoPage() {
 
     function handleLikeVideo(){
         setLiked(!liked)
-        !liked ? dispatch(setLikes(video.values?.likes + 1)) : dispatch(setLikes(video.values?.likes - 1))
+        setDisliked(false)
+        if (!liked){
+            dispatch(setLikes(video.values?.likes + 1)) 
+            if (disliked) dispatch(setDislikes(video.values?.dislikes - 1))
+            return
+        }
+        dispatch(setLikes(video.values?.likes - 1))
     }
 
     function handleDislikeVideo(){
         setDisliked(!disliked)
-        !disliked ? dispatch(setDislikes(video.values?.dislikes + 1)) : dispatch(setDislikes(video.values?.dislikes - 1))
+        setLiked(false)
+        if (!disliked){
+            dispatch(setDislikes(video.values?.dislikes + 1))
+            if (liked) dispatch(setLikes(video.values?.likes - 1))
+            return
+        }
+        dispatch(setDislikes(video.values?.dislikes - 1))
     }
 
   return video.status === 'success' ? (
