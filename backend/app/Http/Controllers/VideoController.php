@@ -89,24 +89,29 @@ class VideoController extends Controller
     public function likeVideo(Request $request){
         $lookup_url_kwarg = 'id';
         $video_id = $request->$lookup_url_kwarg;
+        $user = Auth::user();
+        $userChannel = Channel::where('user_id', $user->id)->where('active', true)->first();
         Like_Dislike::updateOrCreate(
-            ['channel_id' => $request->channel_id, 'video_id' => $video_id, 'liked' => true, 'disliked' => false]
+            ['channel_id' => $userChannel->id, 'video_id' => $video_id,], ['liked' => true, 'disliked' => false]
         );
     }
 
     public function dislikeVideo(Request $request){
         $lookup_url_kwarg = 'id';
         $video_id = $request->$lookup_url_kwarg;
+        $user = Auth::user();
+        $userChannel = Channel::where('user_id', $user->id)->where('active', true)->first();
         Like_Dislike::updateOrCreate(
-            ['channel_id' => $request->channel_id, 'video_id' => $video_id, 'liked' => false, 'disliked' => true]
+            ['channel_id' => $userChannel->id, 'video_id' => $video_id], ['liked' => false, 'disliked' => true]
         );
     }
 
-    public function removeLikeDislike(){
+    public function removeLikeDislike(Request $request){
         $lookup_url_kwarg = 'id';
         $video_id = $request->$lookup_url_kwarg;
-        $channel_id = $request->$channel_id;
-        Like_Dislike::where(['channel_id','=',$channel_id], ['video_id','=',$video_id])->delete();
+        $user = Auth::user();
+        $userChannel = Channel::where('user_id', $user->id)->where('active', true)->first();
+        Like_Dislike::where('channel_id', $userChannel->id) ->where('video_id','=',$video_id)->delete();
     }
 
 }
