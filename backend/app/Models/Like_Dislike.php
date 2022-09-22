@@ -9,4 +9,5 @@ class Like_Dislike extends Model
 {
     use HasFactory;
     protected $table = 'likes_dislikes';
+    protected $fillable = ['channel_id', 'video_id', 'liked', 'disliked'];
 }
