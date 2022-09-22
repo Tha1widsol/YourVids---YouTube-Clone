@@ -41,7 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getCurrentChannel',[ChannelController::class, 'getCurrentChannel']);
     Route::post('/likeVideo',[VideoController::class, 'likeVideo']);
     Route::post('/dislikeVideo',[VideoController::class, 'dislikeVideo']);
-    Route::post('/removeLikeDislike',[VideoController::class, 'removeLikeDislike']);
+    Route::delete('/removeLikeDislike',[VideoController::class, 'removeLikeDislike']);
     Route::put('/switchChannel',[ChannelController::class, 'switchChannel']);
     Route::post('/logout',[UserController::class,'logout']);
 });
