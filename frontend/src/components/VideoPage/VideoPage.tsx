@@ -41,10 +41,12 @@ export default function VideoPage() {
         setDisliked(false)
         if (!liked){
             dispatch(setLikes(video.values?.likes + 1)) 
+            axios.post(`/api/likeVideo?id=${videoID}`)
             if (disliked) dispatch(setDislikes(video.values?.dislikes - 1))
             return
         }
         dispatch(setLikes(video.values?.likes - 1))
+        axios.delete(`/api/removeLikeDislike?id=${videoID}`)
     }
 
     function handleDislikeVideo(){
@@ -52,10 +54,12 @@ export default function VideoPage() {
         setLiked(false)
         if (!disliked){
             dispatch(setDislikes(video.values?.dislikes + 1))
+            axios.post(`/api/dislikeVideo?id=${videoID}`)
             if (liked) dispatch(setLikes(video.values?.likes - 1))
             return
         }
         dispatch(setDislikes(video.values?.dislikes - 1))
+        axios.delete(`/api/removeLikeDislike?id=${videoID}`)
     }
 
   return video.status === 'success' ? (
