@@ -36,3 +36,14 @@ export interface VideosProps{
     status: '' | 'success' | 'loading' | 'rejected'
 }
 
+export interface LikedDislikedVideosProps{
+    values: [{
+        id: number
+        liked: boolean
+        disliked: boolean
+        channel: ChannelProps['values']
+        video: VideoProps['values']
+        created_at: string
+    }]
+    status: '' | 'success' | 'loading' | 'rejected'
+}

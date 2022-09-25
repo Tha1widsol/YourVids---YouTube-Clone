@@ -34,6 +34,19 @@ export default function VideoPage() {
             const url = URL.createObjectURL(blob);
             setVideoFilePath(url)
         })
+        axios.get(`/api/checkLikedVideo?id=${videoID}`)
+        .then(response => {
+            const data = response.data
+    
+            if (data.liked) {
+                setLiked(true)
+            }
+
+            if (data.disliked) {
+                setDisliked(true)
+            }
+        })
+
     },[video.values?.pathName, dispatch, videoID, user.isLoggedIn])
 
     function handleLikeVideo(){

@@ -13,6 +13,7 @@ import channelVideosReducer from '../features/videos/channelVideos'
 import subscriptionVideosReducer from '../features/videos/subscriptionVideos'
 import homeVideosReducer from '../features/videos/homeVideos'
 import channelSubscribersReducer from '../features/channels/channelSubscribers'
+import likedVideosReducer from '../features/videos/likedVideos'
 import { channelSubscribersApi } from '../features/channels/getSubscribers'
 import storage from 'redux-persist/lib/storage'
 
@@ -34,6 +35,7 @@ import storage from 'redux-persist/lib/storage'
     subscriptionVideos: subscriptionVideosReducer,
     video: videoReducer,
     homeVideos: homeVideosReducer,
+    likedVideos: likedVideosReducer,
     [channelSubscribersApi.reducerPath]: channelSubscribersApi.reducer
   })
 
