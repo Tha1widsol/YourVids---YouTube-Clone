@@ -9,6 +9,14 @@ use App\Models\Channel;
 use App\Models\Subscription;
 use App\Models\Like_Dislike;
 
+function refreshLikesDislikes($video_id){
+    $likes = Like_Dislike::where('video_id', $video_id)->where('liked', true)->get();
+    $likesCount = $likes->count();
+    $dislikes = Like_Dislike::where('video_id', $video_id)->where('disliked', true)->get();
+    $dislikesCount = $dislikes->count();
+    Video::where('id', $video_id)->update(['likes' => $likesCount, 'dislikes' => $dislikesCount]);
+}
+
 class VideoController extends Controller
 {
     public function createVideo(Request $request){
@@ -50,6 +58,7 @@ class VideoController extends Controller
     public function getVideo(Request $request){
         $lookup_url_kwarg = 'id';
         $video_id = $request->$lookup_url_kwarg;
+        refreshLikesDislikes($video_id);
         $video = Video::with('channel')->where('id', $video_id)->first();
         if (!$video) throw new \ErrorException;
         return $video;
@@ -114,4 +123,28 @@ class VideoController extends Controller
         Like_Dislike::where('channel_id', $userChannel->id) ->where('video_id','=',$video_id)->delete();
     }
 
+    public function getLikedVideos(Request $request){
+        $lookup_url_kwarg = 'id';
+        $channel_id = $request->$lookup_url_kwarg;
+        $channel = Channel::where('id', $channel_id)->first();
+        $videos = Like_Dislike::with('channel')->with('videos')->where('channel_id', $channel_id)->where('liked', true)->get();
+        if (!$channel || !$videos) throw new \ErrorException;
+        return $videos;
+    }
+
+    public function checkLikedVideo(Request $request){
+        $lookup_url_kwarg = 'id';
+        $video_id = $request->$lookup_url_kwarg;
+        $user = Auth::user();
+        $userChannel = Channel::where('user_id', $user->id)->where('active', true)->first();
+        $likedVideo = Like_Dislike::where('video_id', $video_id)->where('channel_id', $userChannel->id)->first();
+        if ($likedVideo){
+            return response([
+                'liked' => $likedVideo->liked,
+                'disliked' => $likedVideo->disliked
+            ]);
+        }
+
+       
+    }
 }
