@@ -9,9 +9,9 @@ class Video extends Model
 {
     use HasFactory;
     protected $table = 'videos';
+    protected $fillable = ['likes', 'dislikes'];
 
     public function channel(){
         return $this->belongsTo('App\Models\Channel');
     }
-
 }
