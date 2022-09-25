@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth, DB;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Channel;
 use App\Models\Subscription;
 
@@ -31,7 +31,7 @@ class ChannelController extends Controller
             $pathName = $banner->storeAs('banners/', $finalName, 'public');
             $channel->banner = $pathName;
         }
-        DB::table('channels')->where('active', true)->update(['active' => null]);
+        Channel::where('active', true)->update(['active' => null]);
         $channel->user_id = $user->id;
         $channel->active = true;
         $channel->save();
@@ -44,27 +44,27 @@ class ChannelController extends Controller
     public function getChannel(Request $request){
         $lookup_url_kwarg = 'id';
         $id = $request->$lookup_url_kwarg;
-        $channel = DB::table('channels')->where('id', $id)->first();
+        $channel = Channel::where('id', $id)->first();
         if (!$channel) throw new \ErrorException();
         return $channel;
     }
 
     public function getUserChannels(Request $request){
         $user = Auth::user();
-        $channels = DB::table('channels')->where('user_id', $user->id)->where('active', null)->get();
+        $channels = Channel::where('user_id', $user->id)->where('active', null)->get();
         return $channels;
     }
 
     public function getCurrentChannel(){
-        $channel = DB::table('channels')->where('active', true)->first();
+        $channel = Channel::where('active', true)->first();
         return $channel;
     }
 
     public function switchChannel(Request $request){
         $lookup_url_kwarg = 'id';
         $channel_id = $request->$lookup_url_kwarg;
-        DB::table('channels')->where('active', true)->update(['active' => null]);
-        DB::table('channels')->where('id', $channel_id)->update(['active' => true]);
+        Channel::where('active', true)->update(['active' => null]);
+        Channel::where('channels')->where('id', $channel_id)->update(['active' => true]);
     }
 
     public function subscribe(Request $request){
