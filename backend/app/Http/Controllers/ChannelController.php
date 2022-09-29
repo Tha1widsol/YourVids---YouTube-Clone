@@ -98,4 +98,17 @@ class ChannelController extends Controller
         return $subscribers;
     }
 
+    public function checkSubscribed(Request $request){
+        $subscribed = false;
+        $lookup_url_kwarg = 'id';
+        $channel_id = $request->$lookup_url_kwarg;
+        $user = Auth::user();
+        $userChannel = Channel::where('user_id', $user->id)->where('active', true)->first();
+        $subscription = Subscription::where('subscribing_id', $channel_id)->where('subscriber_id', $userChannel->id)->first();
+        if ($subscription) $subscribed = true;
+        return response([
+            'subscribed' => $subscribed
+        ]);
+    }
+
 }      

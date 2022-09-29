@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React,{useState, useEffect} from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { fetchChannel } from '../../features/channels/channel'
 import { fetchCurrentChannel } from '../../features/channels/currentChannel'
@@ -19,11 +19,8 @@ export default function ChannelPage() {
     const currentChannel = useAppSelector(state => state.currentChannel)
     const videos = useAppSelector(state => state.channelVideos)
     const subscribers = useAppSelector(state => state.channelSubscribers)
+    const [alreadySubscribed, setAlreadySubscribed] = useState(false)
     const navigate = useNavigate()
-
-    const checkSubbed = () => {
-      return subscribers.values?.find(sub => sub.id === currentChannel.values.id)
-    }
 
     useEffect(() => {
       dispatch(fetchChannel(channelID))
@@ -32,6 +29,13 @@ export default function ChannelPage() {
       if (!user.isLoggedIn) return
         dispatch(fetchChannelSubscribers(channelID))
         dispatch(fetchCurrentChannel())
+
+        axios.get(`/api/checkSubscribed?id=${channelID}`)
+        .then(response => {
+          const data = response.data
+          if (data.subscribed) setAlreadySubscribed(true)
+        })
+
     },[dispatch, channelID, user.isLoggedIn])
 
     function handleToggleSubscribe(isSubscribing = true){
@@ -47,14 +51,14 @@ export default function ChannelPage() {
       .then(response => {
         if (response.status === 200) {
           if (isSubscribing){
+            setAlreadySubscribed(true)
             dispatch(setSubscribers(channel.values.subscribers + 1))
             return 
           }
-
+          setAlreadySubscribed(false)
           dispatch(setSubscribers(channel.values.subscribers - 1))
         }
       })
-      window.location.reload()
     }
     
   return (
@@ -74,7 +78,7 @@ export default function ChannelPage() {
          <div>
             {Number(channelID) !== currentChannel.values?.id ? 
             <>
-            {!checkSubbed() ? <button type = 'button' onClick = {() => handleToggleSubscribe()}>Subscribe</button> : <button type = 'button' className = 'unsubscribe' onClick = {() => handleToggleSubscribe(false)}>Unsubscribe</button>}
+            {!alreadySubscribed ? <button type = 'button' onClick = {() => handleToggleSubscribe()}>Subscribe</button> : <button type = 'button' className = 'unsubscribe' onClick = {() => handleToggleSubscribe(false)}>Unsubscribe</button>}
           
             <button>Notify</button>
             </>
