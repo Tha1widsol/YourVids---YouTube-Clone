@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('channel_id');
             $table->foreign('channel_id')->references('id')->on('channels')->onDelete('cascade')->nullable();
             $table->string('title', 200);
-            $table->string('description', 500);
+            $table->string('description', 500)->nullable();
             $table->bigInteger('views')->default(0);
             $table->bigInteger('videoCount')->default(0);
             $table->string('visibility')->default('Public');
