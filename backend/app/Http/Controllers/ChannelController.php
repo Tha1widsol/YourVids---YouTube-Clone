@@ -64,7 +64,7 @@ class ChannelController extends Controller
         $lookup_url_kwarg = 'id';
         $channel_id = $request->$lookup_url_kwarg;
         Channel::where('active', true)->update(['active' => null]);
-        Channel::where('channels')->where('id', $channel_id)->update(['active' => true]);
+        Channel::where('id', $channel_id)->update(['active' => true]);
     }
 
     public function subscribe(Request $request){
