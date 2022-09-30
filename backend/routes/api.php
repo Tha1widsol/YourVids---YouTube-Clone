@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\PlaylistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/checkLikedVideo',[VideoController::Class, 'checkLikedVideo']);
     Route::delete('/removeLikeDislike',[VideoController::class, 'removeLikeDislike']);
     Route::put('/switchChannel',[ChannelController::class, 'switchChannel']);
+    Route::post('/createPlaylist', [PlaylistController::class, 'createPlaylist']);
     Route::post('/logout',[UserController::class,'logout']);
 });
 
