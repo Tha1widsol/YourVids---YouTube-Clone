@@ -27,5 +27,9 @@ class Channel extends Model
         return $this->hasMany('App\Models\Video', 'channel_id');
     }
 
+    public function playlists(){
+        return $this->hasMany('App\Models\Playlist', 'channel_id');
+    }
+
 
 }
