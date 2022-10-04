@@ -8,7 +8,6 @@ import Subscribe from '../Subscribe/Subscribe'
 import ReactPlayer from 'react-player'
 import './css/VideoPage.css'
 import axios from 'axios'
-import { channel } from 'diagnostics_channel'
 
 export default function VideoPage() {
     const dispatch = useAppDispatch()
