@@ -4,9 +4,11 @@ import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { fetchVideo } from '../../features/videos/video'
 import { fetchCurrentChannel } from '../../features/channels/currentChannel'
 import { setLikes, setDislikes } from '../../features/videos/video'
+import Subscribe from '../Subscribe/Subscribe'
 import ReactPlayer from 'react-player'
 import './css/VideoPage.css'
 import axios from 'axios'
+import { channel } from 'diagnostics_channel'
 
 export default function VideoPage() {
     const dispatch = useAppDispatch()
@@ -91,7 +93,7 @@ export default function VideoPage() {
             </div>
             <hr className = 'mt-0-mb-4'/>
 
-            {video.values.channel.id !== currentChannel.values?.id ? <button type = 'button' className = 'subscribe'>Subscribe</button> : <button className = 'edit' type = 'button'>Edit</button>}
+            {video.values.channel.id !== currentChannel.values?.id || !user.isLoggedIn ? <div style = {{float: 'right'}}><Subscribe channel = {video.values?.channel}/></div> : <button className = 'edit' type = 'button'>Edit</button>}
             <section style = {{display: 'flex', columnGap: '10px'}}>
                 <Link to = {`/channel/${video.values.channel.id}`}>
                 {video.values?.channel?.logo ?  <img className = 'logo' style = {{width: '50px', height: '50px'}} src = {`/storage/${video.values?.channel?.logo}`} alt = ''/> : null}

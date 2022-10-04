@@ -1,0 +1,8 @@
+.unsubscribe{
+    color: red;
+    border-color: red;
+}
+
+.unsubscribe:hover{
+    background-color: red;
+}
