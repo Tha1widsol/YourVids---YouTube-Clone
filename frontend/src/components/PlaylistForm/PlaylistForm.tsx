@@ -20,8 +20,7 @@ export default function PlaylistForm({popupOff}: {popupOff: () => void}) {
     axios.post('/api/createPlaylist',form, requestOptions)
     .then(response => {
       if (response.status === 200){
-        console.log(response.data)
-        popupOff()
+         popupOff()
       }
     })
 
