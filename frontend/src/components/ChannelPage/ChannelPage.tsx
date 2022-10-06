@@ -8,6 +8,7 @@ import {Link, useParams} from 'react-router-dom'
 import Channels from '../Channels/Channels'
 import Videos from '../Videos/Videos'
 import Subscribe from '../Subscribe/Subscribe'
+import Playlists from '../Playlists/Playlists'
 import './css/ChannelPage.css'
 
 export default function ChannelPage() {
@@ -72,6 +73,9 @@ export default function ChannelPage() {
          <hr className = 'mt-0-mb-4'/>
           <h3><b>Recent subscribers</b></h3>
           <Channels channels = {subscribers.values}/>
+
+          <h3><b>Playlists</b></h3>
+          <Playlists channelID = {channelID}/>
         </>
         : null}
       
