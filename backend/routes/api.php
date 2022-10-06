@@ -48,6 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/removeLikeDislike',[VideoController::class, 'removeLikeDislike']);
     Route::put('/switchChannel',[ChannelController::class, 'switchChannel']);
     Route::post('/createPlaylist', [PlaylistController::class, 'createPlaylist']);
+    Route::get('/getPlaylists', [PlaylistController::class, 'getPlaylists']);
     Route::post('/logout',[UserController::class,'logout']);
 });
 

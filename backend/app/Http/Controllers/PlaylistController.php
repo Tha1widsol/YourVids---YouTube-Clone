@@ -22,4 +22,12 @@ class PlaylistController extends Controller
             'message' => 'Playlist is created on this channel'
         ]);
     }
+
+    public function getPlaylists(Request $request){
+        $lookup_url_kwarg = 'id';
+        $channel_id = $request->$lookup_url_kwarg;
+        $playlists = Playlist::with('channel')->where('channel_id', $channel_id)->get();
+        if (!$playlists) throw new \ErrorException();
+        return $playlists;
+    }
 }
