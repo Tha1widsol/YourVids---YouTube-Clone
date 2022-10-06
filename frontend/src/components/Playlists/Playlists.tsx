@@ -12,13 +12,19 @@ export default function Playlists({channelID}: {channelID: string | number | und
     
   return (
     <>
-        {playlists.values?.map((playlist, index) => {
-            return (
-                <div key = {index}>
-                    <p>{playlist.title}</p>
-                </div>
-            )
-        })}
+        {playlists.status === 'success' ?
+                playlists.values?.map((playlist, index) => {
+                    return (
+                        <div key = {index}>
+                            <p>{playlist.title}</p>
+                        </div>
+                    )
+                })
+
+        : playlists.status === 'loading' ? <p>Loading...</p>
+
+    : <p>No playlists found...</p>}
+        
     </>
   )
 }
