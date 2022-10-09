@@ -1,30 +1,28 @@
-import React,{useEffect} from 'react'
-import { useAppSelector, useAppDispatch } from '../../app/hooks'
-import { fetchPlaylists } from '../../features/playlists/playlists'
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { PlaylistsProps } from '../../features/playlists/types/playlistsProps'
+import './css/Playlists.css'
 
-export default function Playlists({channelID}: {channelID: string | number | undefined }) {
-    const playlists = useAppSelector(state => state.playlists)
-    const dispatch = useAppDispatch()
-
-    useEffect(() => {
-        dispatch(fetchPlaylists(channelID))
-    },[dispatch, channelID])
-    
-  return (
+export default function Playlists({playlists, isRow = true, areOwnPlaylists = false}: {playlists: PlaylistsProps['values'], isRow?: boolean, areOwnPlaylists?: boolean}) {
+  return playlists ? (
     <>
-        {playlists.status === 'success' ?
-                playlists.values?.map((playlist, index) => {
-                    return (
-                        <div key = {index}>
-                            <p>{playlist.title}</p>
-                        </div>
-                    )
-                })
+        {playlists?.length ? 
+        <section className = {`playlistsContainer ${isRow ? 'row' : 'col'} `}>
+            {playlists.map((playlist, index) => {
+                return (
+                    <div className = 'playlistContainer' key = {index}>
+                      <Link to = {`/playlist/${playlist.id}`}>
+                          <p>{playlist.title}</p>
+                          <p className = 'smallGray'>Videos - {playlist.videoCount}</p>
+                      </Link>
+                      <button>Add Video</button>
+                    </div>
+                )
+            })}
 
-        : playlists.status === 'loading' ? <p>Loading...</p>
-
-    : <p>No playlists found...</p>}
+        </section>
+        : <p>No playlists created...</p>}
         
     </>
-  )
+  ): <p>Loading...</p>
 }
