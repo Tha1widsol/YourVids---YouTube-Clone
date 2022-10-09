@@ -9,6 +9,7 @@ import Channels from '../Channels/Channels'
 import Videos from '../Videos/Videos'
 import Subscribe from '../Subscribe/Subscribe'
 import Playlists from '../Playlists/Playlists'
+import { fetchPlaylists } from '../../features/playlists/playlists'
 import './css/ChannelPage.css'
 
 export default function ChannelPage() {
@@ -19,6 +20,7 @@ export default function ChannelPage() {
     const currentChannel = useAppSelector(state => state.currentChannel)
     const videos = useAppSelector(state => state.channelVideos)
     const subscribers = useAppSelector(state => state.channelSubscribers)
+    const playlists = useAppSelector(state => state.playlists)
 
     useEffect(() => {
       dispatch(fetchChannel(channelID))
@@ -31,6 +33,7 @@ export default function ChannelPage() {
       if (!user.isLoggedIn) return
         dispatch(fetchChannelSubscribers(channelID))
         dispatch(fetchCurrentChannel())
+        dispatch(fetchPlaylists(channelID))
 
     },[dispatch, channelID, user.isLoggedIn])
 
@@ -75,7 +78,7 @@ export default function ChannelPage() {
           <Channels channels = {subscribers.values}/>
 
           <h3><b>Playlists</b></h3>
-          <Playlists channelID = {channelID}/>
+          <Playlists playlists = {playlists.values}/>
         </>
         : null}
       
