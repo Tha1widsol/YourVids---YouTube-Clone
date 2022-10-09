@@ -1,4 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
+import { PlaylistsProps } from './types/playlistsProps';
 import axios from 'axios';
 
 const initialState = {
@@ -23,7 +24,7 @@ const initialState = {
         created_at: '',
     }],
     status: ''
-} 
+} as PlaylistsProps
 
 export const fetchPlaylists = createAsyncThunk(
     'playlist/fetchPlaylists',
