@@ -1,0 +1,11 @@
+.playlistContainer{
+    border-radius: 5px;
+    border-style: groove;
+    border-width: 2px;
+    padding: 10px;
+}
+
+.playlistsContainer{
+    flex-wrap: wrap;
+    gap: 20px;
+}
