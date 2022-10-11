@@ -7,6 +7,8 @@ import { setLikes, setDislikes } from '../../features/videos/video'
 import Subscribe from '../Subscribe/Subscribe'
 import ReactPlayer from 'react-player'
 import './css/VideoPage.css'
+import Popup from '../Popup/Popup'
+import PlaylistsCheckbox from '../Playlists/PlaylistsCheckbox'
 import axios from 'axios'
 
 export default function VideoPage() {
@@ -18,6 +20,7 @@ export default function VideoPage() {
     const [videoFilePath, setVideoFilePath] = useState('')
     const [liked, setLiked] = useState(false)
     const [disliked, setDisliked] = useState(false)
+    const [popup, setPopup] = useState({playlist: false})
 
     useEffect(() => {
         if (user.isLoggedIn) dispatch(fetchCurrentChannel())
@@ -78,6 +81,10 @@ export default function VideoPage() {
 
   return video.status === 'success' ? (
     <div>
+        <Popup trigger = {popup.playlist} switchOff = {() => setPopup(prev => {return{...prev, playlist: false}})}>
+            <PlaylistsCheckbox/>
+        </Popup>
+
         <section style = {{maxWidth: '60%'}}>
             <p className = 'title'>{video.values?.title}</p>
             <ReactPlayer className = 'skeleton' url = {videoFilePath} controls playing/> 
@@ -88,7 +95,7 @@ export default function VideoPage() {
                 <p>{video.values?.likes}</p>
                 <i className = 'fa fa-thumbs-down' style = {disliked ? {color: 'red'} : {}} onClick = {handleDislikeVideo}/>
                 <p>{video.values?.dislikes}</p>
-                <button>Save</button>
+                <button onClick = {() => setPopup(prev => {return{...prev, playlist: true}})}>Save</button>
             </div>
             <hr className = 'mt-0-mb-4'/>
 
