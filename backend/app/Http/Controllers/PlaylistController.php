@@ -30,4 +30,30 @@ class PlaylistController extends Controller
         if (!$playlists) throw new \ErrorException();
         return $playlists;
     }
+
+    public function getPlaylist(Request $request){
+        $lookup_url_kwarg = 'id';
+        $playlist_id = $request->$lookup_url_kwarg;
+        $playlist = Playlist::with('channel')->with('videos')->where('id', $playlist_id)->first();
+        if (!$playlist) throw new \ErrorException();
+        return $playlist;
+    }
+
+    public function getPlaylistVideos(Request $request){
+        $lookup_url_kwarg = 'id';
+        $playlist_id = $request->$lookup_url_kwarg;
+        $playlist = Playlist::where('id', $playlist_id)->first();
+        $videos = $playlist->videos()->get();
+        return $videos;
+    }
+
+    public function addToPlaylist(Request $request){
+        $video_lookup_url_kwarg = 'videoID';
+        $video_id = $request->$lookup_url_kwarg;
+        $playlist_lookup_url_kwarg = 'playlistID';
+        $playlist_id = $request->$lookup_url_kwarg;
+        $playlist = Playlist::where('id', $playlist_id)->first();
+        $video = Video::where('id', $video_id)->first();
+        $playlist->playlistVideos()->attach($video);
+    }
 }
