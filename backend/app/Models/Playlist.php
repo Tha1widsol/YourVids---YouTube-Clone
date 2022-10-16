@@ -10,12 +10,16 @@ class Playlist extends Model
     use HasFactory;
     protected $table = 'playlists';
 
-    public function videos() {
+    public function playlistVideos() {
         return $this->belongsToMany('App\Models\Video', 'playlist_videos', 'playlist_id', 'video_id')->withTimestamps();
     }
 
     public function channel(){
         return $this->belongsTo('App\Models\Channel');
+    }
+
+    public function videos(){
+        return $this->hasMany('App\Models\Video', 'channel_id');
     }
 
 }
