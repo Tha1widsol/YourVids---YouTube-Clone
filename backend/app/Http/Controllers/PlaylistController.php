@@ -54,6 +54,6 @@ class PlaylistController extends Controller
         $playlist_id = $request->$lookup_url_kwarg;
         $playlist = Playlist::where('id', $playlist_id)->first();
         $video = Video::where('id', $video_id)->first();
-        $playlist->playlistVideos()->attach($video);
+        $playlist->playlist()->attach($video);
     }
 }
