@@ -1,0 +1,9 @@
+.kebabMenuIcon:after{
+    float: right;
+    cursor: pointer;
+    content: '\2807';
+    font-size: 25px;
+    color:grey;
+}
+  
+
