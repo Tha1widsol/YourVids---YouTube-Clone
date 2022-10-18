@@ -127,6 +127,51 @@ textarea{
 Icon styles
 ##################*/
 
+  /* ################
+Dropdown styles
+##################*/
+
+.containerDropdown{
+  position: relative;
+  display: none;
+  float: right;
+  font-size: 16px;  
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  z-index: 1;
+  margin: 0;
+}
+
+.containerDropdownContent{
+  position: absolute;
+  right: 10;
+  background-color: #f9f9f9;
+  min-width: 200px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 5px;
+}
+
+.dropdownBtn{
+  color: black;
+  font-size: small;
+  background-color: unset;
+  border:unset;
+  padding: 14px 16px;
+  margin: 0;
+  width:100%;
+  text-align: start;
+}
+
+.dropdownBtn:hover{
+  background-color: lightgray;
+  color: black;
+ }
+
+
+
+.containerDropdown,.containerDropdownContent,.containerDropdownContent button {display: block;}
 
 
   /* ################
