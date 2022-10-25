@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Channel;
+use App\Models\Video;
 use App\Models\Playlist;
 
 class PlaylistController extends Controller
@@ -49,11 +50,21 @@ class PlaylistController extends Controller
 
     public function addToPlaylist(Request $request){
         $video_lookup_url_kwarg = 'videoID';
-        $video_id = $request->$lookup_url_kwarg;
+        $video_id = $request->$video_lookup_url_kwarg;
         $playlist_lookup_url_kwarg = 'playlistID';
-        $playlist_id = $request->$lookup_url_kwarg;
+        $playlist_id = $request->$playlist_lookup_url_kwarg;
         $playlist = Playlist::where('id', $playlist_id)->first();
         $video = Video::where('id', $video_id)->first();
         $playlist->playlist()->attach($video);
+    }
+
+    public function removeFromPlaylist(Request $request){
+        $video_lookup_url_kwarg = 'videoID';
+        $video_id = $request->$video_lookup_url_kwarg;
+        $playlist_lookup_url_kwarg = 'playlistID';
+        $playlist_id = $request->$playlist_lookup_url_kwarg;
+        $playlist = Playlist::where('id', $playlist_id)->first();
+        $video = Video::where('id', $video_id)->first();
+        $playlist->playlist()->detach($video);
     }
 }
