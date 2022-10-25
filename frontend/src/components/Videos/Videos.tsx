@@ -7,6 +7,7 @@ import KebabMenu from '../KebabMenu/KebabMenu'
 import Popup from '../Popup/Popup'
 import { fetchPlaylists } from '../../features/playlists/playlists'
 import './css/Videos.css'
+import axios from 'axios'
 
 export default function Videos({videos, isRow = true, isOwnVideos = false}: {videos: VideosProps['values'] | undefined, isRow?: boolean, isOwnVideos?: boolean}) {
   const videoProgress = useAppSelector(state => state.videoProgress.value)
@@ -29,6 +30,15 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
     setChosenVideo(videoID)
   }
 
+  function handleToggleAddToPlaylist(playlistID: number){
+    axios.post(`/api/addToPlaylist?videoID=${chosenVideo}&playlistID=${playlistID}`)
+    .then(response => {
+        if (response.status === 200){
+            console.log('Saved to playlist')
+        }
+    })
+  }
+
   
   return videos ? (
     <>
@@ -40,7 +50,7 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
                     <hr className = 'mt-0-mb-4'/>
                     <div className = 'row' style = {{alignItems: 'center', gap: '10px'}}>
                          <p>{playlist.title}</p>
-                         <input type = 'checkbox'/>
+                         <input type = 'checkbox' onClick = {() => handleToggleAddToPlaylist(playlist.id)}/>
                     </div>
                    
                 </div>
