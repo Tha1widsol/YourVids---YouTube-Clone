@@ -19,7 +19,7 @@ class Playlist extends Model
     }
 
     public function videos(){
-        return $this->hasMany('App\Models\Video', 'channel_id');
+        return $this->belongsToMany('App\Models\Video', 'playlist_videos', 'playlist_id', 'video_id');
     }
 
 }
