@@ -16,6 +16,7 @@ import channelSubscribersReducer from '../features/channels/channelSubscribers'
 import likedVideosReducer from '../features/videos/likedVideos'
 import { channelSubscribersApi } from '../features/channels/getSubscribers'
 import playlistsReducer from '../features/playlists/playlists'
+import playlistVideosReducer from '../features/videos/playlistVideos'
 import storage from 'redux-persist/lib/storage'
 
   const persistConfig = {
@@ -38,7 +39,8 @@ import storage from 'redux-persist/lib/storage'
     homeVideos: homeVideosReducer,
     likedVideos: likedVideosReducer,
     [channelSubscribersApi.reducerPath]: channelSubscribersApi.reducer,
-    playlists: playlistsReducer
+    playlists: playlistsReducer,
+    playlistVideos: playlistVideosReducer
   })
 
   const persistedReducer = persistReducer(persistConfig, reducers)
