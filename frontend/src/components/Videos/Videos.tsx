@@ -39,6 +39,15 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
     })
   }
 
+  function handleRemoveFromPlaylist(playlistID: number){
+    axios.delete(`/api/removeFromPlaylist?videoID=${chosenVideo}&playlistID=${playlistID}`)
+    .then(response => {
+        if (response.status === 200){
+            console.log('Removed from playlist')
+        }
+    })
+  }
+
   
   return videos ? (
     <>
@@ -50,13 +59,14 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
                     <hr className = 'mt-0-mb-4'/>
                     <div className = 'row' style = {{alignItems: 'center', gap: '10px'}}>
                          <p>{playlist.title}</p>
-                         <input type = 'checkbox' onClick = {() => handleToggleAddToPlaylist(playlist.id)}/>
+                         <input type = 'checkbox' onChange = {e => e.target.checked ? handleToggleAddToPlaylist(playlist.id) : handleRemoveFromPlaylist(playlist.id)}/>
                     </div>
                    
                 </div>
             )
            })}
         </Popup>
+        
        {videos?.length ? 
        <>
           <section className = {`videosContainer ${isRow ? 'row' : 'col'} `}>
