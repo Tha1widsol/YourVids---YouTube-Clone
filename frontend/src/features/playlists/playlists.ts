@@ -16,6 +16,20 @@ const initialState = {
             created_at: '',
             active: false
         },
+        videos: [{
+            id: 0,
+            title: '',
+            description: '',
+            views: 0,
+            likes: 0,
+            dislikes: 0,
+            thumbnail: '',
+            category: '',
+            length: '',
+            pathName: '',
+            created_at: ''
+        }],
+
         title: '',
         description: '',
         views: 0,
