@@ -1,5 +1,5 @@
 import React,{useEffect} from 'react'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { useAppDispatch, useAppSelector, useQuery } from '../../app/hooks'
 import { fetchChannel } from '../../features/channels/channel'
 import { fetchCurrentChannel } from '../../features/channels/currentChannel'
 import { fetchChannelVideos } from '../../features/videos/channelVideos'
@@ -10,9 +10,12 @@ import Videos from '../Videos/Videos'
 import Subscribe from '../Subscribe/Subscribe'
 import Playlists from '../Playlists/Playlists'
 import { fetchPlaylists } from '../../features/playlists/playlists'
+import ChannelNavbar from '../Navbar/ChannelNavbar'
 import './css/ChannelPage.css'
 
 export default function ChannelPage() {
+    const query = useQuery()
+    const tab = query.get('tab')
     const {channelID} = useParams()
     const dispatch = useAppDispatch()
     const user = useAppSelector(state => state.user)
@@ -67,10 +70,28 @@ export default function ChannelPage() {
         
          </div>
        </header>
-      
+       
+        <ChannelNavbar/>
+        
         <hr className = 'mt-0-mb-4'/>
-        <p>Videos:</p>
-        <Videos videos = {videos.values} isOwnVideos = {Number(channelID) === currentChannel.values?.id}/>
+        {tab === 'featured' ? 
+        <>
+          <h2>Featured</h2>
+        </>
+        : 
+        
+        tab === 'videos' ? 
+        <>
+         <p>Videos:</p>
+          <Videos videos = {videos.values} isOwnVideos = {Number(channelID) === currentChannel.values?.id}/>
+        </>
+        :
+        tab === 'playlists' ?
+        <>
+        <h2>Playlists</h2>
+        </>
+        : null}
+       
         {Number(channelID) === currentChannel.values?.id && subscribers.values.length ? 
         <>
          <hr className = 'mt-0-mb-4'/>
