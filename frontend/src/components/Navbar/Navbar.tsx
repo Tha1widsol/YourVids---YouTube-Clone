@@ -42,13 +42,14 @@ export default function Navbar() {
   }
 
   return (
-    <div className = 'nav'>
+    <div className = 'nav mainNav'>
         <NavLink to = '/' id = 'yourvids'>YourVids</NavLink>
         <NavLink to = '/home'>Home</NavLink>
         {user.isLoggedIn ?  
         <>
         <NavLink to = {`/channel/${currentChannel.values?.id}`}>Your channel</NavLink>
         <NavLink to = '/videos'>Your videos</NavLink>
+        <NavLink to = '/subscriptions'>Subscriptions</NavLink>
         <NavLink to = '/upload'>Upload</NavLink>
         <div className = 'dropdown'>
           <button id = 'navDropBtn' onClick={() => setDropdown({menu: !dropdown.menu, channels: false})}>My account</button>

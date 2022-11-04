@@ -1,19 +1,25 @@
 .nav{
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
     display: flex;
     align-items: center;
-    background-color: green;
     z-index: 1;
+}
+
+.mainNav{
+  position: fixed;
+  background-color: green;
+  top: 0;
+  left: 0;
+}
+
+.mainNav a {
+  color: white;
 }
 
 a{text-decoration: none;}
 
 .nav a{
     font-size: 16px;
-    color: white;
     padding: 14px 16px;
     text-decoration: none;
   }
@@ -45,9 +51,9 @@ a{text-decoration: none;}
   background-color: green;
 }
 
-.nav a:hover{color: whitesmoke}
+.mainNav a:hover{color: whitesmoke}
 
-.nav a.active{
+.mainNav a.active{
   border-bottom: 0.5px solid white;
 }
 
