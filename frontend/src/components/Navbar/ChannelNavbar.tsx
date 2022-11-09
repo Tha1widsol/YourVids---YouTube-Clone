@@ -10,7 +10,7 @@ export default function ChannelNavbar() {
 
   return (
     <div className = 'nav channelNav'>
-        <Link to = '?tab=featured' className = {tab === 'featured' ? 'active' : ''}>Home</Link>
+        <Link to = '?tab=featured' className = {tab === 'featured' || !tab ? 'active' : ''}>Home</Link>
         <Link to = '?tab=videos' className = {tab === 'videos' ? 'active' : ''}>Videos</Link>
         <Link to = '?tab=playlists' className = {tab === 'playlists' ? 'active' : ''}>Playlists</Link>
     </div>
