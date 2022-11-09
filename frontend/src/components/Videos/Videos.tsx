@@ -17,12 +17,12 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
   const playlists = useAppSelector(state => state.playlists)
   const currentChannelID = useAppSelector(state => state.currentChannel.values?.id)
   const user = useAppSelector(state => state.user)
-  const [chosenVideo, setChosenVideo] =  useState(0)
+  const [chosenVideo, setChosenVideo] = useState(0)
 
   useEffect(() => {
     if (!user.isLoggedIn) return
     dispatch(fetchPlaylists(currentChannelID))
-  },[dispatch])
+  },[dispatch, currentChannelID, user.isLoggedIn, chosenVideo])
 
   function handlePlaylistPopup(videoID: number){
     setPopup(prev => {return{...prev, playlist: true}})
@@ -48,7 +48,6 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
     })
   }
 
-  
   return videos ? (
     <>
         <Popup trigger = {popup.playlist} switchOff = {() => setPopup(prev => {return{...prev, playlist: false}})}>
@@ -58,10 +57,9 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
                     <h2>Add to playlist:</h2>
                     <hr className = 'mt-0-mb-4'/>
                     <div className = 'row' style = {{alignItems: 'center', gap: '10px'}}>
-                         <p>{playlist.title}</p>
-                         <input type = 'checkbox' onChange = {e => e.target.checked ? handleToggleAddToPlaylist(playlist.id) : handleRemoveFromPlaylist(playlist.id)}/>
+                    <p>{playlist.title}</p>
+                    <input type = 'checkbox' defaultChecked = {playlist.videos.filter(vid => vid.id === chosenVideo).length > 0} onChange = {e => e.target.checked ? handleToggleAddToPlaylist(playlist.id) : handleRemoveFromPlaylist(playlist.id)}/>
                     </div>
-                   
                 </div>
             )
            })}
