@@ -74,21 +74,23 @@ export default function ChannelPage() {
         <ChannelNavbar/>
         
         <hr className = 'mt-0-mb-4'/>
-        {tab === 'featured' ? 
+        {tab === 'featured' || !tab ? 
         <>
           <h2>Featured</h2>
+          <Videos videos = {videos.values} isOwnVideos = {Number(channelID) === currentChannel.values?.id}/>
         </>
         : 
-        
         tab === 'videos' ? 
         <>
-         <p>Videos:</p>
+         <h2>Videos</h2>
           <Videos videos = {videos.values} isOwnVideos = {Number(channelID) === currentChannel.values?.id}/>
         </>
         :
         tab === 'playlists' ?
         <>
         <h2>Playlists</h2>
+          <Playlists playlists = {playlists.values}/>
+     
         </>
         : null}
        
