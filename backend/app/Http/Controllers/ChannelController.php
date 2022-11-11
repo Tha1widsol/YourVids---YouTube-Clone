@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Channel;
 use App\Models\Subscription;
+use App\Models\Playlist;
 
 class ChannelController extends Controller
 {
@@ -35,7 +36,12 @@ class ChannelController extends Controller
         $channel->user_id = $user->id;
         $channel->active = true;
         $channel->save();
-
+        $savedPlaylist = new Playlist;
+        $savedPlaylist->title = "Saved";
+        $savedPlaylist->visibility = "Private";
+        $channel->playlists()->save($playlist);
+        $savedPlaylist->save();
+        
         return response([
             'message' => 'Channel is created'
         ]);

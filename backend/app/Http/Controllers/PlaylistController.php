@@ -50,6 +50,16 @@ class PlaylistController extends Controller
         $playlist->playlist()->attach($video);
     }
 
+    public function saveVideo(Request $request){
+        $lookup_url_kwarg = 'id';
+        $video_id = $request->$lookup_url_kwarg;
+        $user = Auth::user();
+        $video = Video::where('id', $video_id)->first();
+        $userChannel = Channel::where('user_id', $user->id)->where('active', true)->first();
+        $playlist = Playlist::where('channel_id', $userChannel->id)->where('title', 'Saved')->first();
+        $playlist->playlist()->attach($video);
+    }
+
     public function removeFromPlaylist(Request $request){
         $video_lookup_url_kwarg = 'videoID';
         $video_id = $request->$video_lookup_url_kwarg;

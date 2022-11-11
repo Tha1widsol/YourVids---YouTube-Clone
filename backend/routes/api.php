@@ -51,6 +51,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getPlaylists', [PlaylistController::class, 'getPlaylists']);
     Route::get('/getPlaylist', [PlaylistController::class, 'getPlaylist']);
     Route::post('/addToPlaylist',[PlaylistController::class, 'addToPlaylist']);
+    Route::post('/saveVideo',[PlaylistController::class, 'saveVideo']);
     Route::delete('/removeFromPlaylist',[PlaylistController::class, 'removeFromPlaylist']);
     Route::post('/logout',[UserController::class,'logout']);
 });
