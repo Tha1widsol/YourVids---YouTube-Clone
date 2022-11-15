@@ -34,7 +34,7 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
     axios.post(`/api/addToPlaylist?videoID=${chosenVideo}&playlistID=${playlistID}`)
     .then(response => {
         if (response.status === 200){
-            console.log('Saved to playlist')
+            alert('Saved to playlist')
         }
     })
   }
@@ -43,7 +43,7 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
     axios.delete(`/api/removeFromPlaylist?videoID=${chosenVideo}&playlistID=${playlistID}`)
     .then(response => {
         if (response.status === 200){
-            console.log('Removed from playlist')
+            alert('Removed from playlist')
         }
     })
   }
@@ -51,14 +51,14 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
   return videos ? (
     <>
         <Popup trigger = {popup.playlist} switchOff = {() => setPopup(prev => {return{...prev, playlist: false}})}>
+            <h2>Add to playlist:</h2>
+            <hr className = 'mt-0-mb-4'/>
            {playlists.values?.map((playlist, index) => {
             return (
                 <div key = {index}>
-                    <h2>Add to playlist:</h2>
-                    <hr className = 'mt-0-mb-4'/>
                     <div className = 'row' style = {{alignItems: 'center', gap: '10px'}}>
-                    <p>{playlist.title}</p>
-                    <input type = 'checkbox' defaultChecked = {playlist.videos.filter(vid => vid.id === chosenVideo).length > 0} onChange = {e => e.target.checked ? handleToggleAddToPlaylist(playlist.id) : handleRemoveFromPlaylist(playlist.id)}/>
+                        <p>{playlist.title}</p>
+                        <input type = 'checkbox' defaultChecked = {playlist.videos.filter(vid => vid.id === chosenVideo).length > 0} onChange = {e => e.target.checked ? handleToggleAddToPlaylist(playlist.id) : handleRemoveFromPlaylist(playlist.id)}/>
                     </div>
                 </div>
             )
@@ -79,8 +79,10 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
                         </Link>
                     
                         <KebabMenu current = {dropdown} many = {true} index = {index} switchOn = {() => setDropdown(index)} switchOff = {() => setDropdown(null)}>
-                            <button className = 'dropdownBtn'>Save</button>
-                            <button className = 'dropdownBtn' onClick = {() => handlePlaylistPopup(video.id)}>Add to playlist</button>
+                            <div onClick = {() => handlePlaylistPopup(video.id)}>
+                                <button className = 'dropdownBtn'>Save</button>
+                                <button className = 'dropdownBtn'>Add to playlist</button>
+                            </div>
                         </KebabMenu>
 
                         <Link to = {`/video/${video.id}`} key = {index}>
