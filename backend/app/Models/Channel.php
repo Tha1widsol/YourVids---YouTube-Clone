@@ -31,5 +31,9 @@ class Channel extends Model
         return $this->hasMany('App\Models\Playlist', 'channel_id');
     }
 
+    public function comments(){
+        return $this->hasMany('App\Models\Comments','video_id','channel_id');
+    }
+
 
 }
