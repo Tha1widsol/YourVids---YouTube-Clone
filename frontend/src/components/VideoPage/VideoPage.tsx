@@ -9,6 +9,7 @@ import ReactPlayer from 'react-player'
 import './css/VideoPage.css'
 import Popup from '../Popup/Popup'
 import PlaylistsCheckbox from '../Playlists/PlaylistsCheckbox'
+import Comments from '../Comments/Comments'
 import axios from 'axios'
 
 export default function VideoPage() {
@@ -17,6 +18,7 @@ export default function VideoPage() {
     const {videoID} = useParams()
     const video = useAppSelector(state => state.video)
     const currentChannel = useAppSelector(state => state.currentChannel)
+    const [comment, setComment] = useState('')
     const [videoFilePath, setVideoFilePath] = useState('')
     const [liked, setLiked] = useState(false)
     const [disliked, setDisliked] = useState(false)
@@ -79,6 +81,12 @@ export default function VideoPage() {
         axios.delete(`/api/removeLikeDislike?id=${videoID}`)
     }
 
+    function handleAddComment(e: React.SyntheticEvent){
+        e.preventDefault()
+        setComment('')
+
+    }
+
   return video.status === 'success' ? (
     <div>
         <Popup trigger = {popup.playlist} switchOff = {() => setPopup(prev => {return{...prev, playlist: false}})}>
@@ -113,6 +121,12 @@ export default function VideoPage() {
             <p className = 'description'>{video.values?.description}</p>
             <hr className = 'mt-0-mb-4'/>
             <p>Comments:</p>
+            <form style = {{margin: 'unset'}} onSubmit = {handleAddComment}>
+                <input type = 'text' value = {comment} onChange = {e => setComment(e.target.value)} placeholder = 'Add comment...'/>
+                <button>Post</button>
+            </form>
+         
+            <Comments/>
         </section>
     
     </div>
