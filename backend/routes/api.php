@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\PlaylistController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/saveVideo',[PlaylistController::class, 'saveVideo']);
     Route::delete('/removeFromPlaylist',[PlaylistController::class, 'removeFromPlaylist']);
     Route::post('/postComment',[CommentController::class, 'postComment']);
+    Route::get('/getVideoComments',[CommentController::class, 'getVideoComments']);
     Route::post('/logout',[UserController::class,'logout']);
 });
 
