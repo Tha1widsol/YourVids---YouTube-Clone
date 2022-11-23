@@ -32,7 +32,7 @@ class Channel extends Model
     }
 
     public function comments(){
-        return $this->hasMany('App\Models\Comments','video_id','channel_id');
+        return $this->hasMany('App\Models\Comment','channel_id');
     }
 
 
