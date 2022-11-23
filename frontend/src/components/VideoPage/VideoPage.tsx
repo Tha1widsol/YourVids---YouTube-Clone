@@ -10,6 +10,7 @@ import './css/VideoPage.css'
 import Popup from '../Popup/Popup'
 import PlaylistsCheckbox from '../Playlists/PlaylistsCheckbox'
 import Comments from '../Comments/Comments'
+import { fetchVideoComments } from '../../features/comments/comments'
 import axios from 'axios'
 
 export default function VideoPage() {
@@ -23,6 +24,8 @@ export default function VideoPage() {
     const [liked, setLiked] = useState(false)
     const [disliked, setDisliked] = useState(false)
     const [popup, setPopup] = useState({playlist: false})
+    const comments = useAppSelector(state => state.videoComments)
+    console.log(comments)
 
     useEffect(() => {
         if (user.isLoggedIn) dispatch(fetchCurrentChannel())
@@ -51,6 +54,9 @@ export default function VideoPage() {
             if (data.disliked) {
                 setDisliked(true)
             }
+
+           dispatch(fetchVideoComments(videoID))
+         
         })
 
     },[video.values?.pathName, dispatch, videoID, user.isLoggedIn])
@@ -83,7 +89,23 @@ export default function VideoPage() {
 
     function handleAddComment(e: React.SyntheticEvent){
         e.preventDefault()
-        setComment('')
+        const requestOptions = { 
+            headers:{'Content-Type':'application/json', 'Accept':'application/json'}
+          }
+
+        let form = new FormData();
+        form.append('video_id', videoID || '')
+        form.append('channel_id', String(currentChannel.values?.id) || '')
+        form.append('text', comment)
+
+        axios.post('/api/postComment', form, requestOptions)
+        .then(response => {
+            if (response.status === 200) {
+                console.log(response.data.message)
+                setComment('')
+            }
+        })
+      
 
     }
 
@@ -110,11 +132,11 @@ export default function VideoPage() {
             {video.values.channel.id !== currentChannel.values?.id || !user.isLoggedIn ? <div style = {{float: 'right'}}><Subscribe channel = {video.values?.channel}/></div> : <button className = 'edit' type = 'button'>Edit</button>}
             <section style = {{display: 'flex', columnGap: '10px'}}>
                 <Link to = {`/channel/${video.values.channel.id}`}>
-                {video.values?.channel?.logo ?  <img className = 'logo' style = {{width: '50px', height: '50px'}} src = {`/storage/${video.values?.channel?.logo}`} alt = ''/> : null}
-                <div>
-                    <p>{video.values?.channel?.name}</p>
-                    <p className = 'smallGray'>{video.values?.channel?.subscribers} subscribers</p>
-                </div>
+                    {video.values?.channel?.logo ?  <img className = 'logo' style = {{width: '50px', height: '50px'}} src = {`/storage/${video.values?.channel?.logo}`} alt = ''/> : null}
+                    <div>
+                        <p>{video.values?.channel?.name}</p>
+                        <p className = 'smallGray'>{video.values?.channel?.subscribers} subscribers</p>
+                    </div>
                 </Link>
             </section>
 
