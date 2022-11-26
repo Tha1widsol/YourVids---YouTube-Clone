@@ -20,7 +20,8 @@ class CommentController extends Controller
         $comment->save();
 
         return response([
-            'message' => 'Comment is posted'
+            'comment' => $comment,
+            'channel' => $channel
         ]);
     }
 
