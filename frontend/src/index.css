@@ -81,7 +81,7 @@ Image styles
 .logo{
   border-radius: 50%;
   width: 100%;
-  height: 90px;
+  height: 50px;
   width: min(70vw, 90px);
   border-width: 1.2px;
   border-style: solid;
