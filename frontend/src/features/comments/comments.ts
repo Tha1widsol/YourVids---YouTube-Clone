@@ -37,6 +37,10 @@ export const commentsSlice = createSlice({
         setComments: (state, action) => {
             state.values = action.payload
         },
+
+        addComment: (state, action) => {
+            state.values.push(action.payload)
+        }
     },
 
     extraReducers(builder){
@@ -57,5 +61,5 @@ export const commentsSlice = createSlice({
 
 })
 
-export const {setComments} = commentsSlice.actions
+export const {setComments, addComment} = commentsSlice.actions
 export default commentsSlice.reducer

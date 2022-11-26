@@ -11,6 +11,7 @@ import Popup from '../Popup/Popup'
 import PlaylistsCheckbox from '../Playlists/PlaylistsCheckbox'
 import Comments from '../Comments/Comments'
 import { fetchVideoComments } from '../../features/comments/comments'
+import { addComment } from '../../features/comments/comments'
 import axios from 'axios'
 
 export default function VideoPage() {
@@ -25,24 +26,28 @@ export default function VideoPage() {
     const [disliked, setDisliked] = useState(false)
     const [popup, setPopup] = useState({playlist: false})
     const comments = useAppSelector(state => state.videoComments)
-    console.log(comments)
 
     useEffect(() => {
-        if (user.isLoggedIn) dispatch(fetchCurrentChannel())
-         dispatch(fetchVideo(videoID))
-        if (!video.values?.pathName) return
-
-        axios({
-            method: 'get',
-            url: `/storage/${video.values?.pathName}`,
-            responseType: 'blob',
-        })
-
+        dispatch(fetchVideo(videoID))
         .then(response => {
-            const blob = response.data
-            const url = URL.createObjectURL(blob);
-            setVideoFilePath(url)
+            if (response.meta.requestStatus === 'fulfilled'){
+                axios({
+                    method: 'get',
+                    url: `/storage/${response.payload.pathName}`,
+                    responseType: 'blob',
+                })
+        
+                .then(response => {
+                    const blob = response.data
+                    const url = URL.createObjectURL(blob);
+                    setVideoFilePath(url)
+                })
+            }
         })
+
+        if (user.isLoggedIn) dispatch(fetchCurrentChannel())
+
+     
         axios.get(`/api/checkLikedVideo?id=${videoID}`)
         .then(response => {
             const data = response.data
@@ -56,10 +61,9 @@ export default function VideoPage() {
             }
 
            dispatch(fetchVideoComments(videoID))
-         
         })
 
-    },[video.values?.pathName, dispatch, videoID, user.isLoggedIn])
+    },[dispatch, videoID, user.isLoggedIn])
 
     function handleLikeVideo(){
         setLiked(!liked)
@@ -101,7 +105,16 @@ export default function VideoPage() {
         axios.post('/api/postComment', form, requestOptions)
         .then(response => {
             if (response.status === 200) {
-                console.log(response.data.message)
+                const comment = response.data.comment
+                const channel = response.data.channel
+
+                dispatch(addComment({
+                    channel: channel,
+                    text: comment.text,
+                    likes: 0,
+                    dislikes: 0,
+                    created_at: comment.created_at
+                }))
                 setComment('')
             }
         })
@@ -132,7 +145,7 @@ export default function VideoPage() {
             {video.values.channel.id !== currentChannel.values?.id || !user.isLoggedIn ? <div style = {{float: 'right'}}><Subscribe channel = {video.values?.channel}/></div> : <button className = 'edit' type = 'button'>Edit</button>}
             <section style = {{display: 'flex', columnGap: '10px'}}>
                 <Link to = {`/channel/${video.values.channel.id}`}>
-                    {video.values?.channel?.logo ?  <img className = 'logo' style = {{width: '50px', height: '50px'}} src = {`/storage/${video.values?.channel?.logo}`} alt = ''/> : null}
+                    {video.values?.channel?.logo ?  <img className = 'logo' src = {`/storage/${video.values?.channel?.logo}`} alt = ''/> : null}
                     <div>
                         <p>{video.values?.channel?.name}</p>
                         <p className = 'smallGray'>{video.values?.channel?.subscribers} subscribers</p>
@@ -147,8 +160,8 @@ export default function VideoPage() {
                 <input type = 'text' value = {comment} onChange = {e => setComment(e.target.value)} placeholder = 'Add comment...'/>
                 <button>Post</button>
             </form>
-         
-            <Comments/>
+    
+            <Comments comments = {comments.values}/>
         </section>
     
     </div>
