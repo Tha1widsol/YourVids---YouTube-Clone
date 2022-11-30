@@ -15,6 +15,8 @@ const initialState = {
             created_at: '',
             active: false
         },
+        id: 0,
+        videoID: 0,
         text: '',
         likes: 0,
         dislikes: 0,
