@@ -12,6 +12,7 @@ import Playlists from '../Playlists/Playlists'
 import { fetchPlaylists } from '../../features/playlists/playlists'
 import ChannelNavbar from '../Navbar/ChannelNavbar'
 import './css/ChannelPage.css'
+import UserChannels from '../UserChannels/UserChannels'
 
 export default function ChannelPage() {
     const query = useQuery()
@@ -112,6 +113,7 @@ export default function ChannelPage() {
         </>
       : <>
         <h2>Channel doesn't exist...</h2>
+        <UserChannels/>
         </>}
 
        

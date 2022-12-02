@@ -2,25 +2,38 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import { CommentsProps } from './types/CommentProps';
 import axios from 'axios';
 
+const channel = {
+    id: 0,
+    name: '',
+    description: '',
+    subscribers: 0,
+    views: 0,
+    logo: '',
+    banner: '',
+    created_at: '',
+    active: false
+}
+
+
 const initialState = {
     values: [{
-        channel: {
-            id: 0,
-            name: '',
-            description: '',
-            subscribers: 0,
-            views: 0,
-            logo: '',
-            banner: '',
-            created_at: '',
-            active: false
-        },
+        channel,
         id: 0,
         videoID: 0,
         text: '',
         likes: 0,
         dislikes: 0,
-        created_at: ''
+        created_at: '',
+
+        replies: [{
+            channel,
+            id: 0,
+            videoID: 0,
+            text: '',
+            likes: 0,
+            dislikes: 0,
+            created_at: ''
+        }]
     }]
 } as CommentsProps
 

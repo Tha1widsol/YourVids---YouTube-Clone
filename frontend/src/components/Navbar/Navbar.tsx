@@ -59,6 +59,7 @@ export default function Navbar() {
                     <p><b>{currentChannel.values?.name}</b></p>
                     <button id = 'navDropBtn' onClick = {() => setDropdown({menu: false, channels: true})}>Switch channel</button>
                     <NavLink to = '/videos'>My Videos</NavLink>
+                    <NavLink to = '/channels'>My Channels</NavLink>
                     <NavLink to = '/' onClick = {handleLogout}>Logout</NavLink>
                     </>
                     : dropdown.channels ?
@@ -66,6 +67,7 @@ export default function Navbar() {
                     <div style = {{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                       <p>Channels:</p>
                       <button id = 'navDropBtn' className = 'arrow' onClick = {() => setDropdown({menu: true, channels: false})}>Return</button>
+            
                     </div>
                     {channels.values?.map((channel, index) => {
                       return (

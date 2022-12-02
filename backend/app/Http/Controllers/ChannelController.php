@@ -39,7 +39,7 @@ class ChannelController extends Controller
         $savedPlaylist = new Playlist;
         $savedPlaylist->title = "Saved";
         $savedPlaylist->visibility = "Private";
-        $channel->playlists()->save($playlist);
+        $channel->playlists()->save($savedPlaylist);
         $savedPlaylist->save();
         
         return response([

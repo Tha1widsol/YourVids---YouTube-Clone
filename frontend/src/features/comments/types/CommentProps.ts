@@ -9,6 +9,16 @@ export interface CommentsProps{
         likes: number
         dislikes: number
         created_at: string
+        
+        replies: [{
+            channel: ChannelProps['values']
+            id: number
+            videoID: number
+            text: string
+            likes: number
+            dislikes: number
+            created_at: string
+        }]
     }]
     status: '' | 'success' | 'loading' | 'rejected'
 }
