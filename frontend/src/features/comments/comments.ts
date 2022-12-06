@@ -55,6 +55,11 @@ export const commentsSlice = createSlice({
 
         addComment: (state, action) => {
             state.values.push(action.payload)
+        },
+
+        addReply: (state, action) => {
+            const index = state.values.findIndex(comment => comment.id === action.payload.parent_id)
+            state.values[index].replies.push(action.payload)
         }
     },
 
@@ -76,5 +81,5 @@ export const commentsSlice = createSlice({
 
 })
 
-export const {setComments, addComment} = commentsSlice.actions
+export const {setComments, addComment, addReply} = commentsSlice.actions
 export default commentsSlice.reducer
