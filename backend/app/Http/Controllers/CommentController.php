@@ -45,7 +45,7 @@ class CommentController extends Controller
         $reply->save();
 
         return response([
-            'reply' => $reply,
+            'reply' => Comment::with('channel')->where('id', $reply->id)->first()
         ]);
 
     }
