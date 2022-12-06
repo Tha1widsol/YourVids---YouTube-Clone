@@ -2,12 +2,15 @@ import React,{useState} from 'react'
 import { useParams } from 'react-router-dom'
 import { CommentsProps } from '../../features/comments/types/CommentProps'
 import Popup from '../Popup/Popup'
-import { useAppSelector } from '../../app/hooks'
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import './css/Comments.css'
+import { addReply } from '../../features/comments/comments'
 import axios from 'axios'
 
 export default function Comments({comments}: {comments: CommentsProps['values']}) {
+  const dispatch = useAppDispatch()
   const [popup, setPopup] = useState({reply: false, comment: {id: 0, channelID: 0}})
+  const [showReplies, setShowReplies] = useState(false)
   const [reply, setReply] = useState('')
   const currentChannel = useAppSelector(state => state.currentChannel)
   const {videoID} = useParams()
@@ -18,7 +21,6 @@ export default function Comments({comments}: {comments: CommentsProps['values']}
     const requestOptions = {
       headers: {'Content-Type':'application/json', 'Accept':'application/json'}
     }
-    console.log(popup.comment)
 
     let form = new FormData()
     form.append('text', reply)
@@ -30,7 +32,9 @@ export default function Comments({comments}: {comments: CommentsProps['values']}
     axios.post(`/api/postReply`,form, requestOptions)
     .then(response => {
       if (response.status === 200){
-        console.log(response.data)
+        const r = response.data.reply
+        dispatch(addReply(r))
+        setPopup(prev => {return{...prev, reply: false}})
       }
     })
     
@@ -64,10 +68,35 @@ export default function Comments({comments}: {comments: CommentsProps['values']}
                           <p>{comment.dislikes}</p>
                           <button onClick = {() => setPopup(prev => ({...prev, reply: true, comment: {...prev, id: comment.id, channelID: comment.channel.id}}))}>Reply</button>
                        </div>
+                  
+                  {showReplies ? 
+                  <div>
+                      {comment.replies.map((reply, index) => {
+                      return (
+                          <div key = {index}>
+                            <b style = {{fontWeight: 500}}>{reply.channel?.name}</b>
+                            <p>{reply.text}</p>
+                              <div className = 'row likesDislikes'>
+                                <i className = 'fa fa-thumbs-up'/>
+                                <p>{reply.likes}</p>
+                                <i className = 'fa fa-thumbs-down'/>
+                                <p>{reply.dislikes}</p>
+                                <button onClick = {() => setPopup(prev => ({...prev, reply: true, comment: {...prev, id: reply.id, channelID: reply.channel.id}}))}>Reply</button>
+                              </div>
+                          </div>
+                      )
+                      })}
+                      <button onClick = {() => setShowReplies(false)}>Close</button>
+                  </div>
+                  : comment.replies.length ? <button onClick = {() => setShowReplies(true)}>Show replies</button> : null}
+                 
                    </div>
       
                 </span>
-             
+
+              
+         
+                
              </div>
           )
         })}
