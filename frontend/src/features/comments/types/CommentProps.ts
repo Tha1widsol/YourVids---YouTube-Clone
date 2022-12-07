@@ -22,3 +22,15 @@ export interface CommentsProps{
     }]
     status: '' | 'success' | 'loading' | 'rejected'
 }
+
+export interface CommentProps {
+        channel: ChannelProps['values']
+        id: number
+        videoID: number
+        text: string
+        likes: number
+        dislikes: number
+        created_at: string
+        
+     
+}
