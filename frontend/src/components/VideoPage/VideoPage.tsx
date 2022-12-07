@@ -9,7 +9,7 @@ import ReactPlayer from 'react-player'
 import './css/VideoPage.css'
 import Popup from '../Popup/Popup'
 import PlaylistsCheckbox from '../Playlists/PlaylistsCheckbox'
-import Comments from '../Comments/Comments'
+import CommentsSection from '../Comments/CommentsSection'
 import { fetchVideoComments } from '../../features/comments/comments'
 import { addComment } from '../../features/comments/comments'
 import axios from 'axios'
@@ -161,7 +161,7 @@ export default function VideoPage() {
                 <button>Post</button>
             </form>
     
-            <Comments comments = {comments.values}/>
+            <CommentsSection comments = {comments.values}/>
         </section>
     
     </div>
