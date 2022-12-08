@@ -19,7 +19,8 @@ const initialState = {
     values: [{
         channel,
         id: 0,
-        videoID: 0,
+        video_id: 0,
+        parent_id: 0,
         text: '',
         likes: 0,
         dislikes: 0,
@@ -28,7 +29,8 @@ const initialState = {
         replies: [{
             channel,
             id: 0,
-            videoID: 0,
+            video_id: 0,
+            parent_id: 0,
             text: '',
             likes: 0,
             dislikes: 0,

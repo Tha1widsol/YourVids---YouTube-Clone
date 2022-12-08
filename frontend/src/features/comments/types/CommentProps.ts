@@ -4,7 +4,8 @@ export interface CommentsProps{
     values:[{
         channel: ChannelProps['values']
         id: number
-        videoID: number
+        video_id: number
+        parent_id: number
         text: string
         likes: number
         dislikes: number
@@ -13,7 +14,8 @@ export interface CommentsProps{
         replies: [{
             channel: ChannelProps['values']
             id: number
-            videoID: number
+            video_id: number
+            parent_id: number
             text: string
             likes: number
             dislikes: number
@@ -26,7 +28,8 @@ export interface CommentsProps{
 export interface CommentProps {
         channel: ChannelProps['values']
         id: number
-        videoID: number
+        video_id: number
+        parent_id: number
         text: string
         likes: number
         dislikes: number
