@@ -10,7 +10,7 @@ import axios from 'axios'
 
 export default function CommentsSection({comments}: {comments: CommentsProps['values']}) {
   const dispatch = useAppDispatch()
-  const [popup, setPopup] = useState({reply: false, comment: {id: 0, channelID: 0}})
+  const [popup, setPopup] = useState({reply: false, comment: {id: 0}})
   const [showReplies, setShowReplies] = useState<{commentIDList: Array<number>}>({commentIDList: []})
   const [reply, setReply] = useState('')
   const currentChannel = useAppSelector(state => state.currentChannel)
@@ -65,21 +65,20 @@ export default function CommentsSection({comments}: {comments: CommentsProps['va
         {comments.map((comment, index) => {
           return (
             <div className = 'comments' key = {index}>
-              <Comment comment = {comment} replyOn = {() => setPopup(prev => ({...prev, reply: true, comment: {...prev, id: comment.id, channelID: comment.channel.id}}))}/>
-               
+              <Comment comment = {comment} replyOn = {() => setPopup(prev => ({...prev, reply: true, comment: {...prev, id: comment.id}}))}/> 
                <div className = 'replies'>
                  {showReplies.commentIDList.includes(comment.id) ? 
                     <>
                         {comment.replies.map((reply, index) => {
                          return (
                             <div key = {index}>
-                              <Comment comment = {reply} replyOn = {() => setPopup(prev => ({...prev, reply: true, comment: {...prev, id: comment.id, channelID: comment.channel.id}}))}/>
+                              <Comment comment = {reply} replyOn = {() => setPopup(prev => ({...prev, reply: true, comment: {...prev, id: reply.id}}))}/>
                             </div>
                          ) 
                         })}
                         <button onClick = {() => handleCloseReply(comment.id)}>Close replies</button>
                     </>
-                    : comment.replies.length ? <button onClick = {() => setShowReplies(prev => {return{...prev, commentIDList: [...prev.commentIDList, comment.id]}})}>Show replies</button> : null}
+                    : comment.replies?.length ? <button onClick = {() => setShowReplies(prev => {return{...prev, commentIDList: [...prev.commentIDList, comment.id]}})}>Show replies</button> : null}
 
                  </div>
                 
