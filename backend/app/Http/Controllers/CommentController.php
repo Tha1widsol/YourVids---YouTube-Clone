@@ -28,7 +28,7 @@ class CommentController extends Controller
     public function getVideoComments(Request $request){
         $lookup_url_kwarg = 'id';
         $video_id = $request->$lookup_url_kwarg;
-        $comments = Comment::with('channel')->with('replies', 'replies.channel')->where('video_id', $video_id)->get();
+        $comments = Comment::with('channel')->with('replies', 'replies.channel')->where('video_id', $video_id)->where('parent_id', null)->get();
         if (!$comments) throw new \ErrorException;
         return $comments;
     }
