@@ -36,7 +36,6 @@ class CommentController extends Controller
     public function postReply(Request $request){
         $reply = new Comment;
         $reply->text = $request->text;
-        $rootComment = Comment::where('id', $request->root_id)->first();
         $video = Video::where('id', $request->video_id)->first();
         $video->comments()->save($reply);
         $channel = Channel::where('id', $request->channel_id)->first();
