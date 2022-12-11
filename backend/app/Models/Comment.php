@@ -15,12 +15,22 @@ class Comment extends Model
         return $this->belongsTo('App\Models\Channel');
     }
 
+    public function parent(){
+        return $this->belongsTo('App\Models\Comment', 'parent_id');
+    }
+
+    public function parents(){
+        return $this->hasMany(Comment::class, 'parent_id');
+    }
+
     public function video(){
         return $this->belongsTo('App\Models\Video');
     }
 
     public function replies(){
-        return $this->hasMany(Comment::class, 'parent_id');
+        return $this->hasMany(Comment::class, 'root_id');
     }
+
+
 
 }

@@ -108,13 +108,7 @@ export default function VideoPage() {
                 const comment = response.data.comment
                 const channel = response.data.channel
 
-                dispatch(addComment({
-                    channel: channel,
-                    text: comment.text,
-                    likes: 0,
-                    dislikes: 0,
-                    created_at: comment.created_at
-                }))
+                dispatch(fetchVideoComments(videoID))
                 setComment('')
             }
         })

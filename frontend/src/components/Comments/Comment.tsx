@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { CommentProps } from '../../features/comments/types/CommentProps'
 import './css/Comments.css'
 
-export default function Comment({comment, replyOn} : {comment: CommentProps, replyOn: () => void}) {
+export default function Comment({comment, parentChannelName = '', replyOn} : {comment: CommentProps, parentChannelName?: string, replyOn: () => void}) {
   return (
         <>
             <span className = 'row' style = {{gap: '20px'}}>
@@ -14,7 +14,14 @@ export default function Comment({comment, replyOn} : {comment: CommentProps, rep
                     <Link to = {`/channel/${comment.channel?.id}`}>
                          <b style = {{fontWeight: 500}}>{comment.channel?.name}</b>
                     </Link>
-                        <p>{comment.text}</p>
+                     
+                      
+                            <p className = 'row' style = {{gap: '10px'}}>
+                                {parentChannelName ? <b>@{parentChannelName}</b> : null}
+                                <span>{comment.text}</span>
+                            </p>
+                    
+
                         <div className = 'row likesDislikes'>
                             <i className = 'fa fa-thumbs-up'/>
                             <p>{comment.likes}</p>

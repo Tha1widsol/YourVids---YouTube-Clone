@@ -21,6 +21,7 @@ const initialState = {
         id: 0,
         video_id: 0,
         parent_id: 0,
+        root_id: 0,
         text: '',
         likes: 0,
         dislikes: 0,
@@ -31,6 +32,18 @@ const initialState = {
             id: 0,
             video_id: 0,
             parent_id: 0,
+            parent: {
+                channel,
+                id: 0,
+                video_id: 0,
+                parent_id: 0,
+                root_id: 0,
+                text: '',
+                likes: 0,
+                dislikes: 0,
+                created_at: ''
+            },
+            root_id: 0,
             text: '',
             likes: 0,
             dislikes: 0,
@@ -43,6 +56,7 @@ export const fetchVideoComments = createAsyncThunk(
     'comment/fetchVideoComments',
     async (id: number | string | undefined) => {
         const response = await axios.get(`/api/getVideoComments?id=${id}`)
+        console.log(response.data)
         return response.data
     }
 )
@@ -60,7 +74,7 @@ export const commentsSlice = createSlice({
         },
 
         addReply: (state, action) => {
-            const index = state.values.findIndex(comment => comment.id === action.payload.parent_id)
+            const index = state.values.findIndex(comment => comment.id === action.payload.root_id)
             state.values[index].replies.push(action.payload)
         }
     },
