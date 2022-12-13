@@ -7,6 +7,7 @@ import { fetchChannels } from '../../features/channels/channels';
 import { fetchCurrentChannel } from '../../features/channels/currentChannel';
 import axios from 'axios'
 
+
 export default function Navbar() {
   const user = useAppSelector(state => state.user)
   const [dropdown, setDropdown] = useState({menu: false, channels: false})
@@ -23,7 +24,9 @@ export default function Navbar() {
   function handleLogout(){
     axios.post('/api/logout')
     .then(response => {
-      if (response.status === 200) dispatch(logout())
+      if (response.status === 200) {
+        dispatch(logout())
+      }
     })
   }
   

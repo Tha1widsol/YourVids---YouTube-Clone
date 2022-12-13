@@ -31,6 +31,8 @@ Route::get('/getVideo',[VideoController::class, 'getVideo']);
 Route::get('/getVideos',[VideoController::class, 'getHomeVideos']);
 Route::get('/getChannelVideos',[VideoController::class,'getChannelVideos']);
 Route::get('/getLikedVideos', [VideoController::class, 'getLikedVideos']);
+Route::get('/getVideoComments',[CommentController::class, 'getVideoComments']);
+Route::get('/getCurrentChannel',[ChannelController::class, 'getCurrentChannel']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getUser',[UserController::class,'getUser']);
@@ -42,7 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/checkSubscribed',[ChannelController::class, 'checkSubscribed']);
     Route::get('/getSubscriptionVideos',[VideoController::class, 'getSubscriptionVideos']);
     Route::get('/getSubscribers',[ChannelController::class, 'getSubscribers']);
-    Route::get('/getCurrentChannel',[ChannelController::class, 'getCurrentChannel']);
+
     Route::post('/likeVideo',[VideoController::class, 'likeVideo']);
     Route::post('/dislikeVideo',[VideoController::class, 'dislikeVideo']);
     Route::get('/checkLikedVideo',[VideoController::Class, 'checkLikedVideo']);
@@ -56,7 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/removeFromPlaylist',[PlaylistController::class, 'removeFromPlaylist']);
     Route::post('/postComment',[CommentController::class, 'postComment']);
     Route::post('/postReply',[CommentController::class, 'postReply']);
-    Route::get('/getVideoComments',[CommentController::class, 'getVideoComments']);
+
     Route::post('/logout',[UserController::class,'logout']);
 });
 

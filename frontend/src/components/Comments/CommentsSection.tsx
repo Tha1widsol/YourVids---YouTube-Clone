@@ -1,5 +1,5 @@
-import React,{useEffect, useState} from 'react'
-import { useParams } from 'react-router-dom'
+import React,{ useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import { CommentsProps } from '../../features/comments/types/CommentProps'
 import Popup from '../Popup/Popup'
 import { useAppSelector, useAppDispatch } from '../../app/hooks'
@@ -10,6 +10,7 @@ import axios from 'axios'
 
 export default function CommentsSection({comments}: {comments: CommentsProps['values']}) {
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const [popup, setPopup] = useState<{reply: boolean, comment: {id: number, rootID: number | null}}>({reply: false, comment: {id: 0, rootID: null}})
   const [showReplies, setShowReplies] = useState<{commentIDList: Array<number>}>({commentIDList: []})
   const [reply, setReply] = useState('')
@@ -41,7 +42,10 @@ export default function CommentsSection({comments}: {comments: CommentsProps['va
         setReply('')
       }
     })
-    
+
+    .catch(error => {
+      if (error.response.status === 401) navigate('/login')
+    })
   }
 
  function handleCloseReply(commentID: number){

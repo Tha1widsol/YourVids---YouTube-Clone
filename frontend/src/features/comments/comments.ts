@@ -56,7 +56,6 @@ export const fetchVideoComments = createAsyncThunk(
     'comment/fetchVideoComments',
     async (id: number | string | undefined) => {
         const response = await axios.get(`/api/getVideoComments?id=${id}`)
-        console.log(response.data)
         return response.data
     }
 )

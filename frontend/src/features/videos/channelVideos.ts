@@ -45,6 +45,10 @@ export const channelVideosSlice = createSlice({
         setVideos: (state, action) => {
             state.values = action.payload
         },
+
+        removeVideo: (state, action) => {
+            state.values.splice(state.values.findIndex(video => video.id === action.payload))
+        }
     },
 
     extraReducers(builder){
@@ -65,5 +69,5 @@ export const channelVideosSlice = createSlice({
 
 })
 
-export const {setVideos} = channelVideosSlice.actions
+export const {setVideos, removeVideo} = channelVideosSlice.actions
 export default channelVideosSlice.reducer

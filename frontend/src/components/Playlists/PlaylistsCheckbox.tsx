@@ -1,15 +1,18 @@
 import React,{useState, useEffect} from 'react'
 import { useAppSelector, useAppDispatch } from '../../app/hooks'
+import { fetchChannel } from '../../features/channels/channel'
 import { fetchPlaylists } from '../../features/playlists/playlists'
 
 export default function PlaylistsCheckbox() {
     const dispatch = useAppDispatch()
     const playlists = useAppSelector(state => state.playlists)
-    const channelID = useAppSelector(state => state.currentChannel.values.id)
+    const channel = useAppSelector(state => state.currentChannel)
+    const user = useAppSelector(state => state.user)
     const [selectedChannelID, setSelectedChannelID] = useState('')
 
     useEffect(() => {
-        dispatch(fetchPlaylists(channelID))
+       if (channel.status === 'rejected' || !user.isLoggedIn) return
+        dispatch(fetchPlaylists(channel.values?.id))
     },[dispatch])
 
     function handleCheckedBox(e: React.ChangeEvent<HTMLInputElement>){

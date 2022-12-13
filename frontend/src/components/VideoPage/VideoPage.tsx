@@ -1,5 +1,5 @@
 import React,{useState, useEffect} from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { fetchVideo } from '../../features/videos/video'
 import { fetchCurrentChannel } from '../../features/channels/currentChannel'
@@ -11,11 +11,14 @@ import Popup from '../Popup/Popup'
 import PlaylistsCheckbox from '../Playlists/PlaylistsCheckbox'
 import CommentsSection from '../Comments/CommentsSection'
 import { fetchVideoComments } from '../../features/comments/comments'
-import { addComment } from '../../features/comments/comments'
+import { removeVideo } from '../../features/videos/channelVideos'
 import axios from 'axios'
+import { fetchChannelVideos } from '../../features/videos/channelVideos'
+import Videos from '../Videos/Videos'
 
 export default function VideoPage() {
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
     const user = useAppSelector(state => state.user)
     const {videoID} = useParams()
     const video = useAppSelector(state => state.video)
@@ -26,6 +29,7 @@ export default function VideoPage() {
     const [disliked, setDisliked] = useState(false)
     const [popup, setPopup] = useState({playlist: false})
     const comments = useAppSelector(state => state.videoComments)
+    const videos = useAppSelector(state => state.channelVideos)
 
     useEffect(() => {
         dispatch(fetchVideo(videoID))
@@ -42,25 +46,37 @@ export default function VideoPage() {
                     const url = URL.createObjectURL(blob);
                     setVideoFilePath(url)
                 })
+              
             }
         })
 
-        if (user.isLoggedIn) dispatch(fetchCurrentChannel())
+        if (user.isLoggedIn){
+            dispatch(fetchCurrentChannel())
+            .then(response => {
+                if (response.meta.requestStatus === 'fulfilled' && currentChannel.status === 'success'){
+                    axios.get(`/api/checkLikedVideo?id=${videoID}`)
+                    .then(response => {
+                        const data = response.data
+                
+                        if (data.liked) {
+                            setLiked(true)
+                        }
+            
+                        if (data.disliked) {
+                            setDisliked(true)
+                        }
+            
+                    })
+                }
+            })
+        }
 
-     
-        axios.get(`/api/checkLikedVideo?id=${videoID}`)
+        dispatch(fetchVideoComments(videoID))   
+        dispatch(fetchChannelVideos(video.values?.channel.id))
         .then(response => {
-            const data = response.data
-    
-            if (data.liked) {
-                setLiked(true)
+            if (response.meta.requestStatus === 'fulfilled'){
+                dispatch(removeVideo(videoID))
             }
-
-            if (data.disliked) {
-                setDisliked(true)
-            }
-
-           dispatch(fetchVideoComments(videoID))
         })
 
     },[dispatch, videoID, user.isLoggedIn])
@@ -93,6 +109,7 @@ export default function VideoPage() {
 
     function handleAddComment(e: React.SyntheticEvent){
         e.preventDefault()
+
         const requestOptions = { 
             headers:{'Content-Type':'application/json', 'Accept':'application/json'}
           }
@@ -105,14 +122,13 @@ export default function VideoPage() {
         axios.post('/api/postComment', form, requestOptions)
         .then(response => {
             if (response.status === 200) {
-                const comment = response.data.comment
-                const channel = response.data.channel
-
                 dispatch(fetchVideoComments(videoID))
                 setComment('')
             }
         })
-      
+        .catch(error => {
+            if (error.response.status === 401) navigate('/login')
+        })
 
     }
 
@@ -122,7 +138,8 @@ export default function VideoPage() {
             <PlaylistsCheckbox/>
         </Popup>
 
-        <section style = {{maxWidth: '60%'}}>
+    <div className = 'row' style = {{justifyContent: 'space-evenly'}}>
+      <section style = {{maxWidth: '60%'}}>
             <p className = 'title'>{video.values?.title}</p>
             <ReactPlayer className = 'skeleton' url = {videoFilePath} controls playing/> 
            
@@ -157,7 +174,13 @@ export default function VideoPage() {
     
             <CommentsSection comments = {comments.values}/>
         </section>
-    
+
+        <section>
+             <Videos videos = {videos.values} isRow = {false}/>
+        </section>
+    </div>
+       
+       
     </div>
  ) : video.status === 'rejected' ? <p>404 page not found</p> : <p>Loading...</p>
 }
