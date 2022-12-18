@@ -14,6 +14,7 @@ import { fetchVideoComments } from '../../features/comments/comments'
 import { removeVideo } from '../../features/videos/channelVideos'
 import axios from 'axios'
 import { fetchChannelVideos } from '../../features/videos/channelVideos'
+import { incrementViews } from '../../features/videos/video'
 import Videos from '../Videos/Videos'
 
 export default function VideoPage() {
@@ -46,6 +47,13 @@ export default function VideoPage() {
                     const url = URL.createObjectURL(blob);
                     setVideoFilePath(url)
                 })
+                axios.put(`/api/incrementViews?id=${videoID}`)
+                .then(response => {
+                    if (response.status === 200){
+                        dispatch(incrementViews())
+                    }
+                })
+               
               
             }
         })
@@ -70,15 +78,16 @@ export default function VideoPage() {
                 }
             })
         }
-
+      
         dispatch(fetchVideoComments(videoID))   
         dispatch(fetchChannelVideos(video.values?.channel.id))
         .then(response => {
             if (response.meta.requestStatus === 'fulfilled'){
                 dispatch(removeVideo(videoID))
+               
             }
         })
-
+      
     },[dispatch, videoID, user.isLoggedIn])
 
     function handleLikeVideo(){
