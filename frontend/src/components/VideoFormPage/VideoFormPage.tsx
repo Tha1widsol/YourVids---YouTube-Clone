@@ -14,7 +14,7 @@ export default function VideoFormPage() {
   const [video, setVideo] = useState<VideoProps>({value: '', name: '', length: ''})
   const [thumbnail, setThumbnail] = useState<FileProps>({value: '', name: ''})
   const [description, setDescription] = useState({value: '', maxlength: 5000})
-  const [category, setCategory] = useState({value: ''})
+  const [category, setCategory] = useState({value: 'Any'})
   const currentChannel = useAppSelector(state => state.currentChannel)
   const [videoFilePath, setVideoFilePath] = useState('')
 
