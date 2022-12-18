@@ -95,6 +95,14 @@ class VideoController extends Controller
         return $videos;
     }
 
+    public function incrementViews(Request $request){
+      $lookup_url_kwarg = 'id';
+      $video_id = $request->$lookup_url_kwarg;
+      $video = Video::find($video_id);
+      $video->views++;
+      $video->save();
+    }
+
     public function likeVideo(Request $request){
         $lookup_url_kwarg = 'id';
         $video_id = $request->$lookup_url_kwarg;

@@ -33,6 +33,7 @@ Route::get('/getChannelVideos',[VideoController::class,'getChannelVideos']);
 Route::get('/getLikedVideos', [VideoController::class, 'getLikedVideos']);
 Route::get('/getVideoComments',[CommentController::class, 'getVideoComments']);
 Route::get('/getCurrentChannel',[ChannelController::class, 'getCurrentChannel']);
+Route::put('/incrementViews',[VideoController::class, 'incrementViews']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getUser',[UserController::class,'getUser']);
