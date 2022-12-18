@@ -39,7 +39,7 @@ export const fetchVideo = createAsyncThunk(
 )
 
 export const videoSlice = createSlice({
-    name: 'videos',
+    name: 'video',
     initialState,
     reducers: {
         setVideo: (state, action) => {
