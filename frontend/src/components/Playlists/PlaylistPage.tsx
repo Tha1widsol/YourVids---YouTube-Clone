@@ -1,12 +1,15 @@
-import React,{useEffect} from 'react'
+import React,{useState, useEffect} from 'react'
 import { useParams } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { fetchPlaylist } from '../../features/playlists/playlist'
+import PlaylistForm from '../PlaylistForm/PlaylistForm'
+import Popup from '../Popup/Popup'
 import Videos from '../Videos/Videos'
 
 export default function PlaylistPage() {
     const dispatch = useAppDispatch()
     const {playlistID} = useParams()
+    const [popup, setPopup] = useState({edit: false})
     const playlist = useAppSelector(state => state.playlist.values)
 
     useEffect(() => {
@@ -15,9 +18,12 @@ export default function PlaylistPage() {
 
   return (
     <div>
+        <Popup trigger = {popup.edit} switchOff = {() => setPopup(prev => {return{...prev, edit: false}})}>
+          <PlaylistForm playlistID = {playlistID} popupOff = {() => setPopup(prev => {return{...prev, edit: false}})}/>
+        </Popup>  
         <div className = 'row' style = {{gap: '10px'}}>
            <h2>{playlist.title}</h2>
-           <button>Edit</button>
+           <button onClick = {() => setPopup(prev => {return{...prev, edit: true}})}>Edit</button>
         </div>
        
          <p>{playlist.description}</p>

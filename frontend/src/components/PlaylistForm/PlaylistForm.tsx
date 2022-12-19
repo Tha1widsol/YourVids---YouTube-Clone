@@ -1,35 +1,38 @@
 import React,{useState} from 'react'
 import axios from 'axios'
 
-export default function PlaylistForm({popupOff}: {popupOff: () => void}) {
+export default function PlaylistForm({playlistID, popupOff}: {playlistID?: number | string, popupOff: () => void}) {
   const [title, setTitle] = useState({value: '', maxlength: 200})
   const [description, setDescription] = useState({value: '', maxlength: 500})
   const [visibility, setVisibility] = useState({value: 'Public'})
 
   function handleSubmit(e: React.SyntheticEvent){
     e.preventDefault()
-    const requestOptions = {
-      headers: {'Content-Type': 'multipart/form-data'}
-    }
 
     let form = new FormData();
     form.append('title', title.value)
     form.append('description', description.value)
     form.append('visibility', visibility.value)
-    
-    axios.post('/api/createPlaylist',form, requestOptions)
+
+    axios({
+      method: playlistID ? 'put' : 'post',
+      url: playlistID ? `/api/editPlaylist?id=${playlistID}` : `/api/createPlaylist`,
+      headers: {'Content-Type': 'multipart/form-data'},
+      data: form
+    })
+
     .then(response => {
       if (response.status === 200){
+        console.log(response.data)
          popupOff()
       }
     })
 
-    
   }
 
   return (
     <form className = 'popupForm' onSubmit = {handleSubmit}>
-      <h2>Create a playlist:</h2>
+      <h2>{playlistID ? 'Edit Playlist:' : 'Create Playlist:'}</h2>
       <label htmlFor = 'playlistTitle'><p>Title - {title.maxlength - title.value.length} characters remaining:</p></label>
       <input id = 'playlistTitle' value = {title.value} maxLength = {title.maxlength} onChange = {e => setTitle(prev => {return{...prev, value: e.target.value}})} placeholder = 'Playlist title...'/>
      

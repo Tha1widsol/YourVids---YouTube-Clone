@@ -24,6 +24,20 @@ class PlaylistController extends Controller
         ]);
     }
 
+    public function editPlaylist(Request $request){
+        $lookup_url_kwarg = 'id';
+        $playlist_id = $request->$lookup_url_kwarg;
+        $playlist = Playlist::find($playlist_id);
+        $playlist->title = $request->title;
+        $playlist->description = $request->description;
+        $playlist->visibility = $request->visibility;
+        $playlist->save();
+
+        return response([
+            'message' => 'Playlist is edited'
+        ]);
+    }
+
     public function getPlaylists(Request $request){
         $lookup_url_kwarg = 'id';
         $channel_id = $request->$lookup_url_kwarg;
