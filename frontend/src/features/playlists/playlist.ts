@@ -34,7 +34,7 @@ const initialState = {
         description: '',
         views: 0,
         videoCount: 0,
-        visibility: 'Public',
+        visibility: '',
         created_at: '',
     },
     status: ''
@@ -54,6 +54,12 @@ export const playlistSlice = createSlice({
     reducers: {
         setPlaylist: (state, action) => {
             state.values = action.payload
+        },
+        
+        editPlaylist: (state, action) => {
+            state.values.title = action.payload.title
+            state.values.description = action.payload.description
+            state.values.visibility = action.payload.visibility
         }
     },
 
@@ -75,5 +81,5 @@ export const playlistSlice = createSlice({
     }
 })
 
-export const {setPlaylist} = playlistSlice.actions
+export const {setPlaylist, editPlaylist} = playlistSlice.actions
 export default playlistSlice.reducer
