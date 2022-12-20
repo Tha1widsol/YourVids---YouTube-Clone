@@ -9,7 +9,7 @@ class Playlist extends Model
 {
     use HasFactory;
     protected $table = 'playlists';
-    protected $fillable = ['id'];
+    protected $fillable = ['id', 'title', 'description', 'visibility'];
 
     public function playlist() {
         return $this->belongsToMany('App\Models\Video', 'playlist_videos', 'playlist_id', 'video_id')->withTimestamps();
