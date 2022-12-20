@@ -1,10 +1,17 @@
 import React,{useState} from 'react'
+import { useParams } from 'react-router-dom'
+import { useAppDispatch } from '../../app/hooks'
+import { editPlaylist } from '../../features/playlists/playlist'
+import { PlaylistProps } from '../../features/playlists/types/playlistsProps'
 import axios from 'axios'
 
-export default function PlaylistForm({playlistID, popupOff}: {playlistID?: number | string, popupOff: () => void}) {
-  const [title, setTitle] = useState({value: '', maxlength: 200})
-  const [description, setDescription] = useState({value: '', maxlength: 500})
-  const [visibility, setVisibility] = useState({value: 'Public'})
+export default function PlaylistForm({playlist, popupOff}: {playlist?: PlaylistProps['values'], popupOff: () => void}) {
+  const dispatch = useAppDispatch()
+  const [title, setTitle] = useState({value: playlist?.title || '', maxlength: 200})
+  const [description, setDescription] = useState({value: playlist?.description || '', maxlength: 500})
+  const [visibility, setVisibility] = useState({value: playlist?.visibility || 'Public'})
+  const {playlistID} = useParams()
+
 
   function handleSubmit(e: React.SyntheticEvent){
     e.preventDefault()
@@ -14,16 +21,20 @@ export default function PlaylistForm({playlistID, popupOff}: {playlistID?: numbe
     form.append('description', description.value)
     form.append('visibility', visibility.value)
 
-    axios({
-      method: playlistID ? 'put' : 'post',
-      url: playlistID ? `/api/editPlaylist?id=${playlistID}` : `/api/createPlaylist`,
-      headers: {'Content-Type': 'multipart/form-data'},
-      data: form
-    })
+    const requestOptions = {
+      headers: {'Content-Type': 'multipart/form-data'}
+    }
 
+    axios.post(`/api/createPlaylist?id=${playlistID}`,form, requestOptions)
     .then(response => {
       if (response.status === 200){
         console.log(response.data)
+        dispatch(editPlaylist({
+          title: title.value,
+          description: description.value,
+          visibility: visibility.value,
+        }))
+
          popupOff()
       }
     })
@@ -40,7 +51,7 @@ export default function PlaylistForm({playlistID, popupOff}: {playlistID?: numbe
       <textarea id = 'playlistDescription' value = {description.value}  onChange = {e => setDescription(prev => {return{...prev, value: e.target.value}})} placeholder = 'Playlist description...'/> 
 
       <label htmlFor = 'playlistVisibility'><p>Visibility:</p></label>
-      <select id = 'playlistVisibility' onChange = {e => setVisibility(prev => {return{...prev, visibility: e.target.value}})}>
+      <select id = 'playlistVisibility' value = {visibility.value} onChange = {e => setVisibility(prev => {return{...prev, value: e.target.value}})}>
         <option value = 'Public'>Public</option>
         <option value = 'Private'>Private</option>
         <option value = 'Unlisted'>Unlisted</option>
