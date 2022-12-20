@@ -19,7 +19,7 @@ export default function PlaylistPage() {
   return (
     <div>
         <Popup trigger = {popup.edit} switchOff = {() => setPopup(prev => {return{...prev, edit: false}})}>
-          <PlaylistForm playlistID = {playlistID} popupOff = {() => setPopup(prev => {return{...prev, edit: false}})}/>
+          <PlaylistForm playlist = {playlist} popupOff = {() => setPopup(prev => {return{...prev, edit: false}})}/>
         </Popup>  
         <div className = 'row' style = {{gap: '10px'}}>
            <h2>{playlist.title}</h2>
