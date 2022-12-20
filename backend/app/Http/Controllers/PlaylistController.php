@@ -10,15 +10,24 @@ use App\Models\Playlist;
 class PlaylistController extends Controller
 {
     public function createPlaylist(Request $request){
-        $playlist = new Playlist;
-        $playlist->title = $request->title;
-        $playlist->description = $request->description;
-        $playlist->visibility = $request->visibility;
-        $user = Auth::user();
-        $userChannel = Channel::where('user_id', $user->id)->where('active', true)->first();
-        $userChannel->playlists()->save($playlist);
-        $playlist->save();
-
+        $lookup_url_kwarg = 'id';
+        $playlist_id = $request->$lookup_url_kwarg;
+        
+        $playlist = Playlist::updateOrCreate([
+            'id' => $playlist_id !== 'undefined' ? $playlist_id : 0
+        ],[
+            'title' => $request->title,
+            'description' => $request->description,
+            'visibility' => $request->visibility
+        ]);
+       
+        if ($playlist_id === 'undefined'){
+            $user = Auth::user();
+            $userChannel = Channel::where('user_id', $user->id)->where('active', true)->first();
+            $userChannel->playlists()->save($playlist);
+            $playlist->save();
+        }
+    
         return response([
             'message' => 'Playlist is created on this channel'
         ]);
@@ -28,6 +37,7 @@ class PlaylistController extends Controller
         $lookup_url_kwarg = 'id';
         $playlist_id = $request->$lookup_url_kwarg;
         $playlist = Playlist::find($playlist_id);
+
         $playlist->title = $request->title;
         $playlist->description = $request->description;
         $playlist->visibility = $request->visibility;
