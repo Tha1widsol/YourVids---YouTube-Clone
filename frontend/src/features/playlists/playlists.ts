@@ -34,7 +34,7 @@ const initialState = {
         description: '',
         views: 0,
         videoCount: 0,
-        visibility: 'Public',
+        visibility: '',
         created_at: '',
     }],
     status: ''

@@ -9,7 +9,7 @@ export interface PlaylistsProps{
         description: string
         views: number
         videoCount: number
-        visibility: 'Public' | 'Private' | 'Unlisted'
+        visibility: ''
         created_at: string
         videos: VideosProps['values']
     }],
@@ -24,7 +24,7 @@ export interface PlaylistProps{
         description: string
         views: number
         videoCount: number
-        visibility: 'Public' | 'Private' | 'Unlisted'
+        visibility: ''
         created_at: string
         videos: VideosProps['values']
     },
