@@ -1,14 +1,35 @@
 import React,{useState, useEffect} from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { useAppDispatch } from '../../app/hooks'
+import { Link } from 'react-router-dom'
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { setCommentLikes, setCommentDislikes } from '../../features/comments/comments'
 import { CommentProps } from '../../features/comments/types/CommentProps'
 import './css/Comments.css'
+import axios from 'axios'
 
 export default function Comment({comment, parentChannelName = '', replyOn} : {comment: CommentProps, parentChannelName?: string, replyOn: () => void}) {
     const dispatch = useAppDispatch()
+    const user = useAppSelector(state => state.user)
     const [liked, setLiked] = useState(false)
     const [disliked, setDisliked] = useState(false)
+
+    useEffect(() => {
+        if (user.isLoggedIn){
+                axios.get(`/api/checkLikedComment?id=${comment.id}`)
+                .then(response => {
+                    const data = response.data
+            
+                    if (data.liked) {
+                        setLiked(true)
+                    }
+        
+                    if (data.disliked) {
+                        setDisliked(true)
+                    }
+        
+                })
+        }
+      
+    },[dispatch, user.isLoggedIn, comment.id])
 
     function handleLikeComment(){
         setLiked(!liked)
@@ -19,6 +40,8 @@ export default function Comment({comment, parentChannelName = '', replyOn} : {co
                 id: comment.id,
                 value: comment.likes + 1
             })) 
+
+            axios.post(`/api/likeComment?id=${comment.id}`)
 
             if (disliked) dispatch(setCommentDislikes({
                 id: comment.id,
@@ -31,6 +54,7 @@ export default function Comment({comment, parentChannelName = '', replyOn} : {co
             id: comment.id,
             value: comment.likes - 1
         }))
+        axios.delete(`/api/comment/removeLikeDislike?id=${comment.id}`)
     }
 
     function handleDislikeComment(){
@@ -41,6 +65,7 @@ export default function Comment({comment, parentChannelName = '', replyOn} : {co
                 id: comment.id,
                 value: comment.dislikes + 1
             }))
+            axios.post(`/api/dislikeComment?id=${comment.id}`)
             if (liked) dispatch(setCommentLikes({
                 id: comment.id,
                 value: comment.likes - 1
@@ -51,6 +76,7 @@ export default function Comment({comment, parentChannelName = '', replyOn} : {co
             id: comment.id,
             value: comment.dislikes - 1
         }))
+        axios.delete(`/api/comment/removeLikeDislike?id=${comment.id}`)
     } 
 
   return (

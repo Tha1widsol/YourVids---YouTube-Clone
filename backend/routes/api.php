@@ -60,7 +60,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/removeFromPlaylist',[PlaylistController::class, 'removeFromPlaylist']);
     Route::post('/postComment',[CommentController::class, 'postComment']);
     Route::post('/postReply',[CommentController::class, 'postReply']);
-
+    Route::post('/likeComment', [CommentController::class, 'likeComment']);
+    Route::post('/dislikeComment', [CommentController::class, 'dislikeComment']);
+    Route::get('/checkLikedComment',[CommentController::class, 'checkLikedComment']);
+    Route::delete('comment/removeLikeDislike', [CommentController::class, 'removeLikeDislike']);
     Route::post('/logout',[UserController::class,'logout']);
 });
 
