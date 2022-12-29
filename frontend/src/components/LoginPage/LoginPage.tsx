@@ -1,5 +1,6 @@
 import React,{useState} from 'react'
 import {useAppDispatch} from '../../app/hooks';
+import { fetchUser } from '../../features/Auth/auth';
 import {login} from '../../features/Auth/auth';
 import Errors from '../Messages/Errors';
 import axios from 'axios'
@@ -20,7 +21,6 @@ export default function LoginPage() {
 
     if (response.data.message === 'success'){
       dispatch(login())
-      window.location.reload()
     }
 
     else setErrors([response.data.message])

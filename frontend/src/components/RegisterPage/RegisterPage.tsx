@@ -42,7 +42,6 @@ export default function RegisterPage() {
     .then(response => {
       if (response.data.message === 'success'){
           dispatch(login())
-          window.location.reload()
         }
       })
 
