@@ -33,31 +33,6 @@ export default function VideoPage() {
     const videos = useAppSelector(state => state.channelVideos)
 
     useEffect(() => {
-        dispatch(fetchVideo(videoID))
-        .then(response => {
-            if (response.meta.requestStatus === 'fulfilled'){
-                axios({
-                    method: 'get',
-                    url: `/storage/${response.payload.pathName}`,
-                    responseType: 'blob',
-                })
-        
-                .then(response => {
-                    const blob = response.data
-                    const url = URL.createObjectURL(blob);
-                    setVideoFilePath(url)
-                })
-                axios.put(`/api/incrementViews?id=${videoID}`)
-                .then(response => {
-                    if (response.status === 200){
-                        dispatch(incrementViews())
-                    }
-                })
-               
-              
-            }
-        })
-
         if (user.isLoggedIn){
             dispatch(fetchCurrentChannel())
             .then(response => {
@@ -78,8 +53,41 @@ export default function VideoPage() {
                 }
             })
         }
+
+        dispatch(fetchVideo(videoID))
+        .then(response => {
+            if (response.meta.requestStatus === 'fulfilled'){
+                axios({
+                    method: 'get',
+                    url: `/storage/${response.payload.pathName}`,
+                    responseType: 'blob',
+                })
+        
+                .then(response => {
+                    const blob = response.data
+                    const url = URL.createObjectURL(blob);
+                    setVideoFilePath(url)
+                })
+
+                .finally(() => {
+                    axios.put(`/api/incrementViews?id=${videoID}`)
+                    .then(response => {
+                        if (response.status === 200){
+                            dispatch(incrementViews())
+                        }
+                    })
+                })
+
+
+               
+              
+            }
+        })
+
+        
       
-        dispatch(fetchVideoComments(videoID))   
+       
+
         dispatch(fetchChannelVideos(video.values?.channel.id))
         .then(response => {
             if (response.meta.requestStatus === 'fulfilled'){
@@ -87,6 +95,8 @@ export default function VideoPage() {
                
             }
         })
+     
+        dispatch(fetchVideoComments(videoID))  
       
     },[dispatch, videoID, user.isLoggedIn])
 
