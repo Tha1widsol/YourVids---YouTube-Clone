@@ -99,7 +99,7 @@ class CommentController extends Controller
     public function getLikedDislikedComments(){
         $user = Auth::user();
         $userChannel = Channel::where('user_id', $user->id)->where('active', true)->first();
-        $comments = $userChannel->likedDislikedComments()->get();
+        $comments = $userChannel->likedDislikedComments()->get(['comment_id', 'liked', 'disliked']);
         return $comments->keyBy('comment_id');;
     }
 
