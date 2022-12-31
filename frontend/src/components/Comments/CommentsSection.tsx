@@ -1,4 +1,4 @@
-import React,{ useState } from 'react'
+import React,{ useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { CommentsProps } from '../../features/comments/types/CommentProps'
 import Popup from '../Popup/Popup'
@@ -16,6 +16,17 @@ export default function CommentsSection({comments}: {comments: CommentsProps['va
   const [reply, setReply] = useState('')
   const currentChannel = useAppSelector(state => state.currentChannel)
   const {videoID} = useParams()
+  const [likedDisliked, setLikedDisliked] = useState({})
+
+  useEffect(() => {
+    axios.get(`/api/getLikedDislikedComments`)
+    .then(response => {
+      if (response.status === 200){
+          const comments = response.data
+          setLikedDisliked(comments)
+      }
+    })
+  },[dispatch])
 
   function handleSubmit(e: React.SyntheticEvent){
     e.preventDefault()
@@ -71,14 +82,14 @@ export default function CommentsSection({comments}: {comments: CommentsProps['va
         {comments.map((comment, index) => {
           return (
             <div className = 'comments' key = {index}>
-              <Comment comment = {comment} replyOn = {() => setPopup(prev => ({...prev, reply: true, comment: {id: comment.id, rootID: comment.id}}))}/> 
+              <Comment comment = {comment} likedDislikedComments = {likedDisliked} replyOn = {() => setPopup(prev => ({...prev, reply: true, comment: {id: comment.id, rootID: comment.id}}))}/> 
                <div className = 'replies'>
                  {showReplies.commentIDList.includes(comment.id) ? 
                     <>
                         {comment.replies.map((reply, index) => {
                          return (
                             <div key = {index}>
-                              <Comment comment = {reply} parentChannelName = {reply.parent_id !== comment.id ? reply.parent?.channel.name : ''} replyOn = {() => setPopup(prev => ({...prev, reply: true, comment: {id: reply.id, rootID: comment.id}}))}/>
+                              <Comment comment = {reply} likedDislikedComments = {likedDisliked} parentChannelName = {reply.parent_id !== comment.id ? reply.parent?.channel.name : ''} replyOn = {() => setPopup(prev => ({...prev, reply: true, comment: {id: reply.id, rootID: comment.id}}))}/>
                             </div>
                          ) 
                         })}
