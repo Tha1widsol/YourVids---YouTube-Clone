@@ -35,5 +35,9 @@ class Channel extends Model
         return $this->hasMany('App\Models\Comment','channel_id');
     }
 
+    public function likedDislikedComments(){
+        return $this->hasMany('App\Models\Like_Dislike_Comment','channel_id');
+    }
+
 
 }

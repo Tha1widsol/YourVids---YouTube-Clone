@@ -95,6 +95,13 @@ class CommentController extends Controller
         if (!$comments) throw new \ErrorException;
         return $comments;
     }
+    
+    public function getLikedDislikedComments(){
+        $user = Auth::user();
+        $userChannel = Channel::where('user_id', $user->id)->where('active', true)->first();
+        $comments = $userChannel->likedDislikedComments()->get();
+        return $comments->keyBy('comment_id');;
+    }
 
     public function postReply(Request $request){
         $reply = new Comment;

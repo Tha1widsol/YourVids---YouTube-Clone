@@ -62,7 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/postReply',[CommentController::class, 'postReply']);
     Route::post('/likeComment', [CommentController::class, 'likeComment']);
     Route::post('/dislikeComment', [CommentController::class, 'dislikeComment']);
-    Route::get('/checkLikedComment',[CommentController::class, 'checkLikedComment']);
+    Route::get('/getLikedDislikedComments',[CommentController::class, 'getLikedDislikedComments']);
     Route::delete('comment/removeLikeDislike', [CommentController::class, 'removeLikeDislike']);
     Route::post('/logout',[UserController::class,'logout']);
 });
