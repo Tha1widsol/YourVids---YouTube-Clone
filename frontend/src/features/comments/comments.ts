@@ -73,14 +73,30 @@ export const commentsSlice = createSlice({
         },
 
         setCommentLikes: (state, action) => {
-            const index = state.values.findIndex(comment => comment.id === action.payload.id)
-            state.values[index].likes = action.payload.value
+            if (!action.payload.root_id){
+                const index = state.values.findIndex(comment => comment.id === action.payload.id)
+                state.values[index].likes = action.payload.value
+                return
+            }
+
+            const parentIndex = state.values.findIndex(comment => comment.id === action.payload.root_id)
+            const index = state.values[parentIndex].replies.findIndex(comment => comment.id === action.payload.id)
+            state.values[parentIndex].replies[index].likes = action.payload.value
         },
 
         setCommentDislikes: (state, action) => {
-            const index = state.values.findIndex(comment => comment.id === action.payload.id)
-            state.values[index].dislikes = action.payload.value
+            if (!action.payload.root_id){
+                const index = state.values.findIndex(comment => comment.id === action.payload.id)
+                state.values[index].dislikes = action.payload.value
+                return
+            }
+
+            const parentIndex = state.values.findIndex(comment => comment.id === action.payload.root_id)
+            const index = state.values[parentIndex].replies.findIndex(comment => comment.id === action.payload.id)
+            state.values[parentIndex].replies[index].dislikes = action.payload.value
+          
         },
+        
 
         addReply: (state, action) => {
             const index = state.values.findIndex(comment => comment.id === action.payload.root_id)
