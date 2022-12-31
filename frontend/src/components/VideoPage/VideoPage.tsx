@@ -77,16 +77,9 @@ export default function VideoPage() {
                         }
                     })
                 })
-
-
-               
-              
             }
         })
 
-        
-      
-       
 
         dispatch(fetchChannelVideos(video.values?.channel.id))
         .then(response => {
@@ -104,26 +97,37 @@ export default function VideoPage() {
         setLiked(!liked)
         setDisliked(false)
         if (!liked){
-            dispatch(setLikes(video.values?.likes + 1)) 
             axios.post(`/api/likeVideo?id=${videoID}`)
+            .then(response => {
+                if (response.status === 200) dispatch(setLikes(video.values?.likes + 1)) 
+            })
+          
+          
             if (disliked) dispatch(setDislikes(video.values?.dislikes - 1))
             return
         }
-        dispatch(setLikes(video.values?.likes - 1))
         axios.delete(`/api/removeLikeDislike?id=${videoID}`)
+        .then(response => {
+            if (response.status === 200) dispatch(setLikes(video.values?.likes - 1))
+        })
+       
     }
 
     function handleDislikeVideo(){
         setDisliked(!disliked)
         setLiked(false)
         if (!disliked){
-            dispatch(setDislikes(video.values?.dislikes + 1))
             axios.post(`/api/dislikeVideo?id=${videoID}`)
+            .then(response => {
+                if (response.status === 200) dispatch(setDislikes(video.values?.dislikes + 1))
+            })
             if (liked) dispatch(setLikes(video.values?.likes - 1))
             return
         }
-        dispatch(setDislikes(video.values?.dislikes - 1))
         axios.delete(`/api/removeLikeDislike?id=${videoID}`)
+        .then(response => {
+            if (response.status === 200) dispatch(setDislikes(video.values?.dislikes - 1))
+        })
     }
 
     function handleAddComment(e: React.SyntheticEvent){

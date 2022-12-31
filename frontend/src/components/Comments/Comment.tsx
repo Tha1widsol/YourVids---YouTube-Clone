@@ -16,20 +16,23 @@ export default function Comment({comment, parentChannelName = '', replyOn} : {co
         if (user.isLoggedIn){
                 axios.get(`/api/checkLikedComment?id=${comment.id}`)
                 .then(response => {
-                    const data = response.data
+                    if (response.status === 200){
+                        const data = response.data
             
-                    if (data.liked) {
-                        setLiked(true)
+                        if (data.liked) {
+                            setLiked(true)
+                        }
+            
+                        if (data.disliked) {
+                            setDisliked(true)
+                        }
                     }
-        
-                    if (data.disliked) {
-                        setDisliked(true)
-                    }
+                   
         
                 })
         }
       
-    },[dispatch, user.isLoggedIn, comment.id])
+    },[dispatch])
 
     function handleLikeComment(){
         setLiked(!liked)
@@ -37,46 +40,95 @@ export default function Comment({comment, parentChannelName = '', replyOn} : {co
 
         if (!liked){
             dispatch(setCommentLikes({
+                root_id: comment.root_id,
                 id: comment.id,
                 value: comment.likes + 1
             })) 
-
+            
             axios.post(`/api/likeComment?id=${comment.id}`)
+            .then(response => {
+                if (response.status !== 200){
+                    dispatch(setCommentLikes({
+                        root_id: comment.root_id,
+                        id: comment.id,
+                        value: comment.likes - 1
+                    })) 
+                }
+            })
 
             if (disliked) dispatch(setCommentDislikes({
+                root_id: comment.root_id,
                 id: comment.id,
                 value: comment.dislikes - 1
             }))
+
             return
         }
 
         dispatch(setCommentLikes({
+            root_id: comment.root_id,
             id: comment.id,
             value: comment.likes - 1
         }))
+
         axios.delete(`/api/comment/removeLikeDislike?id=${comment.id}`)
+        .then(response => {
+            if (response.status !== 200){
+                dispatch(setCommentLikes({
+                    root_id: comment.root_id,
+                    id: comment.id,
+                    value: comment.likes + 1
+                }))
+            }
+        })
     }
 
     function handleDislikeComment(){
         setDisliked(!disliked)
         setLiked(false)
+
         if (!disliked){
             dispatch(setCommentDislikes({
+                root_id: comment.root_id,
                 id: comment.id,
                 value: comment.dislikes + 1
             }))
+
             axios.post(`/api/dislikeComment?id=${comment.id}`)
+            .then(response => {
+                if (response.status !== 200){
+                    dispatch(setCommentDislikes({
+                        root_id: comment.root_id,
+                        id: comment.id,
+                        value: comment.dislikes - 1
+                    }))
+                }
+            })
+
             if (liked) dispatch(setCommentLikes({
+                root_id: comment.root_id,
                 id: comment.id,
                 value: comment.likes - 1
             }))
             return
         }
+
         dispatch(setCommentDislikes({
+            root_id: comment.root_id,
             id: comment.id,
             value: comment.dislikes - 1
         }))
+
         axios.delete(`/api/comment/removeLikeDislike?id=${comment.id}`)
+        .then(response => {
+            if (response.status !== 200){
+                  dispatch(setCommentDislikes({
+                    root_id: comment.root_id,
+                    id: comment.id,
+                    value: comment.dislikes + 1
+                }))
+            }
+        })
     } 
 
   return (
