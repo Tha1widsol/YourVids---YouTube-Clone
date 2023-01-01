@@ -8,25 +8,34 @@ import { addReply, fetchVideoComments } from '../../features/comments/comments'
 import Comment from './Comment'
 import axios from 'axios'
 
-export default function CommentsSection({comments}: {comments: CommentsProps['values']}) {
+export default function CommentsSection({comments}: {comments: CommentsProps}) {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const user = useAppSelector(state => state.user)
   const [popup, setPopup] = useState<{reply: boolean, comment: {id: number, rootID: number | null}}>({reply: false, comment: {id: 0, rootID: null}})
   const [showReplies, setShowReplies] = useState<{commentIDList: Array<number>}>({commentIDList: []})
   const [reply, setReply] = useState('')
   const currentChannel = useAppSelector(state => state.currentChannel)
   const {videoID} = useParams()
-  const [likedDisliked, setLikedDisliked] = useState({})
+  const [likedDislikedComments, setLikedDislikedComments] = useState({})
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
+    if (!user.isLoggedIn) {
+      setLoaded(true)
+      return
+    }
+
     axios.get(`/api/getLikedDislikedComments`)
     .then(response => {
       if (response.status === 200){
           const comments = response.data
-          setLikedDisliked(comments)
+          setLikedDislikedComments(comments)
+          setLoaded(true)
       }
     })
-  },[dispatch])
+    
+  },[dispatch, loaded])
 
   function handleSubmit(e: React.SyntheticEvent){
     e.preventDefault()
@@ -79,30 +88,34 @@ export default function CommentsSection({comments}: {comments: CommentsProps['va
         </form>
       </Popup>
 
-        {comments.map((comment, index) => {
-          return (
-            <div className = 'comments' key = {index}>
-              <Comment comment = {comment} likedDislikedComments = {likedDisliked} replyOn = {() => setPopup(prev => ({...prev, reply: true, comment: {id: comment.id, rootID: comment.id}}))}/> 
-               <div className = 'replies'>
-                 {showReplies.commentIDList.includes(comment.id) ? 
-                    <>
-                        {comment.replies.map((reply, index) => {
-                         return (
-                            <div key = {index}>
-                              <Comment comment = {reply} likedDislikedComments = {likedDisliked} parentChannelName = {reply.parent_id !== comment.id ? reply.parent?.channel.name : ''} replyOn = {() => setPopup(prev => ({...prev, reply: true, comment: {id: reply.id, rootID: comment.id}}))}/>
-                            </div>
-                         ) 
-                        })}
-                        <button onClick = {() => handleCloseReply(comment.id)}>Close replies</button>
-                    </>
-                    : comment.replies?.length ? <button onClick = {() => setShowReplies(prev => {return{...prev, commentIDList: [...prev.commentIDList, comment.id]}})}>Show replies</button> : null}
+        {loaded ? 
+        <>
+          {comments.values?.map((comment, index) => {
+            return (
+              <div className = 'comments' key = {index}>
+                <Comment comment = {comment} likedDislikedComments = {likedDislikedComments} replyOn = {() => setPopup(prev => ({...prev, reply: true, comment: {id: comment.id, rootID: comment.id}}))}/> 
+                <div className = 'replies'>
+                  {showReplies.commentIDList.includes(comment.id) ? 
+                      <>
+                          {comment.replies.map((reply, index) => {
+                            return (
+                                <div key = {index}>
+                                  <Comment comment = {reply} likedDislikedComments = {likedDislikedComments} parentChannelName = {reply.parent_id !== comment.id ? reply.parent?.channel.name : ''} replyOn = {() => setPopup(prev => ({...prev, reply: true, comment: {id: reply.id, rootID: comment.id}}))}/>
+                                </div>
+                            ) 
+                          })}
+                          <button onClick = {() => handleCloseReply(comment.id)}>Close replies</button>
+                      </>
+                      : comment.replies?.length ? <button onClick = {() => setShowReplies(prev => {return{...prev, commentIDList: [...prev.commentIDList, comment.id]}})}>Show replies</button> : null}
 
-                 </div>
-                
-            </div>
-        
-          )
-        })}
+                  </div>
+                  
+              </div>
+          
+            )
+          })} 
+        </>
+        : <p>Loading...</p>}
     </>
   )
 }

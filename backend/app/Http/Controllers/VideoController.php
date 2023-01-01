@@ -135,9 +135,8 @@ class VideoController extends Controller
         $lookup_url_kwarg = 'id';
         $channel_id = $request->$lookup_url_kwarg;
         $channel = Channel::where('id', $channel_id)->first();
-        $videos = Like_Dislike::with('channel')->with('videos')->where('channel_id', $channel_id)->where('liked', true)->get();
-        if (!$channel || !$videos) throw new \ErrorException;
-        return $videos;
+        $videos = $channel->likedVideos()->get();
+        return $videos->keyBy('video_id');
     }
 
     public function checkLikedVideo(Request $request){

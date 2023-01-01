@@ -11,6 +11,7 @@ export default function Subscribe({channel}: {channel: ChannelProps['values']}) 
     const [alreadySubscribed, setAlreadySubscribed] = useState(false)
     const user = useAppSelector(state => state.user)
     const currentChannel = useAppSelector(state => state.currentChannel)
+    const [show, setShow] = useState(false)
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
 
@@ -20,8 +21,12 @@ export default function Subscribe({channel}: {channel: ChannelProps['values']}) 
 
      axios.get(`/api/checkSubscribed?id=${channel.id}`)
      .then(response => {
+      if (response.status === 200){
         const data = response.data
+        setShow(true)
         if (data.subscribed) setAlreadySubscribed(true)
+      }
+       
       })
 
     },[user.isLoggedIn, channel.id])
@@ -51,9 +56,9 @@ export default function Subscribe({channel}: {channel: ChannelProps['values']}) 
 
     }
 
-  return (
+  return show ? (
     !alreadySubscribed ? 
     <button type = 'button' onClick = {() => handleToggleSubscribe()}>Subscribe</button> 
     : <button type = 'button' className = 'unsubscribe' onClick = {() => handleToggleSubscribe(false)}>Unsubscribe</button>
-  )
+  ) : null
 }

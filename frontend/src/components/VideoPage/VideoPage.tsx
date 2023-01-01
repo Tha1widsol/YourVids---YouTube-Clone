@@ -31,29 +31,9 @@ export default function VideoPage() {
     const [popup, setPopup] = useState({playlist: false})
     const comments = useAppSelector(state => state.videoComments)
     const videos = useAppSelector(state => state.channelVideos)
+    const [loadLikesDislikes, setLoadLikesDislikes] = useState(false)
 
     useEffect(() => {
-        if (user.isLoggedIn){
-            dispatch(fetchCurrentChannel())
-            .then(response => {
-                if (response.meta.requestStatus === 'fulfilled' && currentChannel.status === 'success'){
-                    axios.get(`/api/checkLikedVideo?id=${videoID}`)
-                    .then(response => {
-                        const data = response.data
-                
-                        if (data.liked) {
-                            setLiked(true)
-                        }
-            
-                        if (data.disliked) {
-                            setDisliked(true)
-                        }
-            
-                    })
-                }
-            })
-        }
-
         dispatch(fetchVideo(videoID))
         .then(response => {
             if (response.meta.requestStatus === 'fulfilled'){
@@ -90,6 +70,33 @@ export default function VideoPage() {
         })
      
         dispatch(fetchVideoComments(videoID))  
+
+        if (!user.isLoggedIn){
+            setLoadLikesDislikes(true)
+            return
+        }
+            dispatch(fetchCurrentChannel())
+            .then(response => {
+                if (response.meta.requestStatus === 'fulfilled' && currentChannel.status === 'success'){
+                    axios.get(`/api/getLikedVideos?id=${currentChannel.values?.id}`)
+                    .then(response => {
+                        if (response.status === 200){
+                            const likedVideos = response.data
+                            setLoadLikesDislikes(true)
+            
+                            if (likedVideos[videoID!].liked) {
+                                setLiked(true)
+                                return
+                            }
+
+                            setDisliked(true)
+                        }
+                       
+                      
+                    })
+                }
+            })
+        
       
     },[dispatch, videoID, user.isLoggedIn])
 
@@ -97,18 +104,20 @@ export default function VideoPage() {
         setLiked(!liked)
         setDisliked(false)
         if (!liked){
+            dispatch(setLikes(video.values?.likes + 1)) 
             axios.post(`/api/likeVideo?id=${videoID}`)
             .then(response => {
-                if (response.status === 200) dispatch(setLikes(video.values?.likes + 1)) 
+                if (response.status !== 200) dispatch(setLikes(video.values?.likes - 1)) 
             })
-          
-          
+        
             if (disliked) dispatch(setDislikes(video.values?.dislikes - 1))
             return
         }
+
+        dispatch(setLikes(video.values?.likes - 1))
         axios.delete(`/api/removeLikeDislike?id=${videoID}`)
         .then(response => {
-            if (response.status === 200) dispatch(setLikes(video.values?.likes - 1))
+            if (response.status !== 200) dispatch(setLikes(video.values?.likes + 1))
         })
        
     }
@@ -117,21 +126,27 @@ export default function VideoPage() {
         setDisliked(!disliked)
         setLiked(false)
         if (!disliked){
+            dispatch(setDislikes(video.values?.dislikes + 1))
             axios.post(`/api/dislikeVideo?id=${videoID}`)
             .then(response => {
-                if (response.status === 200) dispatch(setDislikes(video.values?.dislikes + 1))
+                if (response.status !== 200){
+                    dispatch(setDislikes(video.values?.dislikes - 1))
+                }
             })
             if (liked) dispatch(setLikes(video.values?.likes - 1))
             return
         }
+
+        dispatch(setDislikes(video.values?.dislikes - 1))
         axios.delete(`/api/removeLikeDislike?id=${videoID}`)
         .then(response => {
-            if (response.status === 200) dispatch(setDislikes(video.values?.dislikes - 1))
+            if (response.status !== 200) dispatch(setDislikes(video.values?.dislikes + 1))
         })
     }
 
     function handleAddComment(e: React.SyntheticEvent){
         e.preventDefault()
+        if (comment === '') return
 
         const requestOptions = { 
             headers:{'Content-Type':'application/json', 'Accept':'application/json'}
@@ -165,15 +180,18 @@ export default function VideoPage() {
       <section style = {{maxWidth: '60%'}}>
             <p className = 'title'>{video.values?.title}</p>
             <ReactPlayer className = 'skeleton' url = {videoFilePath} controls playing/> 
-           
-            <div className = 'row likesDislikes'>
+             
+            {loadLikesDislikes ?
+              <div className = 'row likesDislikes'>
                 <p className = 'views smallGray'>{video.values?.views.toLocaleString()} views</p>
                 <i className = 'fa fa-thumbs-up' style = {liked ? {color: 'green'} : {}} onClick = {handleLikeVideo}/>
                 <p>{video.values?.likes}</p>
                 <i className = 'fa fa-thumbs-down' style = {disliked ? {color: 'red'} : {}} onClick = {handleDislikeVideo}/>
                 <p>{video.values?.dislikes}</p>
                 <button onClick = {() => setPopup(prev => {return{...prev, playlist: true}})}>Save</button>
-            </div>
+             </div>
+           : <p>Loading...</p>}
+          
             <hr className = 'mt-0-mb-4'/>
 
             {video.values.channel.id !== currentChannel.values?.id || !user.isLoggedIn ? <div style = {{float: 'right'}}><Subscribe channel = {video.values?.channel}/></div> : <button className = 'edit' type = 'button'>Edit</button>}
@@ -195,7 +213,7 @@ export default function VideoPage() {
                 <button>Post</button>
             </form>
     
-            <CommentsSection comments = {comments.values}/>
+            <CommentsSection comments = {comments}/>
         </section>
 
         <section>

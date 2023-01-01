@@ -100,7 +100,7 @@ class CommentController extends Controller
         $user = Auth::user();
         $userChannel = Channel::where('user_id', $user->id)->where('active', true)->first();
         $comments = $userChannel->likedDislikedComments()->get(['comment_id', 'liked', 'disliked']);
-        return $comments->keyBy('comment_id');;
+        return $comments->keyBy('comment_id');
     }
 
     public function postReply(Request $request){
