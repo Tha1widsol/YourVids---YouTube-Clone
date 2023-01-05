@@ -72,6 +72,7 @@ class PlaylistController extends Controller
         $playlist = Playlist::where('id', $playlist_id)->first();
         $video = Video::where('id', $video_id)->first();
         $playlist->playlist()->attach($video);
+        return $video;
     }
 
     public function saveVideo(Request $request){
