@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import ReactPlayer from 'react-player'
 import KebabMenu from '../KebabMenu/KebabMenu'
 import Popup from '../Popup/Popup'
-import { fetchPlaylists } from '../../features/playlists/playlists'
+import { fetchPlaylists, addVideo, removeVideo } from '../../features/playlists/playlists'
 import './css/Videos.css'
 import axios from 'axios'
 
@@ -34,7 +34,11 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
     axios.post(`/api/addToPlaylist?videoID=${chosenVideo}&playlistID=${playlistID}`)
     .then(response => {
         if (response.status === 200){
-            alert('Saved to playlist')
+            const video = response.data
+            dispatch(addVideo({
+                id: playlistID,
+                video: video
+            }))
         }
     })
   }
@@ -43,7 +47,10 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
     axios.delete(`/api/removeFromPlaylist?videoID=${chosenVideo}&playlistID=${playlistID}`)
     .then(response => {
         if (response.status === 200){
-            alert('Removed from playlist')
+            dispatch(removeVideo({
+                id: playlistID,
+                videoID: chosenVideo
+            }))
         }
     })
   }

@@ -54,6 +54,17 @@ export const playlistsSlice = createSlice({
     reducers: {
         setPlaylists: (state, action) => {
             state.values = action.payload
+        },
+
+        addVideo: (state, action) => {
+            const index = state.values.findIndex(playlist => playlist.id === action.payload.id)
+            state.values[index].videos.push(action.payload.video)
+        },
+
+        removeVideo: (state, action) => {
+            const playlistIdx = state.values.findIndex(playlist => playlist.id === action.payload.id)
+            const videoIdx = state.values[playlistIdx].videos.findIndex(video => video.id === action.payload.videoID)
+            state.values[playlistIdx].videos.splice(videoIdx, 1)
         }
     },
 
@@ -75,5 +86,5 @@ export const playlistsSlice = createSlice({
     }
 })
 
-export const {setPlaylists} = playlistsSlice.actions
+export const {setPlaylists, addVideo, removeVideo} = playlistsSlice.actions
 export default playlistsSlice.reducer
