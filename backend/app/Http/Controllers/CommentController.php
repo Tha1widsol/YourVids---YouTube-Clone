@@ -91,7 +91,7 @@ class CommentController extends Controller
     public function getVideoComments(Request $request){
         $lookup_url_kwarg = 'id';
         $video_id = $request->$lookup_url_kwarg;
-        $comments = Comment::with('channel')->with('replies', 'replies.channel','replies.parent','replies.parent.channel')->where('video_id', $video_id)->where('parent_id', null)->get();
+        $comments = Comment::with('channel')->with('replies', 'replies.channel','replies.parent','replies.parent.channel')->where('video_id', $video_id)->where('parent_id', null)->orderBy('created_at', 'DESC')->get();
         if (!$comments) throw new \ErrorException;
         return $comments;
     }
