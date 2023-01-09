@@ -6,9 +6,10 @@ import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import './css/Comments.css'
 import { addReply, fetchVideoComments } from '../../features/comments/comments'
 import Comment from './Comment'
+import KebabMenu from '../KebabMenu/KebabMenu'
 import axios from 'axios'
 
-export default function CommentsSection({comments}: {comments: CommentsProps}) {
+export default function CommentsSection({comments, videoChannelID}: {comments: CommentsProps, videoChannelID?: number}) {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const user = useAppSelector(state => state.user)
@@ -19,7 +20,8 @@ export default function CommentsSection({comments}: {comments: CommentsProps}) {
   const {videoID} = useParams()
   const [likedDislikedComments, setLikedDislikedComments] = useState({})
   const [loaded, setLoaded] = useState(false)
-
+  const [dropdown, setDropdown] = useState<number | null>(null)
+ 
   useEffect(() => {
     if (!user.isLoggedIn) {
       setLoaded(true)
@@ -93,7 +95,14 @@ export default function CommentsSection({comments}: {comments: CommentsProps}) {
           {comments.values?.map((comment, index) => {
             return (
               <div className = 'comments' key = {index}>
-                <Comment comment = {comment} likedDislikedComments = {likedDislikedComments} replyOn = {() => setPopup(prev => ({...prev, reply: true, comment: {id: comment.id, rootID: comment.id}}))}/> 
+                <div className = 'row' style = {{justifyContent: 'space-between'}}>
+                  <Comment comment = {comment} likedDislikedComments = {likedDislikedComments} replyOn = {() => setPopup(prev => ({...prev, reply: true, comment: {id: comment.id, rootID: comment.id}}))}/> 
+                  <KebabMenu current = {dropdown} many = {true} index = {index} switchOn = {() => setDropdown(index)} switchOff = {() => setDropdown(null)}>
+                      <button className = 'dropdownBtn redText'>Report</button>
+                      {videoChannelID === currentChannel.values?.id || currentChannel.values?.id === comment.channel.id ? <button className = 'dropdownBtn redText'>Delete</button> : null}
+                  </KebabMenu>
+                </div>
+              
                 <div className = 'replies'>
                   {showReplies.commentIDList.includes(comment.id) ? 
                       <>
@@ -109,6 +118,7 @@ export default function CommentsSection({comments}: {comments: CommentsProps}) {
                       : comment.replies?.length ? <button onClick = {() => setShowReplies(prev => {return{...prev, commentIDList: [...prev.commentIDList, comment.id]}})}>Show replies</button> : null}
 
                   </div>
+                    
                   
               </div>
           
