@@ -84,7 +84,7 @@ export default function VideoPage() {
                             const likedVideos = response.data
                             setLoadLikesDislikes(true)
             
-                            if (likedVideos[videoID!].liked) {
+                            if (likedVideos[videoID!]?.liked) {
                                 setLiked(true)
                                 return
                             }
@@ -213,7 +213,7 @@ export default function VideoPage() {
                 <button>Post</button>
             </form>
     
-            <CommentsSection comments = {comments}/>
+            <CommentsSection comments = {comments} videoChannelID = {video.values?.channel.id}/>
         </section>
 
         <section>
