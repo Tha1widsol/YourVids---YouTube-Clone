@@ -169,6 +169,15 @@ Dropdown styles
   color: black;
  }
 
+ .dropdownBtn.redText:hover{
+  background-color: lightgray;
+  color: red;
+ }
+
+ .redText{
+   color: red
+ }
+
 
 
 .containerDropdown,.containerDropdownContent,.containerDropdownContent button {display: block;}
