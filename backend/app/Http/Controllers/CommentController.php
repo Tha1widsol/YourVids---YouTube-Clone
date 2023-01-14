@@ -84,8 +84,14 @@ class CommentController extends Controller
             ]);
         }
 
-       
     }
+
+    public function removeComment(Request $request){
+        $lookup_url_kwarg = 'id';
+        $comment_id = $request->$lookup_url_kwarg;
+        Comment::find($comment_id)->delete();
+    }
+
 
 
     public function getVideoComments(Request $request){

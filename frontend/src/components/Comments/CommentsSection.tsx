@@ -4,7 +4,7 @@ import { CommentsProps } from '../../features/comments/types/CommentProps'
 import Popup from '../Popup/Popup'
 import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import './css/Comments.css'
-import { addReply, fetchVideoComments } from '../../features/comments/comments'
+import { addReply, fetchVideoComments, removeComment } from '../../features/comments/comments'
 import Comment from './Comment'
 import KebabMenu from '../KebabMenu/KebabMenu'
 import axios from 'axios'
@@ -13,7 +13,7 @@ export default function CommentsSection({comments, videoChannelID}: {comments: C
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const user = useAppSelector(state => state.user)
-  const [popup, setPopup] = useState<{reply: boolean, comment: {id: number, rootID: number | null}}>({reply: false, comment: {id: 0, rootID: null}})
+  const [popup, setPopup] = useState<{reply: boolean, comment: {id: number, rootID: number | null}, delete: {trigger: boolean, commentID: number}}>({reply: false, comment: {id: 0, rootID: null}, delete: {trigger: false, commentID: 0}})
   const [showReplies, setShowReplies] = useState<{commentIDList: Array<number>}>({commentIDList: []})
   const [reply, setReply] = useState('')
   const currentChannel = useAppSelector(state => state.currentChannel)
@@ -37,7 +37,7 @@ export default function CommentsSection({comments, videoChannelID}: {comments: C
       }
     })
     
-  },[dispatch, loaded])
+  },[dispatch, loaded, user.isLoggedIn])
 
   function handleSubmit(e: React.SyntheticEvent){
     e.preventDefault()
@@ -77,6 +77,16 @@ export default function CommentsSection({comments, videoChannelID}: {comments: C
     setShowReplies({commentIDList: newCommentIDList})
  }
 
+ function handleRemoveComment(commentID: number){
+  axios.delete(`/api/removeComment?id=${commentID}`)
+  .then(response => {
+    if (response.status === 200) {
+      dispatch(removeComment(commentID))
+      setPopup(prev => ({...prev, delete: {...prev.delete, trigger: false}}))
+    }
+  })
+ }
+
 
   return (
     <>
@@ -90,6 +100,14 @@ export default function CommentsSection({comments, videoChannelID}: {comments: C
         </form>
       </Popup>
 
+      <Popup trigger = {popup.delete.trigger} switchOff = {() =>setPopup(prev => ({...prev, delete: {...prev.delete, trigger: false}}))}>
+        <div style = {{textAlign: 'center'}}>
+            <p>Are you sure you want to delete this comment?</p>
+              <button onClick = {() => handleRemoveComment(popup.delete.commentID)}>Yes</button>
+              <button onClick = {() => setPopup(prev => ({...prev, delete: {...prev.delete, trigger: false}}))}>Cancel</button>
+        </div>
+      </Popup>
+
         {loaded ? 
         <>
           {comments.values?.map((comment, index) => {
@@ -99,7 +117,7 @@ export default function CommentsSection({comments, videoChannelID}: {comments: C
                   <Comment comment = {comment} likedDislikedComments = {likedDislikedComments} replyOn = {() => setPopup(prev => ({...prev, reply: true, comment: {id: comment.id, rootID: comment.id}}))}/> 
                   <KebabMenu current = {dropdown} many = {true} index = {index} switchOn = {() => setDropdown(index)} switchOff = {() => setDropdown(null)}>
                       <button className = 'dropdownBtn redText'>Report</button>
-                      {videoChannelID === currentChannel.values?.id || currentChannel.values?.id === comment.channel.id ? <button className = 'dropdownBtn redText'>Delete</button> : null}
+                      {videoChannelID === currentChannel.values?.id || currentChannel.values?.id === comment.channel.id ? <button className = 'dropdownBtn redText' onClick = {() =>{setPopup(prev => ({...prev, delete: {...prev.delete, trigger: true, commentID: comment.id}})); setDropdown(null)}}>Delete</button> : null}
                   </KebabMenu>
                 </div>
               
