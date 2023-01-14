@@ -6,6 +6,8 @@ import { setProgress } from '../../features/videos/videoProgress'
 import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { fetchCurrentChannel } from '../../features/channels/currentChannel'
 import ReactPlayer from 'react-player'
+import ChunkedUploady from "@rpldy/chunked-uploady";
+import UploadButton from "@rpldy/upload-button"
 
 export default function VideoFormPage() {
   const dispatch = useAppDispatch()
@@ -59,12 +61,11 @@ function handleSetFile(e: React.ChangeEvent<HTMLInputElement>){
     form.append('category', category.value)
     form.append('length', video.length)
     
-    axios.post(`/api/createVideo?id=${currentChannel.values?.id}`,form, requestOptions)
     navigate('/videos')
   }
 
   return (
-      <form onSubmit = {handleSubmitForm} method = 'post'>
+      <>
           <h1>Upload/Create a video:</h1>
           {videoFilePath ? <p>Preview:</p> : null}
           <ReactPlayer url = {videoFilePath} width = '100%' height = '100%' controls/>
@@ -72,12 +73,12 @@ function handleSetFile(e: React.ChangeEvent<HTMLInputElement>){
           <label id = 'video'><p>Video file:</p></label>
           <input type = 'file' id = 'video' accept = 'video/*,.mkv'  onChange = {handleSetFile}/>
           <ChunkedUploady
-        method="POST"
-        destination={{ url: "http://localhost:8000/api/files/upload", headers: {      "x-custom": "123" } }}
-        chunkSize={1000 * 1024}
-        inputFieldName={'file'}>
-        <UploadButton />
-      </ChunkedUploady>
+            method = 'POST'
+            destination={{ url: `/api/createVideo?id=${currentChannel.values?.id}`, headers: {"x-custom": "123" } }}
+            chunkSize = {1000 * 1024}
+            inputFieldName={'file'}>
+            <UploadButton/>
+          </ChunkedUploady>
           <label htmlFor = 'videoTitle'><p>Title - {title.maxlength - title.value.length} characters remaining:</p></label>
           <input type = 'text' id = 'videoTitle' className = 'longInput' value = {title.value} onChange = {e => setTitle(prev => {return{...prev, value: e.target.value}})} placeholder = 'Title...' maxLength = {title.maxlength}/>
 
@@ -99,6 +100,6 @@ function handleSetFile(e: React.ChangeEvent<HTMLInputElement>){
           </select>
       
           <button style = {{float: 'right'}}>Submit</button>
-      </form>
+      </>
   )
 }
