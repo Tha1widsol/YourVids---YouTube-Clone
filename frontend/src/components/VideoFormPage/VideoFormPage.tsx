@@ -23,20 +23,8 @@ export default function VideoFormPage() {
   },[dispatch])
   
   const convertHMS = (secs: number) => {
-    let hours = Math.floor(secs / 3600) // get hours
-    let minutes = Math.floor((secs - (hours * 3600)) / 60); // get minutes
-    let seconds = secs - (hours * 3600) - (minutes * 60); //  get seconds
-    let formatedHours = ''
-    let formatedMins = ''
-    let formatedSecs = ''
-
-    // add 0 if value < 10; Example: 2 => 02
-    
-    if (hours < 10) formatedHours  = '0' + Math.round(hours)
-    if (minutes < 10) formatedMins = '0' + Math.round(minutes)
-    if (seconds < 10) formatedSecs = '0' + Math.round(seconds)
-    
-    return `${formatedHours}:${formatedMins}:${formatedSecs}`; // Return is HH : MM : SS
+    if (secs < 3600) return new Date(secs * 1000).toISOString().substring(14, 19)
+    return new Date(secs * 1000).toISOString().substring(11, 16)
 }
   
 function handleSetFile(e: React.ChangeEvent<HTMLInputElement>){
@@ -49,6 +37,7 @@ function handleSetFile(e: React.ChangeEvent<HTMLInputElement>){
     vid.ondurationchange = () => {
      setVideo(prev => {return{...prev, length: convertHMS(vid.duration)}})
     }
+   
  }
 
   function handleSubmitForm(e: React.SyntheticEvent){
@@ -82,7 +71,13 @@ function handleSetFile(e: React.ChangeEvent<HTMLInputElement>){
           <hr className = 'mt-0-mb-4'/>
           <label id = 'video'><p>Video file:</p></label>
           <input type = 'file' id = 'video' accept = 'video/*,.mkv'  onChange = {handleSetFile}/>
-
+          <ChunkedUploady
+        method="POST"
+        destination={{ url: "http://localhost:8000/api/files/upload", headers: {      "x-custom": "123" } }}
+        chunkSize={1000 * 1024}
+        inputFieldName={'file'}>
+        <UploadButton />
+      </ChunkedUploady>
           <label htmlFor = 'videoTitle'><p>Title - {title.maxlength - title.value.length} characters remaining:</p></label>
           <input type = 'text' id = 'videoTitle' className = 'longInput' value = {title.value} onChange = {e => setTitle(prev => {return{...prev, value: e.target.value}})} placeholder = 'Title...' maxLength = {title.maxlength}/>
 

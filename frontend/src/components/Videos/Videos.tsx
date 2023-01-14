@@ -74,7 +74,7 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
         
        {videos?.length ? 
        <>
-          <section className = {`videosContainer ${isRow ? 'row' : 'col'} `}>
+          <section className = {`videosContainer ${isRow ? 'row' : 'col videosCol'} `}>
                 {videos?.map((video, index) =>{
                 return (
                     <div className = 'videoContainer' key = {index}>
