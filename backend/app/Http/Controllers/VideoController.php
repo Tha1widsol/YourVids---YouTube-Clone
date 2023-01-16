@@ -8,6 +8,12 @@ use App\Models\Video;
 use App\Models\Channel;
 use App\Models\Subscription;
 use App\Models\Like_Dislike;
+use Pion\Laravel\ChunkUpload\Exceptions\UploadFailedException;
+use Illuminate\Http\UploadedFile;
+use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
+use Pion\Laravel\ChunkUpload\Handler\AbstractHandler;
+use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
+use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
 
 function refreshLikesDislikes($video_id){
     $likes = Like_Dislike::where('video_id', $video_id)->where('liked', true)->get();
@@ -23,35 +29,77 @@ class VideoController extends Controller
         $lookup_url_kwarg = 'id';
         $channel_id = $request->$lookup_url_kwarg;
         $video = new Video;
+     
+        $receiver = new FileReceiver("file", $request, HandlerFactory::classFromRequest($request));
 
-        $video->title = $request->title;
-        $video->description = $request->description;
-        $video->category = $request->category;
-
-        if ($request->hasFile('thumbnail')){
-            $thumbnail = $request->file('thumbnail');
-            $thumbnailName = $thumbnail->getClientOriginalName();
-            $finalName = date('His') . $thumbnailName;
-            $pathName = $thumbnail->storeAs('thumbnails/', $finalName, 'public');
-            $video->thumbnail = $pathName;
+        if ($receiver->isUploaded() === false) {
+            throw new UploadMissingFileException();
         }
 
-        if ($request->hasFile('video')){
-            $fileName = $request->video->getClientOriginalName();
-            $filePath = 'videos/' . $fileName;
-            $isFileUploaded = Storage::disk('public')->put($filePath, file_get_contents($request->video));
-            $video->pathName = $filePath;
+        $save = $receiver->receive();
+        if ($save->isFinished()) {
+            return $this->saveFile($save->getFile(), $request);
         }
-
-        $video->length = $request->length;
-
-        $channel = Channel::where('id', $channel_id)->first();
-        $channel->videos()->save($video);
-        $video->save();
-
-        return response([
-            'message' => 'Video is created on this channel'
+        $handler = $save->handler();
+       
+        error_log('finished');
+        return response()->json([
+            "done" => $handler->getPercentageDone(),
+            'status' => true
         ]);
+    }
+
+    protected function saveFile(UploadedFile $file, Request $request){
+        $user = Auth::user();
+      
+        $fileName = $this->createFilename($file);
+        $mime_original = $file->getMimeType();
+        $mime = str_replace('/', '-', $mime_original);
+        $folderDATE = $request->dataDATE;
+
+        $folder  = $folderDATE;
+        $filePath = "public/upload/medialibrary/{$user->id}/{$folder}/";
+        $finalPath = storage_path("app/" . $filePath);
+        $fileSize = $file->getSize();
+        $file->move($finalPath, $fileName);
+        $url_base = 'storage/upload/medialibrary/' . $user->id . "/{$folderDATE}/" . $fileName;
+      
+        return response()->json([
+            'path' => $filePath,
+            'name' => $fileName,
+            'mime_type' => $mime
+        ]);
+    }
+
+    protected function createFilename(UploadedFile $file){
+        $extension = $file->getClientOriginalExtension();
+        $filename = str_replace("." . $extension, "", $file->getClientOriginalName());
+        $temp_arr = explode('_', $filename);
+        if (isset($temp_arr[0])) unset($temp_arr[0]);
+        $filename = implode('_', $temp_arr);
+
+        return $filename . "." . $extension;
+    }
+
+    public function delete(Request $request){
+        $user = Auth::user();
+        $file = $request->filename;
+        $temp_arr = explode('_', $file);
+        if (isset($temp_arr[0])) unset($temp_arr[0]);
+        $file = implode('_', $temp_arr);
+        $dir = $request->date;
+        $filePath = "public/upload/medialibrary/{$user_obj->id}/{$dir}/";
+        $finalPath = storage_path("app/" . $filePath);
+
+        if (unlink($finalPath . $file)) {
+            return response()->json([
+                'status' => 'ok'
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error'
+            ], 403);
+        }
 
     }
 

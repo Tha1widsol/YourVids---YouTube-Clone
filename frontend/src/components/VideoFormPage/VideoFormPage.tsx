@@ -17,13 +17,8 @@ export default function VideoFormPage() {
   const [thumbnail, setThumbnail] = useState<FileProps>({value: '', name: ''})
   const [description, setDescription] = useState({value: '', maxlength: 5000})
   const [category, setCategory] = useState({value: 'Any'})
-  const currentChannel = useAppSelector(state => state.currentChannel)
   const [videoFilePath, setVideoFilePath] = useState('')
 
-  useEffect(() => {
-    dispatch(fetchCurrentChannel())
-  },[dispatch])
-  
   const convertHMS = (secs: number) => {
     if (secs < 3600) return new Date(secs * 1000).toISOString().substring(14, 19)
     return new Date(secs * 1000).toISOString().substring(11, 16)
@@ -74,7 +69,7 @@ function handleSetFile(e: React.ChangeEvent<HTMLInputElement>){
           <input type = 'file' id = 'video' accept = 'video/*,.mkv'  onChange = {handleSetFile}/>
           <ChunkedUploady
             method = 'POST'
-            destination={{ url: `/api/createVideo?id=${currentChannel.values?.id}`, headers: {"x-custom": "123" } }}
+            destination={{ url: `/api/createVideo`, headers: {"x-custom": "123" } }}
             chunkSize = {1000 * 1024}
             inputFieldName={'file'}>
             <UploadButton/>
