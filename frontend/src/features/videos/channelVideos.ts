@@ -47,8 +47,10 @@ export const channelVideosSlice = createSlice({
         },
 
         removeVideo: (state, action) => {
-            state.values.splice(state.values.findIndex(video => video.id === action.payload))
-        }
+            const id = state.values.findIndex(video => video.id === action.payload)
+            state.values.splice(id, 1)
+        },
+
     },
 
     extraReducers(builder){
