@@ -26,7 +26,7 @@ export default function ChannelVideosPage() {
         <PlaylistForm popupOff = {() => setPopup(prev => {return{...prev, playlist: false}})}/>
       </Popup>
 
-      <Videos videos = {videos.values} isRow = {false} isOwnVideos = {true}/>
+      <Videos videos = {videos.values} isRow = {false} AreOwnVideos = {true}/>
     </div>
   )
 }

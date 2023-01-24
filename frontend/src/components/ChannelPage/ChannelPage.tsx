@@ -78,13 +78,13 @@ export default function ChannelPage() {
         {tab === 'featured' || !tab ? 
         <>
           <h2>Featured</h2>
-          <Videos videos = {videos.values} isOwnVideos = {Number(channelID) === currentChannel.values?.id}/>
+          <Videos videos = {videos.values} AreOwnVideos = {Number(channelID) === currentChannel.values?.id}/>
         </>
         : 
         tab === 'videos' ? 
         <>
          <h2>Videos</h2>
-          <Videos videos = {videos.values} isOwnVideos = {Number(channelID) === currentChannel.values?.id}/>
+          <Videos videos = {videos.values} AreOwnVideos = {Number(channelID) === currentChannel.values?.id}/>
         </>
         :
         tab === 'playlists' ?
