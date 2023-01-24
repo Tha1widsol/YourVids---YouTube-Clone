@@ -179,6 +179,12 @@ class VideoController extends Controller
         Like_Dislike::where('channel_id', $userChannel->id) ->where('video_id','=',$video_id)->delete();
     }
 
+    public function removeVideo(Request $request){
+        $lookup_url_kwarg = 'id';
+        $video_id = $request->$lookup_url_kwarg;
+        Video::find($video_id)->delete();
+    }
+
     public function getLikedVideos(Request $request){
         $lookup_url_kwarg = 'id';
         $channel_id = $request->$lookup_url_kwarg;

@@ -46,6 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getSubscriptionVideos',[VideoController::class, 'getSubscriptionVideos']);
     Route::get('/getSubscribers',[ChannelController::class, 'getSubscribers']);
     Route::get('/getLikedVideos', [VideoController::class, 'getLikedVideos']);
+    Route::delete('/removeVideo', [VideoController::class, 'removeVideo']);
     Route::post('/likeVideo',[VideoController::class, 'likeVideo']);
     Route::post('/dislikeVideo',[VideoController::class, 'dislikeVideo']);
     Route::get('/checkLikedVideo',[VideoController::Class, 'checkLikedVideo']);
