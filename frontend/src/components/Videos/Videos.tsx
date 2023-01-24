@@ -5,14 +5,15 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import ReactPlayer from 'react-player'
 import KebabMenu from '../KebabMenu/KebabMenu'
 import Popup from '../Popup/Popup'
-import { fetchPlaylists, addVideo, removeVideo } from '../../features/playlists/playlists'
+import { fetchPlaylists, addVideo, removeVideoFromPlaylist } from '../../features/playlists/playlists'
+import { removeVideo } from '../../features/videos/channelVideos'
 import './css/Videos.css'
 import axios from 'axios'
 
-export default function Videos({videos, isRow = true, isOwnVideos = false}: {videos: VideosProps['values'] | undefined, isRow?: boolean, isOwnVideos?: boolean}) {
+export default function Videos({videos, isRow = true, AreOwnVideos = false}: {videos: VideosProps['values'] | undefined, isRow?: boolean, AreOwnVideos?: boolean}) {
   const videoProgress = useAppSelector(state => state.videoProgress.value)
   const [dropdown, setDropdown] = useState<number | null>(null)
-  const [popup, setPopup] = useState({playlist: false})
+  const [popup, setPopup] = useState({playlist: false, delete: {trigger: false, videoID: 0, videoTitle: ''}})
   const dispatch = useAppDispatch()
   const playlists = useAppSelector(state => state.playlists)
   const currentChannelID = useAppSelector(state => state.currentChannel.values?.id)
@@ -47,10 +48,21 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
     axios.delete(`/api/removeFromPlaylist?videoID=${chosenVideo}&playlistID=${playlistID}`)
     .then(response => {
         if (response.status === 200){
-            dispatch(removeVideo({
+            dispatch(removeVideoFromPlaylist({
                 id: playlistID,
                 videoID: chosenVideo
             }))
+        }
+    })
+  }
+
+  function handleRemoveVideo(videoID: number){
+    axios.delete(`/api/removeVideo?id=${videoID}`)
+    .then(response => {
+        if (response.status === 200){
+            dispatch(removeVideo(videoID))
+            setPopup(prev => ({...prev, delete: {...prev.delete, trigger: false}}))
+            alert('Video removed')
         }
     })
   }
@@ -71,6 +83,14 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
             )
            })}
         </Popup>
+
+        <Popup trigger = {popup.delete.trigger} switchOff = {() => setPopup(prev => ({...prev, delete: {...prev.delete, trigger: false}}))}>
+            <div style = {{textAlign: 'center'}}>
+                <p>Are you sure you want to delete '{popup.delete.videoTitle}' ?</p>
+                    <button onClick = {() => handleRemoveVideo(popup.delete.videoID)}>Yes</button>
+                    <button onClick = {() => setPopup(prev => ({...prev, delete: {...prev.delete, trigger: false}}))}>No</button>
+            </div>
+        </Popup>
         
        {videos?.length ? 
        <>
@@ -90,6 +110,7 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
                                 <button className = 'dropdownBtn'>Save</button>
                                 <button className = 'dropdownBtn'>Add to playlist</button>
                             </div>
+                            {!AreOwnVideos ? <button className = 'dropdownBtn redText' onClick = {() => {setPopup(prev => ({...prev, delete: {...prev.delete, trigger: true, videoID: video.id, videoTitle: video.title}})); setDropdown(null)}}>Remove</button> : null}
                         </KebabMenu>
 
                         <Link to = {`/video/${video.id}`} key = {index}>
@@ -109,7 +130,7 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
                     </div>
                 )
                 })}
-                {isOwnVideos && videoProgress > 0 ? 
+                {AreOwnVideos && videoProgress > 0 ? 
                     <div className = 'thumbnail skeleton center'>
                         <p>Progress - {videoProgress}</p>
                     </div>
@@ -121,7 +142,7 @@ export default function Videos({videos, isRow = true, isOwnVideos = false}: {vid
         <>
       
         <p>No videos posted...</p>
-        {isOwnVideos ? <Link to = '/upload'><button>Upload</button></Link> : null}
+        {AreOwnVideos ? <Link to = '/upload'><button>Upload</button></Link> : null}
         </>}
     </>
   ) : <p>Loading...</p>
