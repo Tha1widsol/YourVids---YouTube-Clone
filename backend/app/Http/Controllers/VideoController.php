@@ -49,6 +49,21 @@ class VideoController extends Controller
         ]);
     }
 
+    public function editVideo(Request $request){
+        $lookup_url_kwarg = 'id';
+        $video_id = $request->$lookup_url_kwarg;
+        $video = Video::find($video_id);
+        $video->title = $request->title;
+        $video->description = $request->description;
+        $video->thumbnail = $request->thumbnail;
+        $video->category = $request->category;
+        $video->save();
+
+        return response([
+            'message' => 'Video details are edited'
+        ]);
+    }
+
     protected function saveFile(UploadedFile $file, Request $request){
         $user = Auth::user();
       
