@@ -2,7 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8000",
+  "proxy": "http://127.0.0.1:8000",
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.2",
     "@rpldy/chunked-uploady": "^1.3.1",
@@ -18,6 +18,7 @@
     "@types/react-dom": "^18.0.5",
     "@types/react-redux": "^7.1.24",
     "axios": "^0.27.2",
+    "caniuse-lite": "^1.0.30001448",
     "react": "^18.1.0",
     "react-cookie": "^4.1.1",
     "react-dom": "^18.1.0",
