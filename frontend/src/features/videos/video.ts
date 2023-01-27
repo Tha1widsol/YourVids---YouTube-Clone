@@ -50,6 +50,13 @@ export const videoSlice = createSlice({
             state.values.views += 1
         },
 
+        editVideo: (state, action) => {
+            state.values.title = action.payload.title
+            state.values.description = action.payload.description
+            state.values.thumbnail = action.payload.thumbnail
+            state.values.category = action.payload.category
+        },
+
         setLikes: (state, action) => {
             state.values.likes = action.payload
         },
@@ -77,5 +84,5 @@ export const videoSlice = createSlice({
 
 })
 
-export const {setVideo, incrementViews, setLikes, setDislikes} = videoSlice.actions
+export const {setVideo, editVideo, incrementViews, setLikes, setDislikes} = videoSlice.actions
 export default videoSlice.reducer

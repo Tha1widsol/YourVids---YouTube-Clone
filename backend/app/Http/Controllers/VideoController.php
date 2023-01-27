@@ -25,7 +25,7 @@ function refreshLikesDislikes($video_id){
 
 class VideoController extends Controller
 {
-    public function createVideo(Request $request){
+    public function uploadVideo(Request $request){
         $lookup_url_kwarg = 'id';
         $channel_id = $request->$lookup_url_kwarg;
         $video = new Video;
@@ -49,13 +49,23 @@ class VideoController extends Controller
         ]);
     }
 
-    public function editVideo(Request $request){
+    public function postVideo(Request $request){
         $lookup_url_kwarg = 'id';
         $video_id = $request->$lookup_url_kwarg;
-        $video = Video::find($video_id);
+        $user = Auth::user();
+        $userChannel = Channel::where('user_id', $user->id)->where('active', true)->first();
+
+        $video = Video::firstOrCreate(['id' => $video_id], ['title' => $request->title, 'description' => $request->description, 'thumbnail' => $request->thumbnail, 'category' => $request->category]);
         $video->title = $request->title;
         $video->description = $request->description;
-        $video->thumbnail = $request->thumbnail;
+        
+        if ($request->hasFile('thumbnail')){
+            $thumbnail = $request->file('thumbnail');
+            $thumbnailName = $thumbnail->getClientOriginalName();
+            $finalName = date('His') . $thumbnailName;
+            $pathName = $thumbnail->storeAs('thumbnails/', $finalName, 'public');
+            $video->thumbnail = $pathName;
+        }
         $video->category = $request->category;
         $video->save();
 

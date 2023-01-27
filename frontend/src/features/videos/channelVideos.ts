@@ -46,6 +46,15 @@ export const channelVideosSlice = createSlice({
             state.values = action.payload
         },
 
+        editVideo: (state, action) => {
+            const idx = state.values.findIndex(video => video.id === action.payload.id)
+            state.values[idx].title = action.payload.title
+            state.values[idx].description = action.payload.description
+            state.values[idx].thumbnail = action.payload.thumbnail
+            state.values[idx].category = action.payload.category
+            
+        },
+
         removeVideo: (state, action) => {
             const id = state.values.findIndex(video => video.id === action.payload)
             state.values.splice(id, 1)
@@ -71,5 +80,5 @@ export const channelVideosSlice = createSlice({
 
 })
 
-export const {setVideos, removeVideo} = channelVideosSlice.actions
+export const {setVideos, editVideo, removeVideo} = channelVideosSlice.actions
 export default channelVideosSlice.reducer

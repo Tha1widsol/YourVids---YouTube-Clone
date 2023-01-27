@@ -45,6 +45,15 @@ export const homeVideosSlice = createSlice({
         setVideos: (state, action) => {
             state.values = action.payload
         },
+
+        editVideo: (state, action) => {
+            const idx = state.values.findIndex(video => video.id === action.payload.id)
+            state.values[idx].title = action.payload.title
+            state.values[idx].description = action.payload.description
+            state.values[idx].thumbnail = action.payload.thumbnail
+            state.values[idx].category = action.payload.category
+            
+        },
     },
 
     extraReducers(builder){

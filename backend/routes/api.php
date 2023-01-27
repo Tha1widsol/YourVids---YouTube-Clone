@@ -38,8 +38,8 @@ Route::put('/incrementViews',[VideoController::class, 'incrementViews']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getUser',[UserController::class,'getUser']);
     Route::post('/createChannel',[ChannelController::class,'createChannel']);
-    Route::post('/createVideo',[VideoController::class, 'createVideo'])->withoutMiddleware('throttle');
-    Route::put('/editVideo',[VideoController::class, 'editVideo']);
+    Route::post('/uploadVideo',[VideoController::class, 'uploadVideo'])->withoutMiddleware('throttle');
+    Route::post('/postVideo',[VideoController::class, 'postVideo']);
     Route::get('/userChannels',[ChannelController::class, 'getUserChannels']);
     Route::put('/subscribe',[ChannelController::class, 'subscribe']);
     Route::put('/unsubscribe',[ChannelController::class, 'unsubscribe']);
