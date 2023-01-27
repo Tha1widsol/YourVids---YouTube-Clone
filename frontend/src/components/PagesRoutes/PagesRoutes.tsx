@@ -11,6 +11,7 @@ import VideoPage from '../VideoPage/VideoPage'
 import ChannelVideosPage from '../ChannelVideosPage/ChannelVideosPage'
 import SubscriptionVideosPage from '../SubscriptionVideosPage/SubscriptionVideosPage'
 import PlaylistPage from '../Playlists/PlaylistPage'
+import UploadVideoPage from '../UploadVideoPage/UploadVideoPage'
 
 export default function PagesRoutes() {
   return (
@@ -25,7 +26,7 @@ export default function PagesRoutes() {
 
             <Route element = {<CheckAuth/>}>
               <Route path = '/user/:username/channels' element = {<UserChannels/>}/>
-              <Route path = '/upload' element = {<VideoFormPage/>}/>
+              <Route path = '/upload' element = {<UploadVideoPage/>}/>
               <Route path = '/videos' element = {<ChannelVideosPage/>}/>
               <Route path = '/channels' element = {<UserChannels/>}/>
               <Route path = '/subscriptions' element = {<SubscriptionVideosPage/>}/>
