@@ -7,13 +7,14 @@ import KebabMenu from '../KebabMenu/KebabMenu'
 import Popup from '../Popup/Popup'
 import { fetchPlaylists, addVideo, removeVideoFromPlaylist } from '../../features/playlists/playlists'
 import { removeVideo } from '../../features/videos/channelVideos'
+import VideoFormPage from '../VideoFormPage/VideoFormPage'
 import './css/Videos.css'
 import axios from 'axios'
 
 export default function Videos({videos, isRow = true, AreOwnVideos = false}: {videos: VideosProps['values'] | undefined, isRow?: boolean, AreOwnVideos?: boolean}) {
   const videoProgress = useAppSelector(state => state.videoProgress.value)
   const [dropdown, setDropdown] = useState<number | null>(null)
-  const [popup, setPopup] = useState({playlist: false, delete: {trigger: false, videoID: 0, videoTitle: ''}})
+  const [popup, setPopup] = useState({playlist: false, editVideo: {trigger: false, id: 0, title: '', description: '', thumbnail: '', category: '', }, delete: {trigger: false, videoID: 0, videoTitle: ''}})
   const dispatch = useAppDispatch()
   const playlists = useAppSelector(state => state.playlists)
   const currentChannelID = useAppSelector(state => state.currentChannel.values?.id)
@@ -84,6 +85,10 @@ export default function Videos({videos, isRow = true, AreOwnVideos = false}: {vi
            })}
         </Popup>
 
+        <Popup trigger = {popup.editVideo.trigger} switchOff = {() => setPopup(prev => ({...prev, editVideo: {...prev.editVideo, trigger: false}}))}>
+            <VideoFormPage currentID = {popup.editVideo.id} currentTitle = {popup.editVideo.title} currentDescription = {popup.editVideo.description} currentThumbnail = {popup.editVideo.thumbnail} currentCategory = {popup.editVideo.category} popupOff = {() => setPopup(prev => ({...prev, editVideo: {...prev.editVideo, trigger: false}}))}/>
+        </Popup>
+
         <Popup trigger = {popup.delete.trigger} switchOff = {() => setPopup(prev => ({...prev, delete: {...prev.delete, trigger: false}}))}>
             <div style = {{textAlign: 'center'}}>
                 <p>Are you sure you want to delete '{popup.delete.videoTitle}' ?</p>
@@ -110,7 +115,12 @@ export default function Videos({videos, isRow = true, AreOwnVideos = false}: {vi
                                 <button className = 'dropdownBtn'>Save</button>
                                 <button className = 'dropdownBtn'>Add to playlist</button>
                             </div>
-                            {!AreOwnVideos ? <button className = 'dropdownBtn redText' onClick = {() => {setPopup(prev => ({...prev, delete: {...prev.delete, trigger: true, videoID: video.id, videoTitle: video.title}})); setDropdown(null)}}>Remove</button> : null}
+                            {AreOwnVideos ? 
+                            <>
+                                <button className = 'dropdownBtn' onClick = {() => {setPopup(prev => ({...prev, editVideo: {...prev.editVideo, trigger: true, id: video.id, title: video.title, description: video.description, thumbnail: video.thumbnail, category: video.category}}));setDropdown(null)}}>Edit</button>
+                                <button className = 'dropdownBtn redText' onClick = {() => {setPopup(prev => ({...prev, delete: {...prev.delete, trigger: true, videoID: video.id, videoTitle: video.title}})); setDropdown(null)}}>Remove</button>
+                            </>
+                            : null}
                         </KebabMenu>
 
                         <Link to = {`/video/${video.id}`} key = {index}>
