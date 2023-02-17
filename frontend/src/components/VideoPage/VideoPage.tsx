@@ -17,6 +17,7 @@ import { fetchChannelVideos } from '../../features/videos/channelVideos'
 import { incrementViews } from '../../features/videos/video'
 import Videos from '../Videos/Videos'
 
+
 export default function VideoPage() {
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
@@ -32,6 +33,7 @@ export default function VideoPage() {
     const comments = useAppSelector(state => state.videoComments)
     const videos = useAppSelector(state => state.channelVideos)
     const [loadLikesDislikes, setLoadLikesDislikes] = useState(false)
+    const playlists = useAppSelector(state => state.playlists)
 
     useEffect(() => {
         dispatch(fetchVideo(videoID))
@@ -98,7 +100,7 @@ export default function VideoPage() {
             })
         
       
-    },[dispatch, videoID, user.isLoggedIn])
+    },[dispatch, videoID, user.isLoggedIn, currentChannel.values?.id])
 
     function handleLikeVideo(){
         setLiked(!liked)
@@ -173,7 +175,7 @@ export default function VideoPage() {
   return video.status === 'success' ? (
     <div>
         <Popup trigger = {popup.playlist} switchOff = {() => setPopup(prev => {return{...prev, playlist: false}})}>
-            <PlaylistsCheckbox/>
+            <PlaylistsCheckbox playlists = {playlists.values} chosenVideoID = {Number(videoID)}/>
         </Popup>
 
     <div className = 'row' style = {{justifyContent: 'space-evenly'}}>
