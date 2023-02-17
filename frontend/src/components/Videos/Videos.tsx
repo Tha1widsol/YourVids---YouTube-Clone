@@ -10,6 +10,7 @@ import { removeVideo } from '../../features/videos/channelVideos'
 import VideoFormPage from '../VideoFormPage/VideoFormPage'
 import './css/Videos.css'
 import axios from 'axios'
+import PlaylistsCheckbox from '../Playlists/PlaylistsCheckbox'
 
 export default function Videos({videos, isRow = true, AreOwnVideos = false}: {videos: VideosProps['values'] | undefined, isRow?: boolean, AreOwnVideos?: boolean}) {
   const videoProgress = useAppSelector(state => state.videoProgress.value)
@@ -32,30 +33,8 @@ export default function Videos({videos, isRow = true, AreOwnVideos = false}: {vi
     setChosenVideo(videoID)
   }
 
-  function handleToggleAddToPlaylist(playlistID: number){
-    axios.post(`/api/addToPlaylist?videoID=${chosenVideo}&playlistID=${playlistID}`)
-    .then(response => {
-        if (response.status === 200){
-            const video = response.data
-            dispatch(addVideo({
-                id: playlistID,
-                video: video
-            }))
-        }
-    })
-  }
 
-  function handleRemoveFromPlaylist(playlistID: number){
-    axios.delete(`/api/removeFromPlaylist?videoID=${chosenVideo}&playlistID=${playlistID}`)
-    .then(response => {
-        if (response.status === 200){
-            dispatch(removeVideoFromPlaylist({
-                id: playlistID,
-                videoID: chosenVideo
-            }))
-        }
-    })
-  }
+
 
   function handleRemoveVideo(videoID: number){
     axios.delete(`/api/removeVideo?id=${videoID}`)
@@ -73,16 +52,7 @@ export default function Videos({videos, isRow = true, AreOwnVideos = false}: {vi
         <Popup trigger = {popup.playlist} switchOff = {() => setPopup(prev => {return{...prev, playlist: false}})}>
             <h2>Add to playlist:</h2>
             <hr className = 'mt-0-mb-4'/>
-           {playlists.values?.map((playlist, index) => {
-            return (
-                <div key = {index}>
-                    <div className = 'row' style = {{alignItems: 'center', gap: '10px'}}>
-                        <p>{playlist.title}</p>
-                        <input type = 'checkbox' defaultChecked = {playlist.videos.filter(vid => vid.id === chosenVideo).length > 0} onChange = {e => e.target.checked ? handleToggleAddToPlaylist(playlist.id) : handleRemoveFromPlaylist(playlist.id)}/>
-                    </div>
-                </div>
-            )
-           })}
+          <PlaylistsCheckbox playlists = {playlists?.values} chosenVideoID = {chosenVideo}/>
         </Popup>
 
         <Popup trigger = {popup.editVideo.trigger} switchOff = {() => setPopup(prev => ({...prev, editVideo: {...prev.editVideo, trigger: false}}))}>
