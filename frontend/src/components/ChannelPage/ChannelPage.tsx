@@ -100,9 +100,6 @@ export default function ChannelPage() {
          <hr className = 'mt-0-mb-4'/>
           <h3><b>Recent subscribers</b></h3>
           <Channels channels = {subscribers.values}/>
-
-          <h3><b>Playlists</b></h3>
-          <Playlists playlists = {playlists.values}/>
         </>
         : null}
       
