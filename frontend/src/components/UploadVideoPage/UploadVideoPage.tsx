@@ -28,11 +28,6 @@ export default function UploadVideoPage() {
         
     }
 
-    function handleUpload(e: React.SyntheticEvent){
-        e.preventDefault()
-        navigate('/')
-
-    }
 
      
   return (
@@ -44,9 +39,9 @@ export default function UploadVideoPage() {
         <ChunkedUploady
         method = 'POST'
         destination={{ url: `/api/uploadVideo`, headers: {"x-custom": "123" } }}
-        chunkSize = {1000 * 1024}
+        chunkSize = {1000 * 2024}
         inputFieldName={'file'}>
-        <UploadButton onClick = {handleUpload}/>
+        <UploadButton />
         </ChunkedUploady>
     </div>
   )
