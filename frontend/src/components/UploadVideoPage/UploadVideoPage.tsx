@@ -39,7 +39,7 @@ export default function UploadVideoPage() {
         <ChunkedUploady
         method = 'POST'
         destination={{ url: `/api/uploadVideo`, headers: {"x-custom": "123" } }}
-        chunkSize = {1000 * 2024}
+        chunkSize = {100 * 1024 * 1024}
         inputFieldName={'file'}>
         <UploadButton />
         </ChunkedUploady>
