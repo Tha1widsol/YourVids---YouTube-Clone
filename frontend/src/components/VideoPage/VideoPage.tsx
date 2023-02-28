@@ -17,7 +17,6 @@ import { fetchChannelVideos } from '../../features/videos/channelVideos'
 import { incrementViews } from '../../features/videos/video'
 import Videos from '../Videos/Videos'
 
-
 export default function VideoPage() {
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
@@ -34,6 +33,7 @@ export default function VideoPage() {
     const videos = useAppSelector(state => state.channelVideos)
     const [loadLikesDislikes, setLoadLikesDislikes] = useState(false)
     const playlists = useAppSelector(state => state.playlists)
+    console.log(videoFilePath)
 
     useEffect(() => {
         dispatch(fetchVideo(videoID))
@@ -41,7 +41,7 @@ export default function VideoPage() {
             if (response.meta.requestStatus === 'fulfilled'){
                 axios({
                     method: 'get',
-                    url: `/storage/${response.payload.pathName}`,
+                    url: `/storage/upload/medialibrary/${user.values?.id}/${response.payload.pathName}`,
                     responseType: 'blob',
                 })
         
