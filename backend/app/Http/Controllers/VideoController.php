@@ -76,7 +76,8 @@ class VideoController extends Controller
 
     protected function saveFile(UploadedFile $file, Request $request){
         $user = Auth::user();
-      
+        $video = new video;
+        $userChannel = Channel::where('user_id', $user->id)->where('active', true)->first();
         $fileName = $this->createFilename($file);
         $mime_original = $file->getMimeType();
         $mime = str_replace('/', '-', $mime_original);
@@ -88,7 +89,10 @@ class VideoController extends Controller
         $fileSize = $file->getSize();
         $file->move($finalPath, $fileName);
         $url_base = 'storage/upload/medialibrary/' . $user->id . "/{$folderDATE}/" . $fileName;
-      
+        $video->pathName = $fileName;
+        $video->channel_id = $userChannel->id;
+        $video->save();
+
         return response()->json([
             'path' => $filePath,
             'name' => $fileName,
@@ -99,9 +103,7 @@ class VideoController extends Controller
     protected function createFilename(UploadedFile $file){
         $extension = $file->getClientOriginalExtension();
         $filename = str_replace("." . $extension, "", $file->getClientOriginalName());
-        $temp_arr = explode('_', $filename);
-        if (isset($temp_arr[0])) unset($temp_arr[0]);
-        $filename = implode('_', $temp_arr);
+     
 
         return $filename . "." . $extension;
     }
