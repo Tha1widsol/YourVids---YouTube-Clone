@@ -66,7 +66,9 @@ class VideoController extends Controller
             $pathName = $thumbnail->storeAs('thumbnails/', $finalName, 'public');
             $video->thumbnail = $pathName;
         }
+        $video->channel_id = $userChannel->id;
         $video->category = $request->category;
+        $video->pathName = $request->fileName;
         $video->save();
 
         return response([
