@@ -5,14 +5,14 @@ import {FileProps} from '../../app/types/files'
 import { useAppSelector, useAppDispatch } from '../../app/hooks'
 import { editVideo } from '../../features/videos/channelVideos'
 
-export default function VideoFormPage({currentID = 0, currentTitle = '', currentDescription = '', currentThumbnail = '', currentCategory = '', popupOff} : {currentID?: number, currentTitle?: string, currentDescription?: string, currentThumbnail?: string, currentCategory?: string, popupOff: () => void}) {
+export default function VideoFormPage({currentID = 0, currentTitle = '', currentDescription = '', currentThumbnail = '', currentCategory = '', fileName = '',popupOff} : {currentID?: number, currentTitle?: string, currentDescription?: string, currentThumbnail?: string, currentCategory?: string, fileName?: string, popupOff: () => void}) {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const currentChannel = useAppSelector(state => state.currentChannel)
-  const [title, setTitle] = useState({value: currentTitle, maxlength: 100})
+  const [title, setTitle] = useState({value: currentTitle || 'untitled', maxlength: 100})
   const [thumbnail, setThumbnail] = useState<FileProps>({value: currentThumbnail, name: ''})
-  const [description, setDescription] = useState({value: currentDescription, maxlength: 5000})
-  const [category, setCategory] = useState({value: currentCategory})
+  const [description, setDescription] = useState({value: currentDescription || '', maxlength: 5000})
+  const [category, setCategory] = useState({value: currentCategory || 'Any'})
 
   function handleSubmitForm(e: React.SyntheticEvent){
     e.preventDefault()
@@ -26,17 +26,12 @@ export default function VideoFormPage({currentID = 0, currentTitle = '', current
     if (thumbnail.name) form.append('thumbnail', thumbnail.value, thumbnail.name)
     form.append('description', description.value)
     form.append('category', category.value)
+    form.append('fileName', fileName)
 
-    axios.post(`/api/postVideo?id=${currentChannel.values.id}`,form, requestOptions)
+    axios.post(`/api/postVideo?id=${currentID}`,form, requestOptions)
     .then(response => {
       if (response.status === 200) {
-        dispatch(editVideo({
-          id: currentID,
-          title: title.value,
-          description: description.value,
-          thumbnail: thumbnail.value,
-          category: category.value
-        }))
+      
         popupOff()
       }
  
