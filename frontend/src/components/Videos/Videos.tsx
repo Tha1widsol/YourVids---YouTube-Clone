@@ -69,7 +69,7 @@ export default function Videos({videos, isRow = true, AreOwnVideos = false}: {vi
         
        {videos?.length ? 
        <>
-          <section className = {`videosContainer ${isRow ? 'row' : 'col videosCol'} `}>
+          <section className = {`videosContainer ${isRow ? 'row' : 'col videosCol'} `} style = {AreOwnVideos ? {flexWrap: 'unset', overflowX: 'auto', padding: '15px'} : {}} >
                 {videos?.map((video, index) =>{
                 return (
                     <div className = 'videoContainer' key = {index}>

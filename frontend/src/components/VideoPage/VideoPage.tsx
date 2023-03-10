@@ -41,7 +41,7 @@ export default function VideoPage() {
             if (response.meta.requestStatus === 'fulfilled'){
                 axios({
                     method: 'get',
-                    url: `/storage/upload/medialibrary/${user.values?.id}/${response.payload.pathName}`,
+                    url: response.payload.pathName,
                     responseType: 'blob',
                 })
         
