@@ -58,17 +58,18 @@ class VideoController extends Controller
         $video = Video::firstOrCreate(['id' => $video_id], ['title' => $request->title, 'description' => $request->description, 'thumbnail' => $request->thumbnail, 'category' => $request->category]);
         $video->title = $request->title;
         $video->description = $request->description;
+        $videoPathName = "/storage/upload/medialibrary/$user->id/$request->fileName";
         
         if ($request->hasFile('thumbnail')){
             $thumbnail = $request->file('thumbnail');
             $thumbnailName = $thumbnail->getClientOriginalName();
             $finalName = date('His') . $thumbnailName;
-            $pathName = $thumbnail->storeAs('thumbnails/', $finalName, 'public');
-            $video->thumbnail = $pathName;
+            $thumbnailPathName = $thumbnail->storeAs('thumbnails/', $finalName, 'public');
+            $video->thumbnail = $thumbnailPathName;
         }
         $video->channel_id = $userChannel->id;
         $video->category = $request->category;
-        $video->pathName = $request->fileName;
+        $video->pathName = $videoPathName;
         $video->save();
 
         return response([
@@ -90,10 +91,8 @@ class VideoController extends Controller
         $finalPath = storage_path("app/" . $filePath);
         $fileSize = $file->getSize();
         $file->move($finalPath, $fileName);
-        $url_base = 'storage/upload/medialibrary/' . $user->id . "/{$folderDATE}/" . $fileName;
-        $video->pathName = $fileName;
-        $video->channel_id = $userChannel->id;
-        $video->save();
+        $url_base = '/storage/upload/medialibrary/' . $user->id . "/{$folderDATE}/" . $fileName;
+    
 
         return response()->json([
             'path' => $filePath,
