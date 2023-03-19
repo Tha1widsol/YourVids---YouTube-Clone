@@ -58,7 +58,7 @@ export default function PlaylistForm({playlist, popupOff}: {playlist?: PlaylistP
       </select>
 
       <div className = 'row' style = {{justifyContent: 'space-between'}}>
-         <button style = {{float: 'right'}}>Create</button>
+         <button style = {{float: 'right'}}>Submit</button>
          <button onClick = {popupOff}>Cancel</button>
       </div>
 
