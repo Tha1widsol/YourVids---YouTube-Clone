@@ -1,22 +1,27 @@
-import React,{useState, useEffect} from 'react'
+import React,{useState} from 'react'
+import { useAppDispatch } from '../../app/hooks';
 import { useNavigate } from 'react-router-dom';
 import ReactPlayer from 'react-player'
 import ChunkedUploady from "@rpldy/chunked-uploady";
 import UploadButton from "@rpldy/upload-button"
-import { useUploady, useItemProgressListener} from "@rpldy/uploady"
+import {useItemProgressListener} from "@rpldy/uploady"
 import {VideoProps} from '../../app/types/files'
+import {setProgress} from '../../features/videos/videoProgress'
 import VideoFormPage from '../VideoFormPage/VideoFormPage';
+
 
 export default function UploadVideoPage() {
     const navigate = useNavigate()
     const [videoFilePath, setVideoFilePath] = useState('')
     const [video, setVideo] = useState<VideoProps>({value: '', name: '', length: ''})
     const [showForm, setShowForm] = useState({trigger: false, fileName: ''})
+    const dispatch = useAppDispatch()
     console.log(showForm)
 
     const LogProgress = () => {
         useItemProgressListener((item) => {
             if (item) setShowForm({trigger: true, fileName: item.file.name})
+            dispatch(setProgress(item.completed))
             console.log(`>>>>> (hook) File ${item.file.name} completed: ${item.completed}`);
         });
        
