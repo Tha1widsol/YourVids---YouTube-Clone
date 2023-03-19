@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import ReactPlayer from 'react-player'
 import KebabMenu from '../KebabMenu/KebabMenu'
 import Popup from '../Popup/Popup'
-import { fetchPlaylists, addVideo, removeVideoFromPlaylist } from '../../features/playlists/playlists'
+import { fetchPlaylists } from '../../features/playlists/playlists'
 import { removeVideo } from '../../features/videos/channelVideos'
 import VideoFormPage from '../VideoFormPage/VideoFormPage'
 import './css/Videos.css'
@@ -69,7 +69,7 @@ export default function Videos({videos, isRow = true, AreOwnVideos = false}: {vi
         
        {videos?.length ? 
        <>
-          <section className = {`videosContainer ${isRow ? 'row' : 'col videosCol'} `} style = {AreOwnVideos ? {flexWrap: 'unset', overflowX: 'auto', padding: '15px'} : {}} >
+          <section className = {`videosContainer ${isRow ? 'row' : 'col videosCol'} `} >
                 {videos?.map((video, index) =>{
                 return (
                     <div className = 'videoContainer' key = {index}>
