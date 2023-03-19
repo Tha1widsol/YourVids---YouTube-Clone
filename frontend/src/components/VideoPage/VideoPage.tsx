@@ -88,10 +88,8 @@ export default function VideoPage() {
             
                             if (likedVideos[videoID!]?.liked) {
                                 setLiked(true)
-                                return
                             }
-
-                            setDisliked(true)
+                            
                         }
                        
                       
