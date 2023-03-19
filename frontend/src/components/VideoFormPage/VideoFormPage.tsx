@@ -9,7 +9,7 @@ export default function VideoFormPage({currentID = 0, currentTitle = '', current
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const currentChannel = useAppSelector(state => state.currentChannel)
-  const [title, setTitle] = useState({value: currentTitle || 'untitled', maxlength: 100})
+  const [title, setTitle] = useState({value: currentTitle || fileName, maxlength: 100})
   const [thumbnail, setThumbnail] = useState<FileProps>({value: currentThumbnail, name: ''})
   const [description, setDescription] = useState({value: currentDescription || '', maxlength: 5000})
   const [category, setCategory] = useState({value: currentCategory || 'Any'})
@@ -31,8 +31,18 @@ export default function VideoFormPage({currentID = 0, currentTitle = '', current
     axios.post(`/api/postVideo?id=${currentID}`,form, requestOptions)
     .then(response => {
       if (response.status === 200) {
-      
         popupOff()
+        if (currentID){
+            dispatch(editVideo({
+              id: currentID,
+              title: title.value,
+              description: description.value,
+              thumbnail: thumbnail.value,
+              category: category.value
+            }))
+        }
+        navigate('/videos')
+       
       }
  
     })
